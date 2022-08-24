@@ -1,9 +1,11 @@
 export class PostUserLogin {
   static Route = "/login";
+
   static Body: {
     email: string;
     password: string;
   };
+
   static Res: {
     status: string;
     message: string;
@@ -21,12 +23,14 @@ export class PostUserLogin {
 
 export class PostResetPassword {
   static Route = "/auth/password/reset";
+
   static Body: {
     email: string;
     token: string;
     password: string;
     password_confirmation: string;
   };
+
   static Res: {
     status: string;
     status_code: number;
@@ -36,9 +40,11 @@ export class PostResetPassword {
 
 export class PostForgotPassword {
   static Route = "/password/email";
+
   static Body: {
     email: string;
   };
+
   static Res: {
     status: string;
     status_code: number;
@@ -48,6 +54,7 @@ export class PostForgotPassword {
 
 export class GetLandlordProfile {
   static Route = "/profile/:id";
+
   static Res: {
     status: number;
     message: string;
