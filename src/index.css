@@ -1,0 +1,19 @@
+:root {
+  --black: black;
+  --white: white;
+  --blue: #003085;
+  --light-blue: #3a86ff;
+  --gray: #b7b7b7;
+  --med-gray: #909090;
+  --pink: #ff006e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
