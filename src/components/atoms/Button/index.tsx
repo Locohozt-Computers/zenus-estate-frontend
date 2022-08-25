@@ -4,6 +4,7 @@ import { ButtonLoader, ButtonWrapper } from "./style";
 interface ButtonProps extends PropsWithChildren {
   text?: string;
   loading?: { loader: any; state: boolean } | boolean;
+  secondary?: boolean;
 }
 
 export const Button = ({
