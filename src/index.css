@@ -5,7 +5,9 @@
   --light-blue: #3a86ff;
   --med-gray: #909090;
   --gray: #b7b7b7;
+  --gray-2: #ededed;
   --light-gray: #f7f7f7;
+  --lighter-gray: #fbfbfb;
   --pink: #ff006e;
 }
 
@@ -13,6 +15,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /*outline: 1px solid red;*/
 }
 
 body {

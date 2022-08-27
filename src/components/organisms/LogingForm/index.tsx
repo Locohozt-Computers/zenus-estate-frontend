@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, FormikInput } from "components/atoms";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "components/organisms/LogingForm/request";
 import { FormikProvider, useFormik } from "formik";
 import * as yup from "yup";

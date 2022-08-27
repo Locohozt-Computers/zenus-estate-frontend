@@ -2,6 +2,7 @@
 import styled, { css } from "styled-components/macro";
 import { pxToEm } from "utils";
 import { cssObjectToString } from "utils/helpers";
+import { PropsWithChildren, ReactNode } from "react";
 
 export type TextColor =
   | "blue"
@@ -22,6 +23,15 @@ export type TextVariant =
   | "helperText"
   | "subtitle";
 
+export interface TextProps extends PropsWithChildren {
+  content?: string | number | ReactNode;
+  variant?: TextVariant;
+  textColor?: TextColor;
+  color?: string | TextColor;
+  size?: number;
+  weight?: number;
+}
+
 const setVariant = (variant: TextVariant) => {
   switch (variant) {
     case "bodyBig":
@@ -39,11 +49,9 @@ const setVariant = (variant: TextVariant) => {
   }
 };
 
-export const TextWrapper = styled.p<{
-  variant?: TextVariant;
-  textColor?: TextColor;
-  color?: string;
-}>`
+export const TextWrapper = styled.p<TextProps>`
+  font-weight: ${({ weight }) => weight && weight};
+  font-size: ${({ size }) => size && pxToEm(size)};
   ${({ variant }) =>
     variant &&
     css`

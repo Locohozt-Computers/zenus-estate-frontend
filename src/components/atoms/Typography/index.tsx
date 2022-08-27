@@ -1,12 +1,5 @@
-import React, { PropsWithChildren, ReactNode } from "react";
-import { TextWrapper, TextVariant, TextColor } from "./style";
-
-interface TextProps extends PropsWithChildren {
-  content?: string | number | ReactNode;
-  variant?: TextVariant;
-  textColor?: TextColor;
-  color?: string | TextColor;
-}
+import React from "react";
+import { TextProps, TextWrapper } from "./style";
 
 interface HeadingProps extends TextProps {
   level?: number;

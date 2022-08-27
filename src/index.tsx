@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import store, { persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import App from "./App";
@@ -24,8 +24,8 @@ root.render(
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
             <App />
-            <ReactQueryDevtools />
             <Toaster position="bottom-right" reverseOrder={false} />
+            <ReactQueryDevtools />
           </QueryClientProvider>
         </BrowserRouter>
       </PersistGate>
