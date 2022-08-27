@@ -4,6 +4,8 @@
 
 API: [Post Man](https://documenter.getpostman.com/view/8806253/VUqvpaPo#85557f00-1faf-4155-8091-b650db5e4c1b)
 
+Figma: [UI](https://www.figma.com/file/yjqW6baTmUHIRQb0tdtfvs/Zenus?node-id=635%3A8581)
+
 #### Get Familiar Packages
 - **[Redux Toolkit](https://redux-toolkit.js.org/tutorials/quick-start)**: State management tool
 - **[React Query](https://react-query-v3.tanstack.com/overview)**: Potentially help the project save on bandwidth and increase memory performance
