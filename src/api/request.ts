@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 const createClient = () => {
   const appRequest = axios.create({
@@ -20,12 +20,20 @@ const createClient = () => {
     delete appRequest.defaults.headers.common.Authorization;
   };
 
-  const requestFulfilled = () => {};
-  const requestRejected = () => {};
+  const requestFulfilled = (config: AxiosRequestConfig) => {
+    return config;
+  };
+  const requestRejected = (error: AxiosError) => {
+    return Promise.reject(error);
+  };
   appRequest.interceptors.request.use(requestFulfilled, requestRejected);
 
-  const responseFulfilled = () => {};
-  const responseRejected = () => {};
+  const responseFulfilled = (response: AxiosResponse) => {
+    return response;
+  };
+  const responseRejected = (error: AxiosError) => {
+    return Promise.reject(error);
+  };
   appRequest.interceptors.response.use(responseFulfilled, responseRejected);
 
   return {

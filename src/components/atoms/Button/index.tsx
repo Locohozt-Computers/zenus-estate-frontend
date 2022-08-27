@@ -14,7 +14,12 @@ export const Button = ({
   ...rest
 }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
-    <ButtonWrapper btnDisable={!!loading} aria-disabled={!!loading} {...rest}>
+    <ButtonWrapper
+      btnDisable={!!loading}
+      aria-disabled={!!loading}
+      type="button"
+      {...rest}
+    >
       {loading && (
         <ButtonLoader>
           {typeof loading === "boolean" && "loading..."}

@@ -11,7 +11,9 @@ const LoaderWrapper = styled.div<{ absolute?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.13);
+  background-color: #00000008;
+  width: 100%;
+  height: 100%;
 `;
 
 const LoaderIconWrapper = styled.div`
