@@ -1,33 +1,21 @@
-import React from "react";
-import { Button, Typography } from "components";
+import React, { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
 import { Loader } from "components/atoms/Loader";
+import { ROUTES } from "app-constants";
+import HomePage from "pages/HomePage";
+
+const LazyLoginPage = React.lazy(() => import("pages/LoginPage"));
+const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 
 function App() {
   return (
-    <div className="App">
-      <Typography.Heading>Hello</Typography.Heading>
-      <Typography.Heading level={2}>Hello</Typography.Heading>
-      <Typography.Heading level={4}>Hello</Typography.Heading>
-      <Typography.Heading level={6}>Hello</Typography.Heading>
-      <Typography>Hello</Typography>
-      <Typography variant="bodyBig">Hello</Typography>
-      <Typography variant="heading4">Heading 4</Typography>
-      <Typography variant="heading4" textColor="blue" content="heading text" />
-      <Typography variant="heading4" textColor="pink" content="heading next" />
-      <Typography variant="heading4" textColor="med-gray" content="Heading 4" />
-      <Button text="Next" />
-      <Button secondary text="Next" />
-      <Button secondary text="Next" />
-      <div
-        style={{
-          position: "relative",
-          width: 500,
-          height: 600,
-        }}
-      >
-        <Loader open absolute />
-      </div>
-    </div>
+    <Suspense fallback={<Loader open />}>
+      <Routes>
+        <Route index element={<HomePage />} />
+        <Route path={ROUTES.login.fullPath} element={<LazyLoginPage />} />
+        <Route path={ROUTES.other.path} element={<LazyOtherPage />} />
+      </Routes>
+    </Suspense>
   );
 }
 
