@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormikInput } from "components/atoms";
+import { Button, FormikInput, FormikSelect, Select } from "components/atoms";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "components/organisms/LogingForm/request";
 import { FormikProvider, useFormik } from "formik";
@@ -40,9 +40,16 @@ export const LoginForm = () => {
 
   return (
     <FormikProvider value={formik}>
-      <form onSubmit={formik.handleSubmit}>
-        <FormikInput label="Email" name="email" />
-        <FormikInput name="password" label="Password" />
+      <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
+        <FormikInput
+          placeholder="placeholder"
+          label="Email"
+          name="email"
+          suffix="#"
+        />
+        <FormikInput type="password" name="password" label="Password" />
+        <Select name="options" options={["a", "b", "c"]} />
+        <FormikSelect name="options" options={["d", "e", "f"]} />
         <Button type="submit" text="login" loading={isLoading} />
       </form>
     </FormikProvider>
