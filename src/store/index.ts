@@ -11,12 +11,15 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { persistMigrate, persistVersion } from "store/persistMigrations";
 import { rootReducer, RootState } from "./reducers";
 
 const persistConfig = {
   keyPrefix: "",
   key: "z-estate",
   storage,
+  version: persistVersion,
+  migrate: persistMigrate,
 };
 
 const store = configureStore({

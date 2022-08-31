@@ -53,7 +53,7 @@ export class PostForgotPassword {
 }
 
 export class GetLandlordProfile {
-  static Route = "/profile/:id";
+  static Route = "/landlord";
 
   static Res: {
     status: number;
@@ -134,5 +134,15 @@ export class GetPaymentMethod {
       id: number;
       name: string;
     }>;
+  };
+}
+
+export class GetAllEmergencies {
+  static Route = "/emergency";
+
+  static Res: {
+    status: number;
+    message: string;
+    data: [];
   };
 }

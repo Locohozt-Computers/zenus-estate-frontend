@@ -38,6 +38,13 @@ const setVariant = (variant: TextVariant) => {
       return cssObjectToString({
         fontWeight: 400,
         fontSize: pxToEm(16),
+        color: "var(--black)",
+      });
+    case "heading3":
+      return cssObjectToString({
+        fontWeight: 500,
+        fontSize: pxToEm(39),
+        color: "var(--blue)",
       });
     case "heading4":
       return cssObjectToString({

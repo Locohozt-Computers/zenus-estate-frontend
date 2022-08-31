@@ -16,6 +16,7 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
     font-weight: 500;
     font-size: ${pxToEm(17)};
     color: var(--black);
+    margin-bottom: ${pxToEm(12)};
   }
 
   input.input-input,
