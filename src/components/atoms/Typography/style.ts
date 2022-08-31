@@ -57,16 +57,20 @@ const setVariant = (variant: TextVariant) => {
 };
 
 export const TextWrapper = styled.p<TextProps>`
-  font-weight: ${({ weight }) => weight && weight};
-  font-size: ${({ size }) => size && pxToEm(size)};
   ${({ variant }) =>
     variant &&
     css`
       ${setVariant(variant)}
     `};
+  font-weight: ${({ weight }) => weight && weight};
+  font-size: ${({ size }) => size && pxToEm(size)};
   ${({ textColor, color }) =>
     (textColor || color) &&
     css`
-      color: ${textColor ? `var(--${textColor})` : color ? `${color};` : ""};
+      color: ${textColor
+        ? `var(--${textColor})`
+        : color
+        ? `${color};`
+        : "var(--black)"};
     `};
 `;
