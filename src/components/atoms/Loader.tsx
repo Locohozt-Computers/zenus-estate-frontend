@@ -1,20 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
-
-const LoaderWrapper = styled.div<{ absolute?: boolean }>`
-  z-index: 9000;
-  position: ${({ absolute }) => (absolute ? "absolute" : "fixed")};
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #00000008;
-  width: 100%;
-  height: 100%;
-`;
+import { Typography } from "components/atoms/Typography";
 
 const LoaderIconWrapper = styled.div`
   display: flex;
@@ -64,6 +50,21 @@ export const LoaderIcon = () => {
   );
 };
 
+const LoaderWrapper = styled.div<{ absolute?: boolean }>`
+  z-index: 9000;
+  position: ${({ absolute }) => (absolute ? "absolute" : "fixed")};
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f7f752;
+  width: 100%;
+  height: 100%;
+`;
+
 export const Loader = ({
   absolute,
   open,
@@ -76,4 +77,45 @@ export const Loader = ({
       <LoaderIcon />
     </LoaderWrapper>
   ) : null;
+};
+
+const PageLoadStyle = styled.div`
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  z-index: 1000;
+
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+`;
+
+export const PageLoad = () => {
+  return (
+    <PageLoadStyle>
+      <div>
+        <img
+          src="/apple-touch-icon.png"
+          style={{ width: 47, height: 47 }}
+          alt="zenus estate"
+        />
+        <Typography textColor="blue" size={42} weight={600}>
+          ZENUS FINANCIALS
+        </Typography>
+      </div>
+      <LoaderIcon />
+    </PageLoadStyle>
+  );
 };

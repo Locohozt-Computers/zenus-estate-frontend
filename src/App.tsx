@@ -1,22 +1,37 @@
 import React, { Suspense } from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
-import { Loader } from "components/atoms/Loader";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { PageLoad } from "components/atoms/Loader";
 import { ROUTES } from "app-constants";
-import HomePage from "pages/HomePage";
+import LoginPage from "pages/LoginPage";
 import { AuthLayout, DashboardLayout } from "layouts";
+import { useSelector } from "react-redux";
+import { authSelectors } from "store/reducers/auth/authDocSlice";
 
-const LazyLoginPage = React.lazy(() => import("pages/LoginPage"));
+const LazyHomePage = React.lazy(() => import("pages/HomePage"));
+const LazyReportEmergencyPage = React.lazy(
+  () => import("pages/ReportEmergencyPage")
+);
+const LazyTestPage = React.lazy(() => import("pages/TestPage"));
 const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 
 const PrivateRoute = () => {
-  return (
-    <DashboardLayout>
-      <Outlet />
-    </DashboardLayout>
-  );
+  const isAuth = useSelector(authSelectors.isAuth);
+  if (isAuth) {
+    return (
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    );
+  }
+  return <Navigate to={ROUTES.login.path} />;
 };
 
 const ProtectedRoute = () => {
+  const isAuth = useSelector(authSelectors.isAuth);
+  if (isAuth) {
+    return <Navigate to={ROUTES.home.path} />;
+  }
+
   return (
     <AuthLayout>
       <Outlet />
@@ -26,14 +41,42 @@ const ProtectedRoute = () => {
 
 function App() {
   return (
-    <Suspense fallback={<Loader open />}>
+    <Suspense fallback={<PageLoad />}>
       <Routes>
-        <Route index element={<HomePage />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path={ROUTES.login.fullPath} element={<LazyLoginPage />} />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path={ROUTES.login.path} element={<LoginPage />} />
+          <Route
+            path="/"
+            element={<Navigate replace to={ROUTES.login.path} />}
+          />
         </Route>
-        <Route element={<PrivateRoute />}>
-          <Route path={ROUTES.other.path} element={<LazyOtherPage />} />
+
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path={ROUTES.home.path} element={<LazyHomePage />} />
+          <Route
+            path="/"
+            element={<Navigate replace to={ROUTES.home.path} />}
+          />
+          <Route
+            path={ROUTES.reportEmergency.path}
+            element={<LazyReportEmergencyPage />}
+          />
+          <Route path={ROUTES.myWallet.path} element={<LazyTestPage />} />
+          <Route path={ROUTES.myBills.path} element={<LazyOtherPage />}>
+            <Route path={ROUTES.instantPay.path} element={<LazyOtherPage />} />
+            <Route
+              path={ROUTES.myBills.fullPath}
+              element={<Navigate replace to={ROUTES.instantPay.path} />}
+            />
+            <Route
+              path={ROUTES.accountStatements.path}
+              element={<LazyOtherPage />}
+            />
+          </Route>
+          <Route path={ROUTES.myAccount.path} element={<LazyOtherPage />} />
+          <Route path={ROUTES.printReceipt.path} element={<LazyOtherPage />} />
+          <Route path={ROUTES.estateBanks.path} element={<LazyOtherPage />} />
+          <Route path={ROUTES.contactAdmin.path} element={<LazyOtherPage />} />
         </Route>
       </Routes>
     </Suspense>

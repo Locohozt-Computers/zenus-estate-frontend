@@ -1,15 +1,17 @@
 import React from "react";
-import { Typography } from "components";
-import { Link } from "react-router-dom";
-import { ROUTES } from "app-constants";
+import { Select, Typography } from "components";
+import { useQuery } from "@tanstack/react-query";
+import { getLandlordsProfile } from "pages/request";
+import { Loader } from "components/atoms/Loader";
 
 const HomePage = () => {
+  const { isLoading } = useQuery(["getLandlordsProfile"], getLandlordsProfile);
+
   return (
     <div>
-      <Typography>Route Sample</Typography>
-      <Link to={ROUTES.login.fullPath}>Login</Link>
-      <br />
-      <Link to={ROUTES.other.fullPath}>Other</Link>
+      <Loader open={isLoading} />
+      <Typography>Welcome</Typography>
+      <Select name="options" options={["a", "b", "c"]} />
     </div>
   );
 };
