@@ -8,12 +8,12 @@ const HomePage = () => {
   const { isLoading } = useQuery(["getLandlordsProfile"], getLandlordsProfile);
 
   return (
-    <div>
-      <Loader open={isLoading} />
+    <>
+      <Loader absolute open={isLoading} />
       <Typography>Welcome</Typography>
       <Button loading text="Hello" />
       <Select name="options" options={["a", "b", "c"]} />
-    </div>
+    </>
   );
 };
 

@@ -7,10 +7,10 @@ const ReportEmergencyPage = () => {
   const { isLoading } = useQuery(["getAllEmergency"], getAllEmergency);
 
   return (
-    <div>
-      <Loader open={isLoading} />
+    <>
+      <Loader absolute fill open={isLoading} />
       <div>data</div>
-    </div>
+    </>
   );
 };
 
