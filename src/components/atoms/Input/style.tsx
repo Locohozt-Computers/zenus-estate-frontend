@@ -50,8 +50,9 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
   }
 
   small.input-error {
+    margin-top: 5px;
     display: block;
     color: var(--pink);
-    font-size: ${pxToEm(12)};
+    font-size: ${pxToEm(14)};
   }
 `;

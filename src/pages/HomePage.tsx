@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, Typography } from "components";
+import { Button, Select, Typography } from "components";
 import { useQuery } from "@tanstack/react-query";
 import { getLandlordsProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
@@ -11,6 +11,7 @@ const HomePage = () => {
     <div>
       <Loader open={isLoading} />
       <Typography>Welcome</Typography>
+      <Button loading text="Hello" />
       <Select name="options" options={["a", "b", "c"]} />
     </div>
   );

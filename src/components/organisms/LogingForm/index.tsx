@@ -55,7 +55,7 @@ export const LoginForm = () => {
 
   return (
     <FormikProvider value={formik}>
-      <div>
+      <div style={{ width: "100%", maxWidth: 572 }}>
         <Typography.Heading variant="heading3">
           Login my ZENUS account
         </Typography.Heading>
