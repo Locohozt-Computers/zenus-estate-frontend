@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 import { Card, NotificationDropdown, Typography } from "components";
 import { formatNameToDisplay } from "utils/helpers";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import { MdLocationPin } from "react-icons/md";
 
 const HeaderStyles = styled.div`
@@ -40,37 +40,45 @@ const SearchStyle = styled.div`
   }
 `;
 
-const Search = ({
-  onChange,
-}: {
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}) => {
-  return (
-    <SearchStyle>
-      <MdLocationPin size={20} color="var(--blue)" />
-      <input
-        name="search"
-        onChange={onChange}
-        type="search"
-        placeholder="12 Idumota Housing Estate, Lekki."
-      />
-    </SearchStyle>
-  );
-};
+let timer: NodeJS.Timeout;
 
-export const HomeHeader = () => {
+const Search = React.memo(
+  ({ onSearch }: { onSearch: (val: string) => void }) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (onSearch && e.target.value) onSearch(e.target.value.trim());
+      }, 1000);
+    };
+
+    return (
+      <SearchStyle>
+        <MdLocationPin size={20} color="var(--blue)" />
+        <input
+          onChange={handleChange}
+          type="search"
+          placeholder="Search Location..."
+        />
+      </SearchStyle>
+    );
+  }
+);
+
+export const HomeHeader = ({ name }: { name: string }) => {
+  const makeSearch = useCallback(() => {}, []);
+
   return (
     <Card style={{ marginBottom: 16 }}>
       <HeaderStyles>
         <div>
           <Typography variant="heading4">
-            Welcome Back, {formatNameToDisplay("Daniel")}
+            Welcome Back {name && `, ${formatNameToDisplay(name)}`}
           </Typography>
           <Typography variant="bodyBig">
             Keep your environment clean, stay safe. 😷
           </Typography>
         </div>
-        <Search onChange={() => {}} />
+        <Search onSearch={makeSearch} />
         <div>
           <NotificationDropdown />
           <div>profile logo</div>
