@@ -43,7 +43,7 @@ const navSection1: NavType = [
 ];
 
 const navSection2: NavType = [
-  { label: "My Account", icon: "", route: ROUTES.myBills.fullPath },
+  { label: "My Account", icon: "", route: ROUTES.myAccount.fullPath },
   { label: "Contact Admin", icon: "", route: ROUTES.contactAdmin.fullPath },
   { label: "Estate Banks", icon: "", route: ROUTES.estateBanks.fullPath },
   { label: "Print Receipts", icon: "", route: ROUTES.printReceipt.fullPath },
@@ -76,30 +76,54 @@ const Hr = styled.div`
   margin: 10px 0;
 `;
 
+const Li = styled.li`
+  display: block;
+
+  .link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 30px;
+    margin: 23px 0;
+  }
+
+  .active {
+    background-color: var(--blue);
+    color: white;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+`;
+
 const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
   const [show, setShow] = useState(false);
 
   return (
-    <li>
-      <NavLink to={route}>
-        <span>{icon}</span>
-        <span>{label}</span>
+    <Li>
+      <NavLink
+        to={route}
+        className={({ isActive }) => (isActive ? "active link" : "link")}
+      >
+        <span>
+          <span>{icon}</span>
+          <span>{label}</span>
+        </span>
         {drop && !!drop.length && (
           <button type="button" onClick={() => setShow(!show)}>
             ^
           </button>
         )}
-        {show && drop && !!drop.length && (
-          <div>
-            {drop.map(({ label: l, route: r }) => (
-              <NavLink to={r}>
-                <span>{l}</span>
-              </NavLink>
-            ))}
-          </div>
-        )}
       </NavLink>
-    </li>
+      {show && drop && !!drop.length && (
+        <div>
+          {drop.map(({ label: l, route: r }) => (
+            <NavLink style={{ display: "block" }} to={r}>
+              <span>{l}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </Li>
   );
 };
 
@@ -129,14 +153,15 @@ export const Sidebar = () => {
           {navSection2.map((values) => (
             <NavBtn {...values} />
           ))}
-          <li>
+          <Li>
             <button
               type="button"
+              className="link"
               onClick={() => dispatch(authActions.logoutUser())}
             >
               logout
             </button>
-          </li>
+          </Li>
         </ul>
       </Nav>
     </Container>

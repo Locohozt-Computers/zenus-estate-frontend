@@ -62,7 +62,7 @@ function App() {
             element={<LazyReportEmergencyPage />}
           />
           <Route path={ROUTES.myWallet.path} element={<LazyTestPage />} />
-          <Route path={ROUTES.myBills.path} element={<LazyOtherPage />}>
+          <Route path={ROUTES.myBills.fullPath} element={<LazyOtherPage />}>
             <Route path={ROUTES.instantPay.path} element={<LazyOtherPage />} />
             <Route
               path={ROUTES.myBills.fullPath}

@@ -1,4 +1,5 @@
 import React, { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import { ReactComponent as Loader } from "assets/images/btn-loader.svg";
 import { ButtonLoader, ButtonWrapper } from "./style";
 
 interface ButtonProps extends PropsWithChildren {
@@ -22,7 +23,9 @@ export const Button = ({
     >
       {loading && (
         <ButtonLoader>
-          {typeof loading === "boolean" && "loading..."}
+          {typeof loading === "boolean" && (
+            <Loader style={{ width: 40, maxHeight: 40 }} />
+          )}
           {typeof loading === "object" && loading.state ? loading.loader : null}
         </ButtonLoader>
       )}
