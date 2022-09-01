@@ -33,6 +33,7 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
   const apiToken = useSelector(authSelectors.token);
 
   useEffect(() => {
+    // persist token in app
     if (apiToken && !getAuthorizationToken()) {
       setAuthorizationHeader(apiToken);
       setLoading(false);

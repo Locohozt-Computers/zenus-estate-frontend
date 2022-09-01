@@ -3,15 +3,23 @@ import { Card, NotificationDropdown, Typography } from "components";
 import { formatNameToDisplay } from "utils/helpers";
 import React, { ChangeEvent, useCallback } from "react";
 import { MdLocationPin } from "react-icons/md";
+import { pxToEm } from "utils";
 
 const HeaderStyles = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  //grid-template-columns: 1fr;
+  grid-template-areas: "text text account" "search search search";
   grid-gap: 40px;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 20px 40px;
+  padding: 10px 8px;
+
+  @media screen and (min-width: ${pxToEm(1200, false)}) {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "text search account";
+    padding: 20px 40px;
+  } ;
 `;
 
 const SearchStyle = styled.div`
@@ -52,7 +60,7 @@ const Search = React.memo(
     };
 
     return (
-      <SearchStyle>
+      <SearchStyle style={{ gridArea: "search" }}>
         <MdLocationPin size={20} color="var(--blue)" />
         <input
           onChange={handleChange}
@@ -70,7 +78,7 @@ export const HomeHeader = ({ name }: { name: string }) => {
   return (
     <Card style={{ marginBottom: 16 }}>
       <HeaderStyles>
-        <div>
+        <div style={{ gridArea: "text" }}>
           <Typography variant="heading4">
             Welcome Back {name && `, ${formatNameToDisplay(name)}`}
           </Typography>
@@ -79,7 +87,7 @@ export const HomeHeader = ({ name }: { name: string }) => {
           </Typography>
         </div>
         <Search onSearch={makeSearch} />
-        <div>
+        <div style={{ gridArea: "account" }}>
           <NotificationDropdown />
           <div>profile logo</div>
         </div>
