@@ -1,99 +1,73 @@
-import React, { useState } from "react";
+import React, { FC, SVGProps, useState } from "react";
 import { Typography } from "components/atoms";
-import styled from "styled-components/macro";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "app-constants";
 import { useDispatch } from "react-redux";
 import { authActions } from "store/reducers/auth/authDocSlice";
+import { RiDashboardFill, RiLogoutCircleFill } from "react-icons/ri";
+import { AppIcon } from "utils";
+import { IconType } from "react-icons";
+import { FaCoins } from "react-icons/fa";
+import {
+  IconCarEmergency,
+  IconCaretDown,
+  IconUser,
+  IconUserQuestion,
+  IoWallet,
+} from "assets/icons";
+import { AiFillPrinter, AiFillQuestionCircle } from "react-icons/ai";
+import { Container, Drop, Hr, Li, Logo, LogoutBtn, Nav } from "./styles";
 
 type NavType = Array<{
   label: string;
-  icon: string;
+  icon: IconType | FC<SVGProps<SVGSVGElement>>;
   route: string;
-  drop?: Omit<NavType, "drop">;
+  drop?: Array<{ label: string; route: string }>;
 }>;
 
 const navSection1: NavType = [
-  { label: "Home", icon: "", route: ROUTES.home.fullPath },
+  { label: "Home", icon: RiDashboardFill, route: ROUTES.home.fullPath },
   {
     label: "Report Emergency",
-    icon: "",
+    icon: IconCarEmergency,
     route: ROUTES.reportEmergency.fullPath,
   },
   {
     label: "My Bills",
-    icon: "",
+    icon: FaCoins,
     route: ROUTES.myBills.fullPath,
     drop: [
       {
         label: "Instant Payment",
-        icon: "",
         route: ROUTES.instantPay.fullPath,
-        drop: [],
       },
       {
         label: "Account Statements",
-        icon: "",
         route: ROUTES.accountStatements.fullPath,
-        drop: [],
       },
     ],
   },
-  { label: "My Wallet", icon: "", route: ROUTES.myWallet.fullPath },
+  { label: "My Wallet", icon: IoWallet, route: ROUTES.myWallet.fullPath },
 ];
 
 const navSection2: NavType = [
-  { label: "My Account", icon: "", route: ROUTES.myAccount.fullPath },
-  { label: "Contact Admin", icon: "", route: ROUTES.contactAdmin.fullPath },
-  { label: "Estate Banks", icon: "", route: ROUTES.estateBanks.fullPath },
-  { label: "Print Receipts", icon: "", route: ROUTES.printReceipt.fullPath },
+  { label: "My Account", icon: IconUser, route: ROUTES.myAccount.fullPath },
+  {
+    label: "Contact Admin",
+    icon: AiFillQuestionCircle,
+    route: ROUTES.contactAdmin.fullPath,
+  },
+  {
+    label: "Estate Banks",
+    icon: IconUserQuestion,
+    route: ROUTES.estateBanks.fullPath,
+  },
+  {
+    label: "Print Receipts",
+    icon: AiFillPrinter,
+    route: ROUTES.printReceipt.fullPath,
+  },
 ];
-
-const Container = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-`;
-
-const Logo = styled.div`
-  padding: 50px 10px 38px;
-  border-bottom: 1px solid var(--gray-2);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Nav = styled.nav`
-  overflow-y: auto;
-  height: calc(100vh - 180px);
-  > ul {
-  }
-`;
-
-const Hr = styled.div`
-  background-color: var(--gray-2);
-  height: 1px;
-  margin: 10px 0;
-`;
-
-const Li = styled.li`
-  display: block;
-
-  .link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 30px;
-    margin: 23px 0;
-  }
-
-  .active {
-    background-color: var(--blue);
-    color: white;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-  }
-`;
 
 const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
   const [show, setShow] = useState(false);
@@ -104,24 +78,55 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
         to={route}
         className={({ isActive }) => (isActive ? "active link" : "link")}
       >
-        <span>
-          <span>{icon}</span>
-          <span>{label}</span>
-        </span>
-        {drop && !!drop.length && (
-          <button type="button" onClick={() => setShow(!show)}>
-            ^
-          </button>
+        {({ isActive }) => (
+          <>
+            <span style={{ display: "flex", gap: 10 }}>
+              <span>
+                <AppIcon
+                  render={icon}
+                  style={{
+                    fontSize: 23,
+                    color: isActive ? "white" : "var(--med-gray)",
+                  }}
+                />
+              </span>
+              <Typography>{label}</Typography>
+            </span>
+            {drop && !!drop.length && (
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px 4px 4px 10px",
+                }}
+                type="button"
+                onClick={(e) => {
+                  setShow(!show);
+                  e.preventDefault();
+                }}
+              >
+                <AppIcon
+                  render={IconCaretDown}
+                  style={{
+                    color: isActive ? "white" : "var(--med-gray)",
+                    transform: `rotate(${!show ? -90 : 0}deg)`,
+                    transition: "all 0.5s",
+                  }}
+                />
+              </button>
+            )}
+          </>
         )}
       </NavLink>
       {show && drop && !!drop.length && (
-        <div>
+        <Drop>
           {drop.map(({ label: l, route: r }) => (
             <NavLink style={{ display: "block" }} to={r}>
-              <span>{l}</span>
+              <Typography size={14}>{l}</Typography>
             </NavLink>
           ))}
-        </div>
+        </Drop>
       )}
     </Li>
   );
@@ -154,13 +159,16 @@ export const Sidebar = () => {
             <NavBtn {...values} />
           ))}
           <Li>
-            <button
+            <LogoutBtn
               type="button"
               className="link"
               onClick={() => dispatch(authActions.logoutUser())}
             >
-              logout
-            </button>
+              <span>
+                <AppIcon size={23} render={RiLogoutCircleFill} />
+              </span>
+              <span>logout</span>
+            </LogoutBtn>
           </Li>
         </ul>
       </Nav>

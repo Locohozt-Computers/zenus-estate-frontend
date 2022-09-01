@@ -9,6 +9,7 @@ const DashboardStyling = styled.div`
 `;
 
 const ContentStyling = styled.main`
+  position: relative;
   padding: 20px;
   overflow-y: auto;
   background-color: var(--lighter-gray);

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useFormikContext } from "formik";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { AppIcon } from "utils";
 import { InputWrapper } from "./style";
 import { InputProps } from "./types";
 
@@ -39,7 +41,11 @@ export const Input = ({
               className="input-suffix"
               onClick={toggleShowPassword}
             >
-              {show ? "P" : "S"}
+              {show ? (
+                <AppIcon render={AiFillEye} />
+              ) : (
+                <AppIcon render={AiFillEyeInvisible} />
+              )}
             </button>
           ) : (
             suffix && <span className="input-suffix">{suffix}</span>

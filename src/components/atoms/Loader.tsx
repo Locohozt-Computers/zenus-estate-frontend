@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { Typography } from "components/atoms/Typography";
 
 const LoaderIconWrapper = styled.div`
@@ -50,8 +50,8 @@ export const LoaderIcon = () => {
   );
 };
 
-const LoaderWrapper = styled.div<{ absolute?: boolean }>`
-  z-index: 9000;
+const LoaderWrapper = styled.div<{ absolute?: boolean; fillUp?: boolean }>`
+  z-index: 1000;
   position: ${({ absolute }) => (absolute ? "absolute" : "fixed")};
   top: 0;
   bottom: 0;
@@ -63,17 +63,26 @@ const LoaderWrapper = styled.div<{ absolute?: boolean }>`
   background-color: #f7f7f752;
   width: 100%;
   height: 100%;
+
+  ${({ fillUp }) =>
+    fillUp &&
+    css`
+      width: 100%;
+      height: 100vh;
+    `}
 `;
 
 export const Loader = ({
   absolute,
   open,
+  fill,
 }: {
   absolute?: boolean;
   open: boolean;
+  fill?: boolean;
 }) => {
   return open ? (
-    <LoaderWrapper absolute={absolute}>
+    <LoaderWrapper fillUp={absolute && fill} absolute={absolute}>
       <LoaderIcon />
     </LoaderWrapper>
   ) : null;
