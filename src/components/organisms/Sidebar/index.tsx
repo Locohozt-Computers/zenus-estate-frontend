@@ -153,13 +153,13 @@ export const Sidebar = () => {
       <Nav>
         <ul>
           {navSection1.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn key={values.label} {...values} />
           ))}
         </ul>
         <Hr />
         <ul>
           {navSection2.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn key={values.label} {...values} />
           ))}
           <Li>
             <LogoutBtn
