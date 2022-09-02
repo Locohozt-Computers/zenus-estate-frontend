@@ -82,7 +82,7 @@ export class GetLandlordProfile {
 }
 
 export class GetProfile {
-  static Route = "/profile/:id";
+  static Route = "/profile";
 
   static Res: {
     status: number;

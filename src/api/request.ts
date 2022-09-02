@@ -20,13 +20,13 @@ const createClient = () => {
     delete appRequest.defaults.headers.common.Authorization;
   };
 
-  const requestFulfilled = (config: AxiosRequestConfig) => {
+  const onRequestOut = (config: AxiosRequestConfig) => {
     return config;
   };
-  const requestRejected = (error: AxiosError) => {
+  const onRequestRejected = (error: AxiosError) => {
     return Promise.reject(error);
   };
-  appRequest.interceptors.request.use(requestFulfilled, requestRejected);
+  appRequest.interceptors.request.use(onRequestOut, onRequestRejected);
 
   const responseFulfilled = (response: AxiosResponse) => {
     return response;

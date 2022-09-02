@@ -16,6 +16,7 @@ import {
   IoWallet,
 } from "assets/icons";
 import { AiFillPrinter, AiFillQuestionCircle } from "react-icons/ai";
+import { useQueryClient } from "@tanstack/react-query";
 import { Container, Drop, Hr, Li, Logo, LogoutBtn, Nav } from "./styles";
 
 type NavType = Array<{
@@ -133,6 +134,8 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
 };
 
 export const Sidebar = () => {
+  const queryClient = useQueryClient();
+
   const dispatch = useDispatch();
 
   return (
@@ -150,19 +153,22 @@ export const Sidebar = () => {
       <Nav>
         <ul>
           {navSection1.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn key={values.label} {...values} />
           ))}
         </ul>
         <Hr />
         <ul>
           {navSection2.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn key={values.label} {...values} />
           ))}
           <Li>
             <LogoutBtn
               type="button"
               className="link"
-              onClick={() => dispatch(authActions.logoutUser())}
+              onClick={() => {
+                dispatch(authActions.logoutUser());
+                queryClient.clear();
+              }}
             >
               <span>
                 <AppIcon size={23} render={RiLogoutCircleFill} />

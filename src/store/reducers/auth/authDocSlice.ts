@@ -38,13 +38,15 @@ export const authDocSlice = createSlice({
       return initialState;
     },
   },
-  extraReducers: () => {},
 });
 
 export const authActions = { ...authDocSlice.actions };
 
 export const authSelectors = {
   isAuth: (state: RootState) => state.auth.authenticated,
+  profileId: (state: RootState) => state.auth.user.profile_id,
+  userId: (state: RootState) => state.auth.user.user_id,
+  token: (state: RootState) => state.auth.user.token,
 };
 
 export default authDocSlice.reducer;
