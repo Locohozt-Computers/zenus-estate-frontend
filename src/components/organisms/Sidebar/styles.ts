@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { pxToEm } from "utils";
 
 export const Container = styled.div`
   display: grid;
@@ -68,4 +69,17 @@ export const LogoutBtn = styled.button`
   all: unset;
   width: 100%;
   cursor: pointer;
+`;
+
+export const LogoutBtnActions = styled.div`
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+
+  @media screen and (min-width: ${pxToEm(600)}) {
+    margin-top: 70px;
+    flex-direction: row;
+  }
 `;
