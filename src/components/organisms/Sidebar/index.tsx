@@ -1,5 +1,5 @@
 import React, { FC, SVGProps, useState } from "react";
-import { Typography } from "components/atoms";
+import { Button, Card, Modal, Typography } from "components/atoms";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "app-constants";
 import { useDispatch } from "react-redux";
@@ -17,7 +17,16 @@ import {
 } from "assets/icons";
 import { AiFillPrinter, AiFillQuestionCircle } from "react-icons/ai";
 import { useQueryClient } from "@tanstack/react-query";
-import { Container, Drop, Hr, Li, Logo, LogoutBtn, Nav } from "./styles";
+import {
+  Container,
+  Drop,
+  Hr,
+  Li,
+  Logo,
+  LogoutBtn,
+  LogoutBtnActions,
+  Nav,
+} from "./styles";
 
 type NavType = Array<{
   label: string;
@@ -134,9 +143,15 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
 };
 
 export const Sidebar = () => {
+  const [visible, setVisible] = useState(false);
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
+
+  const logoutUser = () => {
+    dispatch(authActions.logoutUser());
+    queryClient.clear();
+  };
 
   return (
     <Container>
@@ -165,10 +180,7 @@ export const Sidebar = () => {
             <LogoutBtn
               type="button"
               className="link"
-              onClick={() => {
-                dispatch(authActions.logoutUser());
-                queryClient.clear();
-              }}
+              onClick={() => setVisible(!visible)}
             >
               <span>
                 <AppIcon size={23} render={RiLogoutCircleFill} />
@@ -178,6 +190,19 @@ export const Sidebar = () => {
           </Li>
         </ul>
       </Nav>
+      <Modal visible={visible} maxWidth={620}>
+        <Card style={{ padding: "50px 70px" }}>
+          <Typography
+            variant="heading4"
+            content="Are you sure you want to log out?"
+            style={{ textAlign: "center" }}
+          />
+          <LogoutBtnActions>
+            <Button secondary text="Cancel" onClick={() => setVisible(false)} />
+            <Button text="Logout" onClick={logoutUser} />
+          </LogoutBtnActions>
+        </Card>
+      </Modal>
     </Container>
   );
 };

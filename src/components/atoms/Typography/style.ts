@@ -2,7 +2,7 @@
 import styled, { css } from "styled-components/macro";
 import { pxToEm } from "utils";
 import { cssObjectToString } from "utils/helpers";
-import { PropsWithChildren, ReactNode } from "react";
+import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 
 export type TextColor =
   | "blue"
@@ -23,7 +23,8 @@ export type TextVariant =
   | "helperText"
   | "subtitle";
 
-export interface TextProps extends PropsWithChildren {
+type Text = HTMLAttributes<HTMLParagraphElement> & PropsWithChildren;
+export interface TextProps extends Text {
   content?: string | number | ReactNode;
   variant?: TextVariant;
   textColor?: TextColor;
