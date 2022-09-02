@@ -31,6 +31,7 @@ export interface TextProps extends Text {
   color?: string | TextColor;
   size?: number;
   weight?: number;
+  className?: string;
 }
 
 const setVariant = (variant: TextVariant) => {

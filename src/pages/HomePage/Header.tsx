@@ -4,6 +4,8 @@ import { formatNameToDisplay } from "utils/helpers";
 import React, { ChangeEvent, useCallback } from "react";
 import { MdLocationPin } from "react-icons/md";
 import { pxToEm } from "utils";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import { useOnClickOutside } from "hooks";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -24,6 +26,8 @@ const HeaderStyles = styled.div`
 
 const SearchStyle = styled.div`
   position: relative;
+  max-width: 535px;
+
   > svg {
     position: absolute;
     display: flex;
@@ -45,6 +49,42 @@ const SearchStyle = styled.div`
     &:focus {
       border: 1px solid var(--blue);
     }
+  }
+`;
+
+const AccountDiv = styled.div`
+  position: relative;
+  display: grid;
+  grid-area: account;
+  grid-auto-flow: column;
+  gap: 30px;
+  align-items: center;
+`;
+
+const AccountDrop = styled.button`
+  position: relative;
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  > img {
+    border-radius: 22.5px;
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+  }
+`;
+
+const Drop = styled.div`
+  position: absolute;
+  top: 65px;
+  left: 0;
+
+  > div {
+    box-shadow: 2px 5px 10px 1px #00000026;
   }
 `;
 
@@ -73,13 +113,15 @@ const Search = React.memo(
 );
 
 export const HomeHeader = ({ name }: { name: string }) => {
+  const { ref, visible, setVisible } = useOnClickOutside(false);
+
   const makeSearch = useCallback(() => {}, []);
 
   return (
     <Card style={{ marginBottom: 16 }}>
       <HeaderStyles>
-        <div style={{ gridArea: "text" }}>
-          <Typography variant="heading4">
+        <div style={{ gridArea: "text", maxWidth: 400 }}>
+          <Typography variant="heading4" className="text-truncate_2">
             Welcome Back {name && `, ${formatNameToDisplay(name)}`}
           </Typography>
           <Typography variant="bodyBig">
@@ -87,10 +129,20 @@ export const HomeHeader = ({ name }: { name: string }) => {
           </Typography>
         </div>
         <Search onSearch={makeSearch} />
-        <div style={{ gridArea: "account" }}>
+        <AccountDiv>
           <NotificationDropdown />
-          <div>profile logo</div>
-        </div>
+          <div style={{ position: "relative" }}>
+            <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
+              <AiOutlineCaretDown size={20} color="var(--gray)" />
+              <img src="https://picsum.photos/200/300" alt="" />
+              {visible && (
+                <Drop>
+                  <Card>YYYY</Card>
+                </Drop>
+              )}
+            </AccountDrop>
+          </div>
+        </AccountDiv>
       </HeaderStyles>
     </Card>
   );
