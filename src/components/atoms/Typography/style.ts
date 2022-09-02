@@ -30,6 +30,7 @@ export interface TextProps extends PropsWithChildren {
   color?: string | TextColor;
   size?: number;
   weight?: number;
+  className?: string;
 }
 
 const setVariant = (variant: TextVariant) => {

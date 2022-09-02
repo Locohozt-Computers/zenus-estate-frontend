@@ -12,12 +12,7 @@ const HomePage = () => {
   return (
     <>
       <Loader absolute open={isLoading} />
-      <HomeHeader
-        name={
-          (data?.data?.data.tenant_name ||
-            data?.data?.data.landlord_name) as string
-        }
-      />
+      <HomeHeader name={(data?.tenant_name || data?.landlord_name) as string} />
       <DashboardContent>
         <Card>
           <Typography>Welcome</Typography>
