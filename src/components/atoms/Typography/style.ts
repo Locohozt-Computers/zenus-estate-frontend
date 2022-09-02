@@ -50,6 +50,7 @@ const setVariant = (variant: TextVariant) => {
       return cssObjectToString({
         fontWeight: 500,
         fontSize: pxToEm(28),
+        color: "var(--blue)",
       });
     default:
       return "";

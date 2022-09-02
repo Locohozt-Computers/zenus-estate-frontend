@@ -6,6 +6,11 @@ const DashboardStyling = styled.div`
   display: grid;
   grid-template-columns: minmax(auto, 282px) 1fr;
   height: 100vh;
+
+  .dashboard-container {
+    width: 100%;
+    max-width: 1120px;
+  }
 `;
 
 const ContentStyling = styled.main`
@@ -28,4 +33,8 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
       <ContentStyling>{children}</ContentStyling>
     </DashboardStyling>
   );
+};
+
+export const DashboardContent = ({ children }: PropsWithChildren) => {
+  return <div className="dashboard-container">{children}</div>;
 };
