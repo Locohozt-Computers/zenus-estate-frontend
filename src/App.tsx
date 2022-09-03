@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { PageLoad } from "components/atoms/Loader";
 import { ROUTES } from "app-constants";
 import LoginPage from "pages/LoginPage";
+import InstantPayPage from "pages/InstantPayPage";
 import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
@@ -12,7 +13,7 @@ const LazyReportEmergencyPage = React.lazy(
   () => import("pages/ReportEmergencyPage")
 );
 const LazyTestPage = React.lazy(() => import("pages/TestPage"));
-const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
+const LazyOtherPage = React.lazy(() => import("pages/InstantPayPage"));
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -67,7 +68,7 @@ function App() {
             element={<Navigate replace to={ROUTES.instantPay.path} />}
           />
           <Route path={ROUTES.myBills.path} element={<LazyOtherPage />}>
-            <Route path={ROUTES.instantPay.path} element={<LazyOtherPage />} />
+            <Route path={ROUTES.instantPay.path} element={<InstantPayPage />} />
             <Route
               path={ROUTES.accountStatements.path}
               element={<LazyOtherPage />}

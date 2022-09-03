@@ -78,6 +78,7 @@ export const FormikInput = ({ name, label, ...rest }: InputProps) => {
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
       error={hasError}
+      readOnly
     />
   );
 };

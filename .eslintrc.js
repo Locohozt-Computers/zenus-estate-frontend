@@ -28,6 +28,28 @@ module.exports = {
       "error",
       { ignorePropertyModificationsFor: ["store"] },
     ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"],
+        },
+      },
+    ],
+    "jsx-a11y/label-has-for": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"],
+        },
+      },
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -75,7 +97,7 @@ module.exports = {
     "consistent-return": "off",
     "react/prop-types": "off",
     "react/require-default-props": "off",
-    "max-classes-per-file": "off"
+    "max-classes-per-file": "off",
   },
   settings: {
     "import/parsers": {

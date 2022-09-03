@@ -36,6 +36,14 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
       border: 1px solid var(--blue);
     }
   }
+  input,
+  select {
+    &::placeholder {
+      font-weight: 500;
+      font-size: 17px;
+      color: #909090;
+    }
+  }
 
   button.input-suffix {
     all: unset;
