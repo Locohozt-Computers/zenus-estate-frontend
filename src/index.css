@@ -34,3 +34,8 @@ a {
   justify-content: center;
   align-items: center;
 }
+
+button {
+  background: none;
+  border: none;
+}

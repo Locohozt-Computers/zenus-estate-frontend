@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Typography, Input, Button } from "components/atoms";
-// import { IoWallet } from "react-icons/io5";
+import { Typography, Button } from "components/atoms";
 import { IoWallet } from "assets/icons";
+import mastercard from "assets/images/logos_mastercard.png";
 
 type Props = {
   page: number;
@@ -12,29 +12,35 @@ type Props = {
 const StyledDiv = styled.div`
   width: 100%;
   height: 100%;
-  padding: 76px 40px 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   .paymentMethod {
-    width: 570px;
+    width: 100%;
     height: 58px;
-    background: #f7f7f7;
+    background: var(--light-gray);
     border-radius: 7px;
-    border-radius: 16px;
     font-size: 17px;
     padding-left: 33px;
-    color: #909090;
-    margin-top: 40px;
+    color: var(--med-grey);
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: calc();
+    margin: 20px 0;
   }
+  .paymentMethod:hover,
+  .paymentMethod:focus,
+  .paymentMethod:active {
+    color: var(--blue);
+    background: #f5f8ff;
+    border: 1px solid var(--blue);
+    outline: none !important;
+  }
+
   .balance {
-    width: 570px;
+    width: 100%;
     height: 28px;
     display: flex;
     justify-content: space-between;
@@ -42,29 +48,42 @@ const StyledDiv = styled.div`
   }
 `;
 export const PayOption = ({ page, setPage }: Props) => {
+  const selectMethod = () => {};
   return (
     <StyledDiv>
-      <span style={{ alignSelf: "flex-start" }}>
+      <span style={{ alignSelf: "flex-start", marginBottom: "37px" }}>
         <Typography
           textColor="blue"
           size={23}
           weight={500}
-          content=" Pay your bills in few minuites"
+          content="Choose Your Prefered Payment Method"
         />
       </span>
-      <div className="paymentMethod">
-        <IoWallet fill="var(--blue)" />
+      <button className="paymentMethod" type="button" onClick={selectMethod}>
+        <IoWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
         My Zenus Wallet Balance
-      </div>
-      <div className="paymentMethod">Pay with Card or Bank Transfer</div>
+      </button>
+      <button className="paymentMethod" type="button" onClick={selectMethod}>
+        <img
+          src={mastercard}
+          alt="logos_mastercard"
+          style={{ marginRight: "12px" }}
+        />
+        Pay with Card or Bank Transfer
+      </button>
       <div className="balance">
         <span>
-          <IoWallet fill="var(--blue)" />
+          <IoWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
           Wallet Balance
         </span>
         <span>N300000</span>
       </div>
-      <Button text="Next" type="submit" onClick={() => setPage(page + 1)} />
+      <Button
+        text="Next"
+        type="submit"
+        onClick={() => setPage(page + 1)}
+        style={{ marginTop: "130px" }}
+      />
     </StyledDiv>
   );
 };

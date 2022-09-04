@@ -15,7 +15,6 @@ import * as yup from "yup";
 const StyledForm = styled.form`
   width: 100%;
   height: 100%;
-  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,21 +45,24 @@ export const InstantForm = ({ page, setPage }: Props) => {
             textColor="blue"
             size={23}
             weight={500}
-            content=" Pay your bills in few minuites"
+            content=" Pay your bills in few minutes"
           />
         </span>
-        <FormikInput
-          color="white"
-          type="text"
-          label="Block Number"
-          name="block"
-          placeholder="12 Okue Street, Okota."
-        />
+        <InputWrapper>
+          <FormikInput
+            color="white"
+            type="text"
+            label="Block Number"
+            name="block"
+            placeholder="12 Okue Street, Okota."
+          />
+        </InputWrapper>
         <FormikSelect
           name="paymentSelect"
           placeholder="Service Charge Fee"
           options={["2", "abc"]}
           label="Payment type"
+          width={57}
         >
           <option value="" disabled selected hidden>
             Choose a drink
@@ -72,7 +74,12 @@ export const InstantForm = ({ page, setPage }: Props) => {
           name="block"
           value={200000}
           readOnly
-          style={{ color: "var(--blue)", fontWeight: "500", fontSize: " 17px" }}
+          style={{
+            color: "var(--blue)",
+            fontWeight: "500",
+            fontSize: " 17px",
+            width: "572px",
+          }}
         />
         <Button text="Next" type="submit" onClick={() => setPage(page + 1)} />
       </StyledForm>
