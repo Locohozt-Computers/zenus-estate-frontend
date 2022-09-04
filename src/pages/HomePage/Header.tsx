@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 import { Card, NotificationDropdown, Typography } from "components";
-import { formatNameToDisplay } from "utils/helpers";
+import { formatNameToDisplay, getInitials } from "utils/helpers";
 import React, { ChangeEvent, useCallback } from "react";
 import { MdLocationPin } from "react-icons/md";
 import { pxToEm } from "utils";
@@ -70,11 +70,16 @@ const AccountDrop = styled.button`
   justify-content: space-between;
   gap: 10px;
 
-  > img {
+  .initials {
     border-radius: 22.5px;
     width: 45px;
     height: 45px;
     object-fit: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray);
   }
 `;
 
@@ -134,7 +139,16 @@ export const HomeHeader = ({ name }: { name: string }) => {
           <div style={{ position: "relative" }}>
             <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
               <AiOutlineCaretDown size={20} color="var(--gray)" />
-              <img src="https://picsum.photos/200/300" alt="" />
+              {/* <img */}
+              {/*  className="initials" */}
+              {/*  src="https://picsum.photos/200/300" */}
+              {/*  alt={name} */}
+              {/* /> */}
+              <div className="initials" aria-label={`name initial for ${name}`}>
+                <Typography color="white" weight={600} size={18}>
+                  {getInitials(name)}
+                </Typography>
+              </div>
               {visible && (
                 <Drop>
                   <Card>YYYY</Card>

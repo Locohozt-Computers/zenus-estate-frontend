@@ -17,7 +17,7 @@ export const Button = ({
   return (
     <ButtonWrapper
       btnDisable={!!loading}
-      aria-disabled={!!loading}
+      aria-label={loading ? "loading" : undefined}
       type="button"
       {...rest}
     >

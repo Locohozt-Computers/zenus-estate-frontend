@@ -54,6 +54,12 @@ const setVariant = (variant: TextVariant) => {
         fontSize: pxToEm(28),
         color: "var(--blue)",
       });
+    case "heading5":
+      return cssObjectToString({
+        fontWeight: 500,
+        fontSize: pxToEm(23),
+        color: "var(--blue)",
+      });
     default:
       return "";
   }
