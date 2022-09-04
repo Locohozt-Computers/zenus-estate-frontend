@@ -146,3 +146,13 @@ export class GetAllEmergencies {
     data: [];
   };
 }
+
+export class GetOustandingBalance {
+  static Route = "/user-levy-type-balance/1";
+
+  static Res: {
+    status: number;
+    message: string;
+    data: [];
+  };
+}

@@ -1,5 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { InputWrapper } from "components/atoms/Input/style";
+import { FormikProvider, useFormik } from "formik";
+import { VALIDATIONS } from "app-constants";
+import * as yup from "yup";
+import { getOustandingBalance } from "pages/request";
+import { useQuery } from "@tanstack/react-query";
 import {
   Input,
   Button,
@@ -7,10 +13,6 @@ import {
   FormikSelect,
   Typography,
 } from "components/atoms";
-import { InputWrapper } from "components/atoms/Input/style";
-import { FormikProvider, useFormik } from "formik";
-import { VALIDATIONS } from "app-constants";
-import * as yup from "yup";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -22,7 +24,7 @@ const StyledForm = styled.form`
 `;
 const validationSchema = yup.object({
   block: VALIDATIONS.address,
-  paymentSelect: VALIDATIONS.password,
+  paymentSelect: VALIDATIONS.select,
 });
 
 type Props = {
@@ -32,11 +34,13 @@ type Props = {
 
 export const InstantForm = ({ page, setPage }: Props) => {
   const formik = useFormik({
-    initialValues: { block: "12 Okue Street, Okota.", paymentSelect: "" },
+    initialValues: { block: "", paymentSelect: "" },
     validationSchema,
     onSubmit: (values) => {},
   });
 
+  const { data } = useQuery(["getOustandingBalance"], getOustandingBalance);
+  console.log(data);
   return (
     <FormikProvider value={formik}>
       <StyledForm onSubmit={formik.handleSubmit} className="form-section">
@@ -60,7 +64,7 @@ export const InstantForm = ({ page, setPage }: Props) => {
         <FormikSelect
           name="paymentSelect"
           placeholder="Service Charge Fee"
-          options={["2", "abc"]}
+          options={["Card", "Wallet"]}
           label="Payment type"
           width={57}
         >

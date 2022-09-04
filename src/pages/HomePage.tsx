@@ -6,7 +6,7 @@ import { Loader } from "components/atoms/Loader";
 
 const HomePage = () => {
   const { isLoading } = useQuery(["getLandlordsProfile"], getLandlordsProfile);
-
+  console.log(isLoading);
   return (
     <>
       <Loader absolute open={isLoading} />
