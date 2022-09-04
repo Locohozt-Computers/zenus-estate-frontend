@@ -7,6 +7,7 @@ import InstantPayPage from "pages/InstantPayPage";
 import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
+import NotFoundPage from "pages/NotFoundPage";
 
 const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
@@ -14,6 +15,7 @@ const LazyReportEmergencyPage = React.lazy(
 );
 const LazyTestPage = React.lazy(() => import("pages/TestPage"));
 const LazyOtherPage = React.lazy(() => import("pages/InstantPayPage"));
+const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -79,6 +81,10 @@ function App() {
           <Route path={ROUTES.estateBanks.path} element={<LazyOtherPage />} />
           <Route path={ROUTES.contactAdmin.path} element={<LazyOtherPage />} />
         </Route>
+        {process.env.NODE_ENV === "development" && (
+          <Route path={ROUTES.playground.path} element={<LazyPlayPage />} />
+        )}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );

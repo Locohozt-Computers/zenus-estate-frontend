@@ -6,6 +6,7 @@
   --med-gray: #909090;
   --gray: #b7b7b7;
   --gray-2: #ededed;
+  --gray-3: #e8e8e8;
   --light-gray: #f7f7f7;
   --lighter-gray: #fbfbfb;
   --pink: #ff006e;
@@ -29,6 +30,10 @@ a {
   font-family: inherit;
 }
 
+input {
+  font-family: inherit;
+}
+
 .center-contents {
   display: flex;
   justify-content: center;
@@ -38,4 +43,39 @@ a {
 button {
   background: none;
   border: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.text-truncate {
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-truncate_2 {
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-truncate_3 {
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
 }

@@ -33,18 +33,24 @@ export const authDocSlice = createSlice({
       state.user.token = action.payload.auth.token;
       state.user.profile_id = action.payload.profile.profile_id;
       state.user.user_id = action.payload.profile.user_id;
+      // watch for redirect in url
+      const query = new URLSearchParams(window.location.search);
+      const url = query.get("redirect");
+      if (url) window.location.replace(url);
     },
     logoutUser: () => {
       return initialState;
     },
   },
-  extraReducers: () => {},
 });
 
 export const authActions = { ...authDocSlice.actions };
 
 export const authSelectors = {
   isAuth: (state: RootState) => state.auth.authenticated,
+  profileId: (state: RootState) => state.auth.user.profile_id,
+  userId: (state: RootState) => state.auth.user.user_id,
+  token: (state: RootState) => state.auth.user.token,
 };
 
 export default authDocSlice.reducer;

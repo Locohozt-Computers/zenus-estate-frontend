@@ -1,0 +1,163 @@
+import styled from "styled-components/macro";
+import { Card, NotificationDropdown, Typography } from "components";
+import { formatNameToDisplay, getInitials } from "utils/helpers";
+import React, { ChangeEvent, useCallback } from "react";
+import { MdLocationPin } from "react-icons/md";
+import { pxToEm } from "utils";
+import { AiOutlineCaretDown } from "react-icons/ai";
+import { useOnClickOutside } from "hooks";
+
+const HeaderStyles = styled.div`
+  display: grid;
+  //grid-template-columns: 1fr;
+  grid-template-areas: "text text account" "search search search";
+  grid-gap: 40px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 8px;
+
+  @media screen and (min-width: ${pxToEm(1200, false)}) {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "text search account";
+    padding: 20px 40px;
+  } ;
+`;
+
+const SearchStyle = styled.div`
+  position: relative;
+  max-width: 535px;
+
+  > svg {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    left: 25px;
+  }
+  > input {
+    border-radius: 8px;
+    border: 1px solid var(--gray-3);
+    padding: 18px 20px 18px 50px;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+
+    &:hover {
+      border: 1px solid var(--light-blue);
+    }
+    &:focus {
+      border: 1px solid var(--blue);
+    }
+  }
+`;
+
+const AccountDiv = styled.div`
+  position: relative;
+  display: grid;
+  grid-area: account;
+  grid-auto-flow: column;
+  gap: 30px;
+  align-items: center;
+`;
+
+const AccountDrop = styled.button`
+  position: relative;
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  .initials {
+    border-radius: 22.5px;
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray);
+  }
+`;
+
+const Drop = styled.div`
+  position: absolute;
+  top: 65px;
+  left: 0;
+
+  > div {
+    box-shadow: 2px 5px 10px 1px #00000026;
+  }
+`;
+
+let timer: NodeJS.Timeout;
+
+const Search = React.memo(
+  ({ onSearch }: { onSearch: (val: string) => void }) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (onSearch && e.target.value) onSearch(e.target.value.trim());
+      }, 1000);
+    };
+
+    return (
+      <SearchStyle style={{ gridArea: "search" }}>
+        <MdLocationPin size={20} color="var(--blue)" />
+        <input
+          onChange={handleChange}
+          type="search"
+          placeholder="Search Location..."
+        />
+      </SearchStyle>
+    );
+  }
+);
+
+export const HomeHeader = ({ name }: { name: string }) => {
+  const { ref, visible, setVisible } = useOnClickOutside(false);
+
+  const makeSearch = useCallback(() => {}, []);
+
+  return (
+    <Card style={{ marginBottom: 16 }}>
+      <HeaderStyles>
+        <div style={{ gridArea: "text", maxWidth: 400 }}>
+          <Typography variant="heading4" className="text-truncate_2">
+            Welcome Back {name && `, ${formatNameToDisplay(name)}`}
+          </Typography>
+          <Typography variant="bodyBig">
+            Keep your environment clean, stay safe. 😷
+          </Typography>
+        </div>
+        <Search onSearch={makeSearch} />
+        <AccountDiv>
+          <NotificationDropdown />
+          <div style={{ position: "relative" }}>
+            <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
+              <AiOutlineCaretDown size={20} color="var(--gray)" />
+              {/* <img */}
+              {/*  className="initials" */}
+              {/*  src="https://picsum.photos/200/300" */}
+              {/*  alt={name} */}
+              {/* /> */}
+              <div className="initials" aria-label={`name initial for ${name}`}>
+                <Typography color="white" weight={600} size={18}>
+                  {getInitials(name)}
+                </Typography>
+              </div>
+              {visible && (
+                <Drop>
+                  <Card>YYYY</Card>
+                </Drop>
+              )}
+            </AccountDrop>
+          </div>
+        </AccountDiv>
+      </HeaderStyles>
+    </Card>
+  );
+};

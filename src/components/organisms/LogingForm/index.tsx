@@ -7,8 +7,6 @@ import * as yup from "yup";
 import { ROUTES, VALIDATIONS } from "app-constants";
 import { authActions } from "store/reducers/auth/authDocSlice";
 import { useDispatch } from "react-redux";
-import { netErrorHandler, notification } from "services";
-import { AxiosError } from "axios";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
 import { Link } from "react-router-dom";
@@ -45,9 +43,6 @@ export const LoginForm = () => {
       mutate(values, {
         onSuccess: (response) => {
           dispatch(authUser(response));
-        },
-        onError: (err) => {
-          notification.error(netErrorHandler(err as AxiosError));
         },
       });
     },

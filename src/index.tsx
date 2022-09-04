@@ -11,7 +11,15 @@ import { Toaster } from "react-hot-toast";
 import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -24,7 +32,7 @@ root.render(
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
             <App />
-            <Toaster position="bottom-right" reverseOrder={false} />
+            <Toaster position="top-right" reverseOrder={false} />
             <ReactQueryDevtools />
           </QueryClientProvider>
         </BrowserRouter>

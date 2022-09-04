@@ -38,6 +38,7 @@ export const Input = ({
           {type === "password" ? (
             <button
               type="button"
+              aria-label={`${show ? "hide" : "show"} password`}
               className="input-suffix"
               onClick={toggleShowPassword}
             >

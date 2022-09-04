@@ -1,5 +1,5 @@
 import React, { FC, SVGProps, useState } from "react";
-import { Typography } from "components/atoms";
+import { Button, Card, Modal, Typography } from "components/atoms";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "app-constants";
 import { useDispatch } from "react-redux";
@@ -13,10 +13,21 @@ import {
   IconCaretDown,
   IconUser,
   IconUserQuestion,
-  IoWallet,
+  IconWallet,
 } from "assets/icons";
 import { AiFillPrinter, AiFillQuestionCircle } from "react-icons/ai";
-import { Container, Drop, Hr, Li, Logo, LogoutBtn, Nav } from "./styles";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  Container,
+  Drop,
+  Hr,
+  Li,
+  Logo,
+  LogoutBtn,
+  LogoutBtnActions,
+  Nav,
+  NavContent,
+} from "./styles";
 
 type NavType = Array<{
   label: string;
@@ -47,7 +58,7 @@ const navSection1: NavType = [
       },
     ],
   },
-  { label: "My Wallet", icon: IoWallet, route: ROUTES.myWallet.fullPath },
+  { label: "My Wallet", icon: IconWallet, route: ROUTES.myWallet.fullPath },
 ];
 
 const navSection2: NavType = [
@@ -69,7 +80,21 @@ const navSection2: NavType = [
   },
 ];
 
-const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
+if (process.env.NODE_ENV === "development") {
+  navSection2.push({
+    label: "PlayGround",
+    icon: IconUser,
+    route: ROUTES.playground.path,
+  });
+}
+
+const NavBtn = ({
+  label,
+  icon,
+  route,
+  drop,
+  open,
+}: NavType[0] & { open: boolean }) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -80,7 +105,7 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
       >
         {({ isActive }) => (
           <>
-            <span style={{ display: "flex", gap: 10 }}>
+            <NavContent open={open}>
               <span>
                 <AppIcon
                   render={icon}
@@ -90,8 +115,8 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
                   }}
                 />
               </span>
-              <Typography>{label}</Typography>
-            </span>
+              <Typography className="label">{label}</Typography>
+            </NavContent>
             {drop && !!drop.length && (
               <button
                 style={{
@@ -132,12 +157,20 @@ const NavBtn = ({ label, icon, route, drop }: NavType[0]) => {
   );
 };
 
-export const Sidebar = () => {
+export const Sidebar = ({ open }: { open: boolean }) => {
+  const [visible, setVisible] = useState(false);
+  const queryClient = useQueryClient();
+
   const dispatch = useDispatch();
+
+  const logoutUser = () => {
+    dispatch(authActions.logoutUser());
+    queryClient.clear();
+  };
 
   return (
     <Container>
-      <Logo>
+      <Logo open={open}>
         <img
           src="/apple-touch-icon.png"
           style={{ width: 36, height: 36 }}
@@ -150,19 +183,20 @@ export const Sidebar = () => {
       <Nav>
         <ul>
           {navSection1.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn open={open} key={values.label} {...values} />
           ))}
         </ul>
         <Hr />
         <ul>
           {navSection2.map((values) => (
-            <NavBtn {...values} />
+            <NavBtn open={open} key={values.label} {...values} />
           ))}
-          <Li>
+          <Li open={open}>
             <LogoutBtn
               type="button"
               className="link"
-              onClick={() => dispatch(authActions.logoutUser())}
+              onClick={() => setVisible(!visible)}
+              open={open}
             >
               <span>
                 <AppIcon size={23} render={RiLogoutCircleFill} />
@@ -172,6 +206,19 @@ export const Sidebar = () => {
           </Li>
         </ul>
       </Nav>
+      <Modal visible={visible} maxWidth={620}>
+        <Card style={{ padding: "50px 70px" }}>
+          <Typography
+            variant="heading4"
+            content="Are you sure you want to log out?"
+            style={{ textAlign: "center" }}
+          />
+          <LogoutBtnActions>
+            <Button secondary text="Cancel" onClick={() => setVisible(false)} />
+            <Button text="Logout" onClick={logoutUser} />
+          </LogoutBtnActions>
+        </Card>
+      </Modal>
     </Container>
   );
 };

@@ -2,7 +2,7 @@
 import styled, { css } from "styled-components/macro";
 import { pxToEm } from "utils";
 import { cssObjectToString } from "utils/helpers";
-import { PropsWithChildren, ReactNode } from "react";
+import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 
 export type TextColor =
   | "blue"
@@ -23,13 +23,15 @@ export type TextVariant =
   | "helperText"
   | "subtitle";
 
-export interface TextProps extends PropsWithChildren {
+type Text = HTMLAttributes<HTMLParagraphElement> & PropsWithChildren;
+export interface TextProps extends Text {
   content?: string | number | ReactNode;
   variant?: TextVariant;
   textColor?: TextColor;
   color?: string | TextColor;
   size?: number;
   weight?: number;
+  className?: string;
 }
 
 const setVariant = (variant: TextVariant) => {
@@ -50,6 +52,13 @@ const setVariant = (variant: TextVariant) => {
       return cssObjectToString({
         fontWeight: 500,
         fontSize: pxToEm(28),
+        color: "var(--blue)",
+      });
+    case "heading5":
+      return cssObjectToString({
+        fontWeight: 500,
+        fontSize: pxToEm(23),
+        color: "var(--blue)",
       });
     default:
       return "";
