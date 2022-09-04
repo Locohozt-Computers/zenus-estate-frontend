@@ -60,6 +60,12 @@ const setVariant = (variant: TextVariant) => {
         fontSize: pxToEm(23),
         color: "var(--blue)",
       });
+    case "subtitle":
+      return cssObjectToString({
+        fontWeight: 500,
+        fontSize: pxToEm(17),
+        color: "var(--black)",
+      });
     default:
       return "";
   }
