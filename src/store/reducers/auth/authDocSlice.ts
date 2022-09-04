@@ -33,6 +33,10 @@ export const authDocSlice = createSlice({
       state.user.token = action.payload.auth.token;
       state.user.profile_id = action.payload.profile.profile_id;
       state.user.user_id = action.payload.profile.user_id;
+      // watch for redirect in url
+      const query = new URLSearchParams(window.location.search);
+      const url = query.get("redirect");
+      if (url) window.location.replace(url);
     },
     logoutUser: () => {
       return initialState;
