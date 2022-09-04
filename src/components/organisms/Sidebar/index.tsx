@@ -80,6 +80,14 @@ const navSection2: NavType = [
   },
 ];
 
+if (process.env.NODE_ENV === "development") {
+  navSection2.push({
+    label: "PlayGround",
+    icon: IconUser,
+    route: ROUTES.playground.path,
+  });
+}
+
 const NavBtn = ({
   label,
   icon,

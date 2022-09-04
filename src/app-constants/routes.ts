@@ -47,4 +47,8 @@ export const ROUTES = {
     path: "printReceipt",
     fullPath: "/printReceipt",
   },
+  playground: {
+    path: "play",
+    fullPath: "/play",
+  },
 };

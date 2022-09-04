@@ -175,21 +175,39 @@ export class PostBillPayment {
   };
 }
 
+interface EmergencyTypesI {
+  id: number;
+  name: string;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export class GetAllEmergencies {
   static Route = "/emergency";
 
   static Res: {
     status: number;
     message: string;
-    data: string[];
+    data: {
+      id: number;
+      user_id: number;
+      emergency_type_id: number;
+      branch_id: number;
+      description: string;
+      created_at: string;
+      updated_at: string;
+      emergency_type: EmergencyTypesI;
+    }[];
   };
 }
+// .concat(["add new", "add new", "add new"])
 
 export class PostCreateEmergency {
   static Route = "/emergency";
 
   static Body: {
-    emergency_type_id: number;
+    emergency_type_id?: number;
     description: string;
   };
 
@@ -234,12 +252,6 @@ export class GetAllEmergenciesTypes {
   static Res: {
     status: number;
     message: string;
-    data: {
-      id: number;
-      name: string;
-      status: boolean;
-      created_at: string;
-      updated_at: string;
-    }[];
+    data: EmergencyTypesI[];
   };
 }

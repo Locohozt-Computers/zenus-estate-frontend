@@ -5,6 +5,7 @@ export const ButtonWrapper = styled.button<{
   btnDisable: boolean;
   secondary?: boolean;
   size?: string;
+  disabled?: boolean;
 }>`
   all: unset;
   cursor: pointer;
@@ -31,6 +32,13 @@ export const ButtonWrapper = styled.button<{
   &:active {
     transform: scale(0.98);
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+      opacity: 0.5;
+    `}
 `;
 
 export const ButtonLoader = styled.div`

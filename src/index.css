@@ -40,6 +40,14 @@ input {
   align-items: center;
 }
 
+.text-center {
+  text-align: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
 .text-truncate {
   display: block;
   display: -webkit-box;
