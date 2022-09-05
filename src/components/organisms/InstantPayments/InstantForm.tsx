@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
@@ -9,6 +9,11 @@ import {
   paymentType,
 } from "pages/request";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  paymentSelectors,
+  paymentActions,
+} from "store/reducers/payment/paymentSlice";
 import { Input, Button, FormikSelect, Typography } from "components/atoms";
 
 const StyledForm = styled.form`
@@ -40,15 +45,21 @@ export const InstantForm = ({ page, setPage }: Props) => {
 
   // requests
   const address = useQuery(["getAdress"], getUserProfile).data?.address;
-  const PaymentTypes = useQuery(["getPaymentType"], paymentType).data;
   const balance = useQuery(["getOustandingBalance"], getOustandingBalance).data
     ?.data.data.user_levy_outstanding_balance;
 
-  const newPaymentTypes = PaymentTypes?.map((item) => {
-    return item.special_name;
-  });
+  const paymentList = useSelector(paymentSelectors.paymentType);
+  console.log(paymentList);
+  const dispatch = useDispatch();
+  // const { setPaymentType } = paymentActions;
 
-  // console.log();
+  //   useEffect(() => {
+  //     dispatch(setPaymentType( useQuery(["getPaymentType"], paymentType).data
+  // ));
+
+  //   }, [dispatch, paymentType, setPaymentType]);
+
+  // console.log(paymentType);
 
   return (
     <FormikProvider value={formik}>
@@ -70,7 +81,7 @@ export const InstantForm = ({ page, setPage }: Props) => {
         <FormikSelect
           name="paymentSelect"
           placeholder="Service Charge Fee"
-          options={newPaymentTypes || []}
+          options={paymentList || []}
           label="Payment type"
         />
         <Input
