@@ -7,12 +7,12 @@ import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
 import NotFoundPage from "pages/NotFoundPage";
-import ContactAdminPage from "pages/ContactAdminPage";
 
 const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
   () => import("pages/ReportEmergencyPage")
 );
+const LazyContactAdminPage = React.lazy(() => import("pages/ContactAdminPage"));
 const LazyTestPage = React.lazy(() => import("pages/TestPage"));
 const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
@@ -81,7 +81,7 @@ function App() {
           <Route path={ROUTES.estateBanks.path} element={<LazyOtherPage />} />
           <Route
             path={ROUTES.contactAdmin.path}
-            element={<ContactAdminPage />}
+            element={<LazyContactAdminPage />}
           />
         </Route>
         {process.env.NODE_ENV === "development" && (
