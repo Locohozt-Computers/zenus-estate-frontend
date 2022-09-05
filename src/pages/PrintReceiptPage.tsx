@@ -17,7 +17,6 @@ const PrintReceiptPage = () => {
     .contact-card {
       width: 100%;
       max-width: 810px;
-      height: calc(100vh - 260px);
     }
     .contact-admin-content {
       display: flex;
@@ -40,7 +39,7 @@ const PrintReceiptPage = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 195px;
+      margin-top: 105px;
     }
   `;
   return (
