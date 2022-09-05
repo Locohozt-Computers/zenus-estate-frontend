@@ -51,6 +51,14 @@ export const InstantForm = ({ page, setPage }: Props) => {
   const paymentList = useSelector(paymentSelectors.paymentType);
   console.log(paymentList);
   const dispatch = useDispatch();
+
+  //  const PaymentTypes = useQuery(["getPaymentType"], paymentType).data;
+  //  const balance = useQuery(["getOustandingBalance"], getOustandingBalance).data
+  //    ?.data.data.user_levy_outstanding_balance;
+
+  //  const newPaymentTypes = PaymentTypes?.map((item) => {
+  //    return item.special_name;
+  //  });
   // const { setPaymentType } = paymentActions;
 
   //   useEffect(() => {
