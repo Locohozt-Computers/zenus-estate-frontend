@@ -9,6 +9,7 @@ export const Select = ({
   id,
   label,
   error,
+  placeholder,
   options,
   ...rest
 }: SelectProps) => {
@@ -22,6 +23,20 @@ export const Select = ({
           className={`input-input ${className ?? ""}`.trim()}
           {...rest}
         >
+          {placeholder && (
+            <option
+              value=""
+              disabled
+              selected
+              style={{
+                fontSize: "17px",
+                fontWeight: "500",
+                color: "var(--med-gray)",
+              }}
+            >
+              {placeholder}
+            </option>
+          )}
           {options &&
             options.map((option, i) =>
               typeof option === "string" ? (

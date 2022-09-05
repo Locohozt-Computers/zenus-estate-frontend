@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { InstantForm } from "components/organisms/InstantPayments";
-import { PayOption } from "components/organisms/InstantPayments/payOption";
+import {
+  InstantForm,
+  PaySummary,
+  PaySuccess,
+  PayFailed,
+  PayOption,
+  Typography,
+} from "components";
 import styled from "styled-components";
-import { Typography } from "components";
 import Arrow from "assets/images/arrowright.png";
-import { PaySummary } from "components/organisms/InstantPayments/paySummary";
-import { PaySuccess } from "components/organisms/InstantPayments/paySuccess";
-import { PayFailed } from "components/organisms/InstantPayments/payFailed";
 
 const StyledDiv = styled.div`
   padding: 39px 80px 47px;
@@ -46,7 +48,11 @@ const InstantPayPage = () => {
   return (
     <StyledDiv>
       <span className="arrow-icon">
-        <button type="button" onClick={() => setPage(page - 1)}>
+        <button
+          type="button"
+          onClick={() => setPage(page - 1)}
+          style={{ visibility: page < 1 ? "hidden" : "visible" }}
+        >
           <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
         </button>
         <Typography

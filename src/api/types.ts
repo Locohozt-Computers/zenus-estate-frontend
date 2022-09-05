@@ -262,6 +262,6 @@ export class GetOustandingBalance {
   static Res: {
     status: number;
     message: string;
-    data: [];
+    data: { user_levy_outstanding_balance: string };
   };
 }

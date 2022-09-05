@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Typography, Button } from "components/atoms";
-import { IoWallet } from "assets/icons";
+import { IconWallet } from "assets/icons";
 import mastercard from "assets/images/logos_mastercard.png";
+import { useQuery } from "@tanstack/react-query";
+import { paymentMethod } from "pages/request";
 
 type Props = {
   page: number;
@@ -48,6 +50,13 @@ const StyledDiv = styled.div`
   }
 `;
 export const PayOption = ({ page, setPage }: Props) => {
+  const [payOption, setpayOption] = useState("");
+  // requests
+  const payMethod = useQuery(["getPaymentMethod"], paymentMethod).data;
+  const payMethodName = payMethod?.map((item) => {
+    return item.name;
+  });
+
   const selectMethod = () => {};
   return (
     <StyledDiv>
@@ -59,11 +68,18 @@ export const PayOption = ({ page, setPage }: Props) => {
           content="Choose Your Prefered Payment Method"
         />
       </span>
-      <button className="paymentMethod" type="button" onClick={selectMethod}>
-        <IoWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
+
+      <button
+        className="paymentMethod"
+        type="button"
+        onClick={() => {
+          setpayOption();
+        }}
+      >
+        <IconWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
         My Zenus Wallet Balance
       </button>
-      <button className="paymentMethod" type="button" onClick={selectMethod}>
+      <button className="paymentMethod" type="button" onClick={() => {}}>
         <img
           src={mastercard}
           alt="logos_mastercard"
@@ -73,7 +89,7 @@ export const PayOption = ({ page, setPage }: Props) => {
       </button>
       <div className="balance">
         <span>
-          <IoWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
+          <IconWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
           Wallet Balance
         </span>
         <span>N300000</span>

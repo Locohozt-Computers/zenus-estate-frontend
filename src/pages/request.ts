@@ -3,6 +3,8 @@ import appRequest, {
   GetAllEmergencies,
   GetLandlordProfile,
   GetProfile,
+  GetAllPaymentType,
+  GetPaymentMethod,
   PostCreateEmergency,
   GetOustandingBalance,
   PutUpdateEmergency,
@@ -64,3 +66,16 @@ export const updateEmergency =
     );
     return res.data.data;
   };
+
+export const paymentType = async () => {
+  const res = await appRequest.get<typeof GetAllPaymentType.Res>(
+    GetAllPaymentType.Route
+  );
+  return res.data.data;
+};
+export const paymentMethod = async () => {
+  const res = await appRequest.get<typeof GetPaymentMethod.Res>(
+    GetPaymentMethod.Route
+  );
+  return res.data.data;
+};

@@ -5,5 +5,5 @@ export const VALIDATIONS = {
   password: yup.string().required("Password is required"),
   description: yup.string(),
   address: yup.string().required("Block is required"),
-  select: yup.string().required("Block is required"),
+  select: yup.string().required("option is required"),
 };
