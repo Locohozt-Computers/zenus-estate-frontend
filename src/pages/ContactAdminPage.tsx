@@ -68,7 +68,7 @@ const ContactAdminPage = () => {
               We’ll reply you as soon as possible.
             </Typography>
 
-            <div>
+            <form>
               <div className="complaints-select">
                 <Select
                   label="Complaints Category"
@@ -84,7 +84,7 @@ const ContactAdminPage = () => {
               <div className="btn-container">
                 <Button text="Send" />
               </div>
-            </div>
+            </form>
           </div>
         </Card>
       </ContactAdminStyle>
