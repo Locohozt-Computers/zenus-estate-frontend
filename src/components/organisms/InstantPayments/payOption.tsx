@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Typography, Button } from "components/atoms";
 import { IconWallet } from "assets/icons";
@@ -51,18 +51,21 @@ const StyledDiv = styled.div`
 `;
 export const PayOption = ({ page, setPage }: Props) => {
   const [payOption, setpayOption] = useState("");
+  const [warning, setWarning] = useState(false);
+  const balance = 300000;
+  const buttonRef = useRef(null);
   // requests
   const payMethod = useQuery(["getPaymentMethod"], paymentMethod).data;
   const payMethodName = payMethod?.map((item) => {
     return item.name;
   });
 
-  const selectMethod = () => {};
+  console.log(payOption);
   return (
     <StyledDiv>
       <span style={{ alignSelf: "flex-start", marginBottom: "37px" }}>
         <Typography
-          textColor="blue"
+          textColor={warning ? "red" : "blue"}
           size={23}
           weight={500}
           content="Choose Your Prefered Payment Method"
@@ -73,13 +76,23 @@ export const PayOption = ({ page, setPage }: Props) => {
         className="paymentMethod"
         type="button"
         onClick={() => {
-          setpayOption();
+          if (payMethodName) {
+            setpayOption(payMethodName[1]);
+          }
         }}
       >
         <IconWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
         My Zenus Wallet Balance
       </button>
-      <button className="paymentMethod" type="button" onClick={() => {}}>
+      <button
+        className="paymentMethod"
+        type="button"
+        onClick={() => {
+          if (payMethodName) {
+            setpayOption(payMethodName[0]);
+          }
+        }}
+      >
         <img
           src={mastercard}
           alt="logos_mastercard"
@@ -92,12 +105,18 @@ export const PayOption = ({ page, setPage }: Props) => {
           <IconWallet fill="var(--blue)" style={{ marginRight: "12px" }} />
           Wallet Balance
         </span>
-        <span>N300000</span>
+        <span>N{balance}</span>
       </div>
       <Button
         text="Next"
         type="submit"
-        onClick={() => setPage(page + 1)}
+        onClick={() => {
+          if (payOption.length > 0) {
+            setPage(page + 1);
+          } else {
+            setWarning(!warning);
+          }
+        }}
         style={{ marginTop: "130px" }}
       />
     </StyledDiv>
