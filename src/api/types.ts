@@ -175,9 +175,15 @@ export class PostBillPayment {
   };
 }
 
-interface EmergencyTypesI {
+export enum EmergencyTypesStatusEnum {
+  Add = "Add New",
+  Fire = "Fire Alarm",
+  Flood = "Flood Alarm",
+}
+
+export interface EmergencyTypesI {
   id: number;
-  name: string;
+  name: EmergencyTypesStatusEnum;
   status: boolean;
   created_at: string;
   updated_at: string;
@@ -208,7 +214,7 @@ export class PostCreateEmergency {
 
   static Body: {
     emergency_type_id?: number;
-    description: string;
+    description?: string;
   };
 
   static Res: {

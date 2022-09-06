@@ -1,6 +1,7 @@
 import appRequest, {
   DelEmergency,
   GetAllEmergencies,
+  GetAllEmergenciesTypes,
   GetLandlordProfile,
   GetProfile,
   GetAllPaymentType,
@@ -35,8 +36,8 @@ export const getOutstandingBalance = async () => {
   );
 };
 export const getAllEmergencyTypes = async () => {
-  const res = await appRequest.get<typeof GetAllEmergencies.Res>(
-    GetAllEmergencies.Route
+  const res = await appRequest.get<typeof GetAllEmergenciesTypes.Res>(
+    GetAllEmergenciesTypes.Route
   );
   return res.data.data;
 };

@@ -3,7 +3,6 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { PageLoad } from "components/atoms/Loader";
 import { ROUTES } from "app-constants";
 import LoginPage from "pages/LoginPage";
-import InstantPayPage from "pages/InstantPayPage";
 import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
@@ -13,8 +12,11 @@ const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
   () => import("pages/ReportEmergencyPage")
 );
-const LazyTestPage = React.lazy(() => import("pages/PlayPage"));
-const LazyOtherPage = React.lazy(() => import("pages/InstantPayPage"));
+const LazyContactAdminPage = React.lazy(() => import("pages/ContactAdminPage"));
+const LazyPrintReceiptPage = React.lazy(() => import("pages/PrintReceiptPage"));
+const LazyInstantPayPage = React.lazy(() => import("pages/InstantPayPage"));
+const LazyTestPage = React.lazy(() => import("pages/TestPage"));
+const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
 
 const PrivateRoute = () => {
@@ -70,16 +72,25 @@ function App() {
             element={<Navigate replace to={ROUTES.instantPay.path} />}
           />
           <Route path={ROUTES.myBills.path} element={<LazyOtherPage />}>
-            <Route path={ROUTES.instantPay.path} element={<InstantPayPage />} />
+            <Route
+              path={ROUTES.instantPay.path}
+              element={<LazyInstantPayPage />}
+            />
             <Route
               path={ROUTES.accountStatements.path}
               element={<LazyOtherPage />}
             />
           </Route>
           <Route path={ROUTES.myAccount.path} element={<LazyOtherPage />} />
-          <Route path={ROUTES.printReceipt.path} element={<LazyOtherPage />} />
+          <Route
+            path={ROUTES.printReceipt.path}
+            element={<LazyPrintReceiptPage />}
+          />
           <Route path={ROUTES.estateBanks.path} element={<LazyOtherPage />} />
-          <Route path={ROUTES.contactAdmin.path} element={<LazyOtherPage />} />
+          <Route
+            path={ROUTES.contactAdmin.path}
+            element={<LazyContactAdminPage />}
+          />
         </Route>
         {process.env.NODE_ENV === "development" && (
           <Route path={ROUTES.playground.path} element={<LazyPlayPage />} />
