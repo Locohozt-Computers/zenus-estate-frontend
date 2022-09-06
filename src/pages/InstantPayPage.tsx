@@ -9,6 +9,8 @@ import {
 } from "components";
 import styled from "styled-components";
 import Arrow from "assets/images/arrowright.png";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers";
 
 const StyledDiv = styled.div`
   padding: 39px 80px 47px;
@@ -34,15 +36,21 @@ const StyledDiv = styled.div`
 
 const InstantPayPage = () => {
   const [page, setPage] = useState(0);
+  const [payStatus, setPayStatus] = useState(false);
+  const payOption = useSelector(
+    (state: RootState) => state.payment.payOption.name
+  );
 
   let pageDetails = "";
   if (page === 1) {
     pageDetails = "/payment methods";
-  } else if (page === 2) {
+  } else if (page === 2 && payOption === "wallet") {
     pageDetails = "/wallet payment";
-  } else if (page === 3) {
+  } else if (page === 2 && payOption === "card") {
+    pageDetails = "/card payment";
+  } else if (page === 3 && payStatus) {
     pageDetails = "/payment methods/successful";
-  } else if (page === 4) {
+  } else if (page === 3 && !payStatus) {
     pageDetails = "/payment methods/failed";
   }
   return (
@@ -65,9 +73,15 @@ const InstantPayPage = () => {
       <div className="paymentDetails">
         {page === 0 && <InstantForm page={page} setPage={setPage} />}
         {page === 1 && <PayOption page={page} setPage={setPage} />}
-        {page === 2 && <PaySummary page={page} setPage={setPage} />}
-        {page === 3 && <PaySuccess />}
-        {page === 4 && <PayFailed />}
+        {page === 2 && (
+          <PaySummary
+            page={page}
+            setPage={setPage}
+            setPayStatus={setPayStatus}
+          />
+        )}
+        {page === 3 && payStatus && <PaySuccess />}
+        {page === 3 && !payStatus && <PayFailed />}
       </div>
     </StyledDiv>
   );

@@ -1,28 +1,22 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "store/reducers/index";
-import { useQuery } from "@tanstack/react-query";
-import {
-  getOustandingBalance,
-  getUserProfile,
-  paymentType,
-} from "pages/request";
 
 export interface PaymentState {
-  username: string;
-  paymentType: string[];
+  paymentType: string;
   address: string;
-  payOptionFee: number;
+  payOption: { name: string; fees: number };
   charges: number;
-  total: number;
+  outstandingBalance: number;
+  walletBalance: number;
 }
 
 const initialState: PaymentState = {
-  username: "",
-  paymentType: ["abc", "bcd"],
+  paymentType: "",
   address: "",
-  payOptionFee: 0,
+  payOption: { name: "", fees: 0 },
+  outstandingBalance: 0,
   charges: 0,
-  total: 0,
+  walletBalance: 10,
 };
 
 export interface Item {
@@ -33,11 +27,14 @@ export const paymentSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
-    setPaymentType: (state, action) => {
-      //   state.paymentType = action.payload?.map((item: Item) => {
-      //     return item.special_name;
-      //   });
-      state.paymentType = ["abc", "bcd"];
+    setValues: (state, action) => {
+      state.paymentType = action.payload.values.paymentSelect;
+      state.address = action.payload.values.address;
+      state.charges = action.payload.chosenType.invoice_amount;
+      // state.outstandingBalance = action.payload.balance;
+    },
+    setFees: (state, action) => {
+      state.payOption = action.payload;
     },
   },
 });
@@ -46,6 +43,8 @@ export const paymentActions = { ...paymentSlice.actions };
 
 export const paymentSelectors = {
   paymentType: (state: RootState) => state.payment.paymentType,
+  address: (state: RootState) => state.payment.address,
+  charges: (state: RootState) => state.payment.charges,
 };
 
 export default paymentSlice.reducer;

@@ -1,10 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Typography, Button } from "components/atoms";
 import { IconWallet } from "assets/icons";
 import mastercard from "assets/images/logos_mastercard.png";
 import { useQuery } from "@tanstack/react-query";
 import { paymentMethod } from "pages/request";
+import { paymentActions } from "store/reducers/payment/paymentSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store/reducers";
 
 type Props = {
   page: number;
@@ -50,17 +53,19 @@ const StyledDiv = styled.div`
   }
 `;
 export const PayOption = ({ page, setPage }: Props) => {
+  const { setFees } = paymentActions;
+  const dispatch = useDispatch();
   const [payOption, setpayOption] = useState("");
   const [warning, setWarning] = useState(false);
-  const balance = 300000;
-  const buttonRef = useRef(null);
-  // requests
+  const balance = useSelector(
+    (state: RootState) => state.payment.walletBalance
+  );
+
   const payMethod = useQuery(["getPaymentMethod"], paymentMethod).data;
   const payMethodName = payMethod?.map((item) => {
     return item.name;
   });
 
-  console.log(payOption);
   return (
     <StyledDiv>
       <span style={{ alignSelf: "flex-start", marginBottom: "37px" }}>
@@ -78,6 +83,7 @@ export const PayOption = ({ page, setPage }: Props) => {
         onClick={() => {
           if (payMethodName) {
             setpayOption(payMethodName[1]);
+            dispatch(setFees({ name: "wallet", fees: 0 }));
           }
         }}
       >
@@ -90,6 +96,7 @@ export const PayOption = ({ page, setPage }: Props) => {
         onClick={() => {
           if (payMethodName) {
             setpayOption(payMethodName[0]);
+            dispatch(setFees({ name: "card", fees: 0 }));
           }
         }}
       >

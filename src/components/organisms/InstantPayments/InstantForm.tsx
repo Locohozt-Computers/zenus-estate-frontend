@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
@@ -9,12 +9,10 @@ import {
   paymentType,
 } from "pages/request";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  paymentSelectors,
-  paymentActions,
-} from "store/reducers/payment/paymentSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { paymentActions } from "store/reducers/payment/paymentSlice";
 import { Input, Button, FormikSelect, Typography } from "components/atoms";
+import { RootState } from "store/reducers";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -25,7 +23,7 @@ const StyledForm = styled.form`
   justify-content: space-around;
 `;
 const validationSchema = yup.object({
-  block: VALIDATIONS.address,
+  address: VALIDATIONS.address,
   paymentSelect: VALIDATIONS.select,
 });
 
@@ -35,39 +33,31 @@ type Props = {
 };
 
 export const InstantForm = ({ page, setPage }: Props) => {
-  const formik = useFormik({
-    initialValues: { block: "", paymentSelect: "" },
-    validationSchema,
-    onSubmit: (values) => {
-      setPage(page + 1);
-    },
-  });
-
-  // requests
+  const details = useSelector((state: RootState) => state.payment);
+  const initpaymentType = details.paymentType;
+  const initAddress = details.address;
+  const dispatch = useDispatch();
+  const { setValues } = paymentActions;
   const address = useQuery(["getAdress"], getUserProfile).data?.address;
+  const paymentTypes = useQuery(["getPaymentType"], paymentType).data;
+  const paymentTypesName = paymentTypes?.map((item) => item.special_name);
   const balance = useQuery(["getOustandingBalance"], getOustandingBalance).data
     ?.data.data.user_levy_outstanding_balance;
 
-  const paymentList = useSelector(paymentSelectors.paymentType);
-  console.log(paymentList);
-  const dispatch = useDispatch();
-
-  //  const PaymentTypes = useQuery(["getPaymentType"], paymentType).data;
-  //  const balance = useQuery(["getOustandingBalance"], getOustandingBalance).data
-  //    ?.data.data.user_levy_outstanding_balance;
-
-  //  const newPaymentTypes = PaymentTypes?.map((item) => {
-  //    return item.special_name;
-  //  });
-  // const { setPaymentType } = paymentActions;
-
-  //   useEffect(() => {
-  //     dispatch(setPaymentType( useQuery(["getPaymentType"], paymentType).data
-  // ));
-
-  //   }, [dispatch, paymentType, setPaymentType]);
-
-  // console.log(paymentType);
+  const formik = useFormik({
+    initialValues: {
+      address: initAddress,
+      paymentSelect: initpaymentType,
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      const chosenType = paymentTypes?.find((item) => {
+        return item.special_name === values.paymentSelect;
+      });
+      setPage(page + 1);
+      dispatch(setValues({ values, chosenType }));
+    },
+  });
 
   return (
     <FormikProvider value={formik}>
@@ -82,19 +72,19 @@ export const InstantForm = ({ page, setPage }: Props) => {
         </span>
         <FormikSelect
           label="Block Address"
-          name="block"
+          name="address"
           placeholder="12 Okue Street, Okota."
-          options={[`${address} || loading`]}
+          options={[`${address}`]}
         />
         <FormikSelect
           name="paymentSelect"
           placeholder="Service Charge Fee"
-          options={paymentList || []}
+          options={paymentTypesName || []}
           label="Payment type"
         />
         <Input
           label="Outstanding Payment Balance"
-          name="block"
+          name="balance"
           value={balance}
           readOnly
           style={{
