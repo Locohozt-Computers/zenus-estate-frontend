@@ -4,7 +4,7 @@ import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import {
-  getOustandingBalance,
+  getOutstandingBalance,
   getUserProfile,
   paymentType,
 } from "pages/request";
@@ -41,7 +41,7 @@ export const InstantForm = ({ page, setPage }: Props) => {
   const address = useQuery(["getAdress"], getUserProfile).data?.address;
   const paymentTypes = useQuery(["getPaymentType"], paymentType).data;
   const paymentTypesName = paymentTypes?.map((item) => item.special_name);
-  const balance = useQuery(["getOustandingBalance"], getOustandingBalance).data
+  const balance = useQuery(["getOustandingBalance"], getOutstandingBalance).data
     ?.data.data.user_levy_outstanding_balance;
 
   const formik = useFormik({

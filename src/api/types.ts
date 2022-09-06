@@ -256,8 +256,8 @@ export class GetAllEmergenciesTypes {
   };
 }
 
-export class GetOustandingBalance {
-  static Route = "/user-levy-type-balance/1";
+export class GetOutstandingBalance {
+  static Route = "/user-levy-type-balance/:id";
 
   static Res: {
     status: number;

@@ -13,7 +13,7 @@ const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
   () => import("pages/ReportEmergencyPage")
 );
-const LazyTestPage = React.lazy(() => import("pages/TestPage"));
+const LazyTestPage = React.lazy(() => import("pages/PlayPage"));
 const LazyOtherPage = React.lazy(() => import("pages/InstantPayPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
 

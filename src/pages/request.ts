@@ -6,7 +6,7 @@ import appRequest, {
   GetAllPaymentType,
   GetPaymentMethod,
   PostCreateEmergency,
-  GetOustandingBalance,
+  GetOutstandingBalance,
   PutUpdateEmergency,
 } from "api";
 
@@ -29,9 +29,9 @@ export const getAllEmergency = async () => {
   return res.data.data;
 };
 
-export const getOustandingBalance = async () => {
-  return appRequest.get<typeof GetOustandingBalance.Res>(
-    GetOustandingBalance.Route
+export const getOutstandingBalance = async () => {
+  return appRequest.get<typeof GetOutstandingBalance.Res>(
+    GetOutstandingBalance.Route
   );
 };
 export const getAllEmergencyTypes = async () => {
