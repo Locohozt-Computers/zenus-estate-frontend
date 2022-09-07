@@ -17,7 +17,7 @@ const LazyPrintReceiptPage = React.lazy(() => import("pages/PrintReceiptPage"));
 const LazyInstantPayPage = React.lazy(() => import("pages/InstantPayPage"));
 const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
-const LazyWalletPage = React.lazy(() => import("pages/PlayPage"));
+const LazyWalletPage = React.lazy(() => import("pages/WalletPage"));
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -71,14 +71,14 @@ function App() {
             path={ROUTES.myBills.path}
             element={<Navigate replace to={ROUTES.instantPay.path} />}
           />
-          <Route path={ROUTES.myBills.path} element={<LazyOtherPage />}>
-            <Route
-              path={ROUTES.instantPay.path}
-              element={<LazyInstantPayPage />}
-            />
+          <Route path={ROUTES.myBills.path} element={<LazyInstantPayPage />}>
             <Route
               path={ROUTES.accountStatements.path}
               element={<LazyOtherPage />}
+            />
+            <Route
+              path={ROUTES.instantPay.path}
+              element={<LazyInstantPayPage />}
             />
           </Route>
           <Route path={ROUTES.myAccount.path} element={<LazyOtherPage />} />

@@ -11,8 +11,7 @@ export type TextColor =
   | "gray"
   | "med-gray"
   | "black"
-  | "white"
-  | "red";
+  | "white";
 export type TextVariant =
   | "heading1"
   | "heading2"

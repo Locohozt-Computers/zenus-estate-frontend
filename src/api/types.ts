@@ -120,8 +120,17 @@ export class GetAllPaymentType {
       id: number;
       special_name: string;
       income_gl_code_id: number;
+      invoice_amount: number;
+      user_levy_outstanding_balance: number;
+      fees: number;
+      final_amount: number;
     }>;
   };
+}
+
+export enum PaymentOptionNameEnum {
+  Wallet = "Wallet",
+  Card = "Card",
 }
 
 export class GetPaymentMethod {
@@ -132,7 +141,7 @@ export class GetPaymentMethod {
     message: string;
     data: Array<{
       id: number;
-      name: string;
+      name: PaymentOptionNameEnum;
     }>;
   };
 }
@@ -270,4 +279,14 @@ export class GetOutstandingBalance {
     message: string;
     data: { user_levy_outstanding_balance: string };
   };
+}
+
+export interface PaystackResponseI {
+  message: string;
+  redirecturl: string;
+  reference: string;
+  status: string;
+  trans: string;
+  transaction: string;
+  trxref: string;
 }
