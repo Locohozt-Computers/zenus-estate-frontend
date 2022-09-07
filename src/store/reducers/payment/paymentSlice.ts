@@ -44,9 +44,9 @@ export const paymentSlice = createSlice({
       if (action.payload.successResponse) {
         state.successResponse = action.payload.successResponse;
       }
-      // if (["string", "number"].includes(typeof action.payload.outStanding)) {
-      //   state.outstandingBalance = action.payload.outStanding;
-      // }
+      if (action.payload.outstandingBalance) {
+        state.outstandingBalance = action.payload.outstandingBalance || 0;
+      }
     },
   },
 });
