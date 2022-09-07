@@ -13,6 +13,7 @@ export const Input = ({
   error,
   suffix,
   type,
+  loading,
   ...rest
 }: InputProps) => {
   const [show, setShow] = useState(false);
@@ -21,7 +22,7 @@ export const Input = ({
   };
 
   return (
-    <InputWrapper suffix={suffix}>
+    <InputWrapper suffix={suffix} loading={loading}>
       <label htmlFor={name || id}>
         {label && <span className="input-label">{label}</span>}
         <div className="input-container">
@@ -62,7 +63,12 @@ export const Input = ({
   );
 };
 
-export const FormikInput = ({ name, label, ...rest }: InputProps) => {
+export const FormikInput = ({
+  name,
+  label,
+  numbersOnly,
+  ...rest
+}: InputProps & { numbersOnly?: boolean }) => {
   const formik = useFormikContext();
   const { value, touched, error } = formik.getFieldMeta(
     (name || label?.toLowerCase()) as string
@@ -70,12 +76,16 @@ export const FormikInput = ({ name, label, ...rest }: InputProps) => {
 
   const hasError = error && touched && error;
 
+  const v = numbersOnly
+    ? (value as string).replaceAll(/\D/g, "").trim()
+    : (value as string);
+
   return (
     <Input
       name={(name || label?.toLowerCase()) as string}
       label={label}
       {...rest}
-      value={value as string}
+      value={v}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
       error={hasError}

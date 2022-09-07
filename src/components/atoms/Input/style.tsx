@@ -1,7 +1,8 @@
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
+import c from "assets/icons/carret-filled.svg";
 
-export const InputWrapper = styled.div<{ suffix?: any }>`
+export const InputWrapper = styled.div<{ suffix?: any; loading?: boolean }>`
   position: relative;
   width: 100%;
 
@@ -18,6 +19,12 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
     color: var(--black);
     margin-bottom: ${pxToEm(12)};
   }
+  select.input-input {
+    cursor: pointer;
+    background-image: ${({ loading }) => (loading ? "none" : `url(${c})`)};
+    background-repeat: no-repeat;
+    background-position: 93.5% 50%;
+  }
 
   input.input-input,
   select.input-input {
@@ -28,15 +35,21 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
     background-color: var(--light-gray);
     border-radius: ${pxToEm(34)};
     padding-right: ${({ suffix }) => suffix && pxToEm(60)};
+    appearance: none;
 
-    &:hover {
+    &:hover :not(:read-only) {
       border: 1px solid var(--light-blue);
     }
-    &:focus {
+    &:focus :not(:read-only) {
       border: 1px solid var(--blue);
     }
   }
 
+  ::placeholder {
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--med-gray);
+  }
   button.input-suffix {
     all: unset;
     cursor: pointer;
@@ -55,4 +68,6 @@ export const InputWrapper = styled.div<{ suffix?: any }>`
     color: var(--pink);
     font-size: ${pxToEm(14)};
   }
+
+  pointer-events: ${({ loading }) => loading && "none"};
 `;

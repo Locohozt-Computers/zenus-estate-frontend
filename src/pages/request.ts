@@ -4,8 +4,12 @@ import appRequest, {
   GetAllEmergenciesTypes,
   GetLandlordProfile,
   GetProfile,
+  GetAllPaymentType,
+  GetPaymentMethod,
   PostCreateEmergency,
+  GetOutstandingBalance,
   PutUpdateEmergency,
+  PostBillPayment,
 } from "api";
 
 export const getUserProfile = async () => {
@@ -27,6 +31,12 @@ export const getAllEmergency = async () => {
   return res.data.data;
 };
 
+export const getOutstandingBalance = (id: number) => async () => {
+  const res = await appRequest.get<typeof GetOutstandingBalance.Res>(
+    GetOutstandingBalance.Route.replace(":id", id.toString())
+  );
+  return res.data.data;
+};
 export const getAllEmergencyTypes = async () => {
   const res = await appRequest.get<typeof GetAllEmergenciesTypes.Res>(
     GetAllEmergenciesTypes.Route
@@ -59,3 +69,25 @@ export const updateEmergency =
     );
     return res.data.data;
   };
+
+export const getPaymentType = async () => {
+  const res = await appRequest.get<typeof GetAllPaymentType.Res>(
+    GetAllPaymentType.Route
+  );
+  return res.data.data;
+};
+
+export const getPaymentMethod = async () => {
+  const res = await appRequest.get<typeof GetPaymentMethod.Res>(
+    GetPaymentMethod.Route
+  );
+  return res.data.data;
+};
+
+export const postBillPayment = async (data: typeof PostBillPayment.Body) => {
+  const res = await appRequest.post<typeof PostBillPayment.Res>(
+    PostBillPayment.Route,
+    data
+  );
+  return res.data.data;
+};

@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, FormikInput, Typography } from "components/atoms";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "components/organisms/LogingForm/request";
 import { FormikProvider, useFormik } from "formik";
 import * as yup from "yup";
 import { ROUTES, VALIDATIONS } from "app-constants";
@@ -10,6 +9,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
 import { Link } from "react-router-dom";
+import { loginUser } from "pages/LoginPage/request";
 
 const validationSchema = yup.object({
   email: VALIDATIONS.email,

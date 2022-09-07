@@ -41,6 +41,11 @@ input {
   align-items: center;
 }
 
+button {
+  background: none;
+  border: none;
+}
+
 .text-center {
   text-align: center;
 }
