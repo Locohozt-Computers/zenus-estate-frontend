@@ -57,6 +57,9 @@ function App() {
         </Route>
 
         <Route path="/" element={<PrivateRoute />}>
+          {process.env.NODE_ENV === "development" && (
+            <Route path={ROUTES.playground.path} element={<LazyPlayPage />} />
+          )}
           <Route path={ROUTES.home.path} element={<LazyHomePage />} />
           <Route
             path="/"
@@ -92,9 +95,6 @@ function App() {
             element={<LazyContactAdminPage />}
           />
         </Route>
-        {process.env.NODE_ENV === "development" && (
-          <Route path={ROUTES.playground.path} element={<LazyPlayPage />} />
-        )}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
