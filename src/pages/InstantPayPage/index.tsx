@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Typography, Card } from "components";
 import styled from "styled-components";
-import Arrow from "assets/images/arrowright.png";
 import { useSelector } from "react-redux";
 import { DashboardContent } from "layouts";
 import { InstantForm } from "pages/InstantPayPage/InstantForm";
@@ -13,6 +12,8 @@ import { paymentSelectors } from "store/reducers/payment/paymentSlice";
 import { PaymentOptionNameEnum } from "api";
 import { useQuery } from "@tanstack/react-query";
 import { getPaymentMethod } from "pages/request";
+import { AppIcon } from "utils";
+import { IconArrowLeft } from "assets/icons";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -75,13 +76,9 @@ const InstantPayPage = () => {
               onClick={() =>
                 page === 4 ? setPage(page - 2) : setPage(page - 1)
               }
-              style={{ visibility: page < 1 ? "hidden" : "visible" }}
+              style={{ display: page < 1 ? "none" : "block" }}
             >
-              <img
-                src={Arrow}
-                alt="arrow"
-                style={{ margin: " 0 12px 0 -1rem" }}
-              />
+              <AppIcon size={45} render={IconArrowLeft} />
             </button>
             <Typography
               size={16}
