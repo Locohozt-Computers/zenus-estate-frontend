@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
-import CreateAccount from "components/organisms/SignUpForm/createAccount";
-import CompleteAccount from "components/organisms/SignUpForm/completeAccount";
+import CreateAccount from "pages/SignUpPage/SignUpForm/createAccount";
+import CompleteAccount from "pages/SignUpPage/SignUpForm/completeAccount";
 import SignupLoader from "components/atoms/SignupLoader";
 
 export interface CreateAccountT {

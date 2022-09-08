@@ -7,14 +7,12 @@ import {
   Select,
   Typography,
 } from "components/atoms";
-import { Form } from "components/organisms/SignUpForm/createAccount";
+import { Form } from "pages/SignUpPage/SignUpForm/createAccount";
 import styled from "styled-components/macro";
 
 type CompleteAccountT = {
   onUpdate?: (pos: number) => void;
   status?: (verify: boolean) => void;
-  // status?: boolean;
-  // check?: boolean;
 };
 
 const CompleteAccountStyle = styled.div`
