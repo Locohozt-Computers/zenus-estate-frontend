@@ -8,6 +8,7 @@ import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
 import NotFoundPage from "pages/NotFoundPage";
+import WalletPage from "pages/WalletPage";
 
 const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
@@ -64,7 +65,7 @@ function App() {
             path={ROUTES.reportEmergency.path}
             element={<LazyReportEmergencyPage />}
           />
-          <Route path={ROUTES.myWallet.path} element={<LazyTestPage />} />
+          <Route path={ROUTES.myWallet.path} element={<WalletPage />} />
           <Route
             path={ROUTES.myBills.path}
             element={<Navigate replace to={ROUTES.instantPay.path} />}
