@@ -28,6 +28,12 @@ module.exports = {
       "error",
       { ignorePropertyModificationsFor: ["store"] },
     ],
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -75,7 +81,7 @@ module.exports = {
     "consistent-return": "off",
     "react/prop-types": "off",
     "react/require-default-props": "off",
-    "max-classes-per-file": "off"
+    "max-classes-per-file": "off",
   },
   settings: {
     "import/parsers": {
