@@ -106,6 +106,7 @@ export class GetProfile {
       charge_svc: boolean;
       created_at: string;
       updated_at: string;
+      walletBalance: number;
     };
   };
 }

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Typography, Button } from "components/atoms";
 import { IconMasterCard, IconWallet } from "assets/icons";
 import { useQuery } from "@tanstack/react-query";
-import { getPaymentMethod } from "pages/request";
+import { getPaymentMethod, getUserProfile } from "pages/request";
 import {
   paymentActions,
   paymentSelectors,
@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { PaymentOptionNameEnum } from "api";
 import { AppIcon } from "utils";
 import { VALIDATIONS } from "app-constants";
+import { currencyFormat } from "utils/helpers";
 
 type Props = {
   page: number;
@@ -80,9 +81,12 @@ const getLabel = (name: string) => {
 
 export const PayOption = ({ page, setPage }: Props) => {
   // TODO: Get wallet balance
-  const [payOption, setPayOption] = useState("");
+  const { isLoading: profileLoading, data: profileData } = useQuery(
+    ["getUserProfile"],
+    getUserProfile
+  );
 
-  const walletBalance = 0;
+  const [payOption, setPayOption] = useState("");
 
   const dispatch = useDispatch();
 
@@ -102,6 +106,12 @@ export const PayOption = ({ page, setPage }: Props) => {
   });
 
   const handleSelect = (name: string, id: number) => () => {
+    if (
+      name === PaymentOptionNameEnum.Wallet &&
+      (profileData?.walletBalance || 0) <= 0
+    ) {
+      return null;
+    }
     setPayOption(name);
     formik.setFieldValue("payment_method_id", id, true);
   };
@@ -154,12 +164,17 @@ export const PayOption = ({ page, setPage }: Props) => {
           <IconWallet fill="var(--blue)" style={{ marginRight: 12 }} />
           Wallet Balance
         </span>
-        <span>N{walletBalance}</span>
+        <span>
+          {profileLoading
+            ? "Getting Balance..."
+            : currencyFormat(profileData?.walletBalance || 0)}
+        </span>
       </div>
       <div className="center-contents">
         <Button
           text="Next"
           type="submit"
+          disabled={payOption === PaymentOptionNameEnum.Wallet}
           onClick={() => formik.handleSubmit()}
           style={{ marginTop: 130 }}
         />

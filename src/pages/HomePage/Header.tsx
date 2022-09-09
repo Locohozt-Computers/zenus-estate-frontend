@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 import { Card, NotificationDropdown, Typography } from "components";
 import { formatNameToDisplay, getInitials } from "utils/helpers";
-import React, { ChangeEvent, useCallback } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import { MdLocationPin } from "react-icons/md";
 import { pxToEm } from "utils";
 import { AiOutlineCaretDown } from "react-icons/ai";
@@ -9,6 +9,7 @@ import { useOnClickOutside } from "hooks";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
+import { IconSpinner } from "assets/icons";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -27,7 +28,7 @@ const HeaderStyles = styled.div`
   } ;
 `;
 
-const SearchStyle = styled.div`
+const SearchStyle = styled.div<{ loading?: boolean }>`
   position: relative;
   max-width: 535px;
 
@@ -37,7 +38,14 @@ const SearchStyle = styled.div`
     align-items: center;
     height: 100%;
     left: 25px;
+
+    :last-child {
+      right: 5px;
+      left: unset;
+      top: 0;
+    }
   }
+
   > input {
     border-radius: 8px;
     border: 1px solid var(--gray-3);
@@ -45,6 +53,7 @@ const SearchStyle = styled.div`
     font-size: 16px;
     width: 100%;
     outline: none;
+    padding-right: ${({ loading }) => loading && "47px"};
 
     &:hover {
       border: 1px solid var(--light-blue);
@@ -99,7 +108,13 @@ const Drop = styled.div`
 let timer: NodeJS.Timeout;
 
 const Search = React.memo(
-  ({ onSearch }: { onSearch: (val: string) => void }) => {
+  ({
+    onSearch,
+    loading,
+  }: {
+    onSearch: (val: string) => void;
+    loading?: boolean;
+  }) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       clearTimeout(timer);
       timer = setTimeout(() => {
@@ -108,13 +123,20 @@ const Search = React.memo(
     };
 
     return (
-      <SearchStyle style={{ gridArea: "search" }}>
+      <SearchStyle loading={loading} style={{ gridArea: "search" }}>
         <MdLocationPin size={20} color="var(--blue)" />
         <input
           onChange={handleChange}
           type="search"
           placeholder="Search Location..."
         />
+        {loading && (
+          <IconSpinner
+            style={{
+              fontSize: 45,
+            }}
+          />
+        )}
       </SearchStyle>
     );
   }
@@ -124,7 +146,13 @@ export const HomeHeader = () => {
   const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
   const { ref, visible, setVisible } = useOnClickOutside(false);
 
-  const makeSearch = useCallback(() => {}, []);
+  const [searching, setSearching] = useState(false);
+  const makeSearch = useCallback(() => {
+    setSearching(true);
+    setTimeout(() => {
+      setSearching(false);
+    }, 3000);
+  }, []);
 
   const name = (data?.tenant_name || data?.landlord_name) as string;
 
@@ -140,7 +168,7 @@ export const HomeHeader = () => {
             Keep your environment clean, stay safe. 😷
           </Typography>
         </div>
-        <Search onSearch={makeSearch} />
+        <Search onSearch={makeSearch} loading={searching} />
         <AccountDiv>
           <NotificationDropdown />
           <div style={{ position: "relative" }}>

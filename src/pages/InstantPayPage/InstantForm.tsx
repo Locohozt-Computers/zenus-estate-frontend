@@ -10,10 +10,8 @@ import {
   paymentActions,
   paymentSelectors,
 } from "store/reducers/payment/paymentSlice";
-import { Button, Typography, FormikInput, Select } from "components/atoms";
+import { Button, Typography, Select, Input } from "components/atoms";
 import { currencyFormat } from "utils/helpers";
-
-// Todo: amount is read only
 
 const StyledForm = styled.form`
   width: 100%;
@@ -121,10 +119,16 @@ export const InstantForm = ({ page, setPage }: Props) => {
             formik.errors.payment_type_id
           }
         />
-        <FormikInput readOnly label="Amount" name="amount" />
-        <FormikInput
+        <Input
+          value={formik.values.amount}
+          readOnly
+          label="Amount"
+          name="amount"
+        />
+        <Input
           label="Account Balance"
           name="outstandingBalance"
+          value={formik.values.outstandingBalance}
           readOnly
           style={{
             color:
