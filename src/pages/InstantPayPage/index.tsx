@@ -1,18 +1,22 @@
 import React, { useMemo, useState } from "react";
 import { Typography, Card } from "components";
 import styled from "styled-components";
-import Arrow from "assets/images/arrowright.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DashboardContent } from "layouts";
 import { InstantForm } from "pages/InstantPayPage/InstantForm";
 import { PayOption } from "pages/InstantPayPage/PayOption";
 import { PaySummary } from "pages/InstantPayPage/PaySummary";
 import { PaySuccess } from "pages/InstantPayPage/PaySuccess";
 import { PayFailed } from "pages/InstantPayPage/PayFailed";
-import { paymentSelectors } from "store/reducers/payment/paymentSlice";
+import {
+  paymentActions,
+  paymentSelectors,
+} from "store/reducers/payment/paymentSlice";
 import { PaymentOptionNameEnum } from "api";
 import { useQuery } from "@tanstack/react-query";
 import { getPaymentMethod } from "pages/request";
+import { AppIcon } from "utils";
+import { IconArrowLeft } from "assets/icons";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -41,6 +45,10 @@ const InstantPayPage = () => {
   const { data: payMethods } = useQuery(["getPaymentMethod"], getPaymentMethod);
   const pId = useSelector(paymentSelectors.paymentMethodId);
 
+  const dispatch = useDispatch();
+
+  const { resetValues } = paymentActions;
+
   const payM = useMemo(
     () => payMethods?.find((el) => el.id === pId),
     [pId, payMethods]
@@ -65,6 +73,13 @@ const InstantPayPage = () => {
     return "";
   };
 
+  const handleBackBtn = () => {
+    if (page > 2) {
+      dispatch(resetValues());
+      setPage(0);
+    } else setPage(page - 1);
+  };
+
   return (
     <DashboardContent>
       <StyledDiv>
@@ -72,16 +87,10 @@ const InstantPayPage = () => {
           <span className="arrow-icon">
             <button
               type="button"
-              onClick={() =>
-                page === 4 ? setPage(page - 2) : setPage(page - 1)
-              }
-              style={{ visibility: page < 1 ? "hidden" : "visible" }}
+              onClick={handleBackBtn}
+              style={{ display: page < 1 ? "none" : "block" }}
             >
-              <img
-                src={Arrow}
-                alt="arrow"
-                style={{ margin: " 0 12px 0 -1rem" }}
-              />
+              <AppIcon size={45} render={IconArrowLeft} />
             </button>
             <Typography
               size={16}

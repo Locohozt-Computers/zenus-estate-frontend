@@ -106,6 +106,7 @@ export class GetProfile {
       charge_svc: boolean;
       created_at: string;
       updated_at: string;
+      walletBalance: number;
     };
   };
 }
@@ -216,7 +217,6 @@ export class GetAllEmergencies {
     }[];
   };
 }
-// .concat(["add new", "add new", "add new"])
 
 export class PostCreateEmergency {
   static Route = "/emergency";
@@ -281,7 +281,7 @@ export class GetOutstandingBalance {
   };
 }
 
-export interface PaystackResponseI {
+export interface PayStackResponseI {
   message: string;
   redirecturl: string;
   reference: string;
@@ -289,4 +289,66 @@ export interface PaystackResponseI {
   trans: string;
   transaction: string;
   trxref: string;
+}
+
+export interface PaymentHistoryI {
+  id: number;
+  user_id: number;
+  description: string;
+  amount: number;
+  fee: number;
+  ref_no: string;
+  receipt_no: string;
+  chart_of_account_id: number;
+  levy_setup_id: number;
+  payment_type_id: number;
+  bank_id: string | null;
+  branch_id: number;
+  transaction_status_id: number;
+  transaction_type_id: number;
+  paid: boolean;
+  approved: boolean;
+  payment_by: null;
+  value_date: string;
+  reference: string;
+  trans_id: string;
+  created_at: string;
+  updated_at: string;
+  levy: {
+    id: number;
+    special_name: string;
+    user_levy_outstanding_balance: number;
+  };
+  payment_type: {
+    id: number;
+    name: string;
+  };
+  transaction_status: {
+    id: number;
+    name: string;
+  };
+  bank: null;
+  transaction_type: {
+    id: number;
+    name: string;
+  };
+}
+
+export interface BalancesI {
+  id: number;
+  special_name: string;
+  user_levy_outstanding_balance: number;
+}
+
+export class GetDashboard {
+  static Route = "/user-dashboard";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      balances: Array<BalancesI>;
+      payment_history: Array<PaymentHistoryI>;
+    };
+  };
 }

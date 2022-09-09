@@ -3,15 +3,19 @@ import styled from "styled-components";
 import { Typography, Button } from "components/atoms";
 import { IconMasterCard, IconWallet } from "assets/icons";
 import { useQuery } from "@tanstack/react-query";
-import { getPaymentMethod } from "pages/request";
-import { paymentActions } from "store/reducers/payment/paymentSlice";
-import { useDispatch } from "react-redux";
+import { getPaymentMethod, getUserProfile } from "pages/request";
+import {
+  paymentActions,
+  paymentSelectors,
+} from "store/reducers/payment/paymentSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import * as yup from "yup";
 import { PaymentOptionNameEnum } from "api";
 import { AppIcon } from "utils";
 import { VALIDATIONS } from "app-constants";
+import { currencyFormat } from "utils/helpers";
 
 type Props = {
   page: number;
@@ -77,11 +81,16 @@ const getLabel = (name: string) => {
 
 export const PayOption = ({ page, setPage }: Props) => {
   // TODO: Get wallet balance
+  const { isLoading: profileLoading, data: profileData } = useQuery(
+    ["getUserProfile"],
+    getUserProfile
+  );
+
   const [payOption, setPayOption] = useState("");
 
-  const walletBalance = 0;
-
   const dispatch = useDispatch();
+
+  const details = useSelector(paymentSelectors.state);
 
   const { setValues } = paymentActions;
 
@@ -91,12 +100,18 @@ export const PayOption = ({ page, setPage }: Props) => {
     initialValues: { payment_method_id: null },
     validationSchema,
     onSubmit: (values) => {
-      dispatch(setValues(values));
+      dispatch(setValues({ ...details, ...values }));
       setPage(page + 1);
     },
   });
 
   const handleSelect = (name: string, id: number) => () => {
+    if (
+      name === PaymentOptionNameEnum.Wallet &&
+      (profileData?.walletBalance || 0) <= 0
+    ) {
+      return null;
+    }
     setPayOption(name);
     formik.setFieldValue("payment_method_id", id, true);
   };
@@ -149,12 +164,17 @@ export const PayOption = ({ page, setPage }: Props) => {
           <IconWallet fill="var(--blue)" style={{ marginRight: 12 }} />
           Wallet Balance
         </span>
-        <span>N{walletBalance}</span>
+        <span>
+          {profileLoading
+            ? "Getting Balance..."
+            : currencyFormat(profileData?.walletBalance || 0)}
+        </span>
       </div>
       <div className="center-contents">
         <Button
           text="Next"
           type="submit"
+          disabled={payOption === PaymentOptionNameEnum.Wallet}
           onClick={() => formik.handleSubmit()}
           style={{ marginTop: 130 }}
         />

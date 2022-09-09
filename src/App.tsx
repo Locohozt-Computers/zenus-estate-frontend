@@ -74,7 +74,7 @@ function App() {
             path={ROUTES.myBills.path}
             element={<Navigate replace to={ROUTES.instantPay.path} />}
           />
-          <Route path={ROUTES.myBills.path} element={<LazyInstantPayPage />}>
+          <Route path={ROUTES.myBills.path} element={<Outlet />}>
             <Route
               path={ROUTES.accountStatements.path}
               element={<LazyOtherPage />}
