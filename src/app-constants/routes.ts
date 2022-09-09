@@ -3,6 +3,10 @@ export const ROUTES = {
     path: "login",
     fullPath: "/login",
   },
+  signUp: {
+    path: "signUp",
+    fullPath: "/signUp",
+  },
   other: {
     path: "other",
     fullPath: "/other",
