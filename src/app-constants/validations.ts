@@ -11,6 +11,6 @@ export const VALIDATIONS = {
     .transform((v) => +v)
     .min(50)
     .nullable(),
-  paymentType: yup.string().required("Payment Type is required"),
+  paymentType: yup.string().required("Payment Type is required").nullable(),
   paymentMethod: yup.string().required("Payment Method is required").nullable(),
 };

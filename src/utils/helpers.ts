@@ -34,3 +34,19 @@ export const truncateLongName = (str: string) => {
 export const getInitials = (name: string) => {
   return name ? `${name[0].toUpperCase()}`.trim() : "-";
 };
+
+export const currencyFormat = (
+  num: number | string,
+  symbol: "$" | "₦" | string = "₦"
+) => {
+  return `${symbol?.trim() ?? ""} ${num
+    .toString()
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}`.trim();
+};
+
+currencyFormat.removeFormat = (str: string, sym = "₦"): number => {
+  return +str.replace(sym, "").replace(/[₦ ,]/g, "");
+};
+
+// @ts-ignore
+window.cur = currencyFormat;

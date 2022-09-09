@@ -14,8 +14,12 @@ import {
   paymentActions,
   paymentSelectors,
 } from "store/reducers/payment/paymentSlice";
-import { formatNameToDisplay, truncateLongName } from "utils/helpers";
-import { PaymentOptionNameEnum, PaystackResponseI } from "api";
+import {
+  currencyFormat,
+  formatNameToDisplay,
+  truncateLongName,
+} from "utils/helpers";
+import { PaymentOptionNameEnum, PayStackResponseI } from "api";
 import { Loader } from "components/atoms/Loader";
 
 type Props = {
@@ -79,9 +83,18 @@ const StyledDiv = styled.div`
 `;
 
 export const PaySummary = ({ page, setPage }: Props) => {
-  const { data: profile } = useQuery(["getUserProfile"], getUserProfile);
-  const { data: paymentTypes } = useQuery(["getPaymentType"], getPaymentType);
-  const { data: payMethods } = useQuery(["getPaymentMethod"], getPaymentMethod);
+  const { data: profile, isLoading: profileLoading } = useQuery(
+    ["getUserProfile"],
+    getUserProfile
+  );
+  const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
+    ["getPaymentType"],
+    getPaymentType
+  );
+  const { data: payMethods, isLoading: payMethodsLoading } = useQuery(
+    ["getPaymentMethod"],
+    getPaymentMethod
+  );
 
   const { mutate, isLoading } = useMutation(postBillPayment);
 
@@ -106,18 +119,14 @@ export const PaySummary = ({ page, setPage }: Props) => {
     [details.payment_method_id, payMethods]
   );
 
-  const amountCharged = details.charges;
-
-  const paymentFee = 0;
-
-  const total = (details?.amount || 0) + details?.outstandingBalance;
+  const total = details.final_amount;
 
   const onPaySuccess = useCallback(
-    (pRes: PaystackResponseI) => {
+    (pRes: PayStackResponseI) => {
       mutate(
         {
           amount: details?.amount || 0,
-          fee: 0,
+          fee: details.fees,
           payment_method_id: details.payment_method_id as number,
           payment_type_id: details.payment_type_id as number,
           final_amount: total,
@@ -126,7 +135,7 @@ export const PaySummary = ({ page, setPage }: Props) => {
         },
         {
           onSuccess: (res: Record<string, any>) => {
-            dispatch(setValues({ successResponse: res }));
+            dispatch(setValues({ ...details, successResponse: res }));
             setPage(page + 1);
           },
           onError: () => {
@@ -135,17 +144,7 @@ export const PaySummary = ({ page, setPage }: Props) => {
         }
       );
     },
-    [
-      details?.amount,
-      details.payment_method_id,
-      details.payment_type_id,
-      dispatch,
-      mutate,
-      page,
-      setPage,
-      setValues,
-      total,
-    ]
+    [details, dispatch, mutate, page, setPage, setValues, total]
   );
 
   const walletPayment = () => {
@@ -157,8 +156,6 @@ export const PaySummary = ({ page, setPage }: Props) => {
     //   setPage(page + 1);
     // }
   };
-
-  // Todo: calculate paystack fee
 
   useEffect(() => {
     setPayStackBtn({
@@ -174,13 +171,21 @@ export const PaySummary = ({ page, setPage }: Props) => {
 
   return (
     <StyledDiv>
-      <Loader open={isLoading} absolute />
+      <Loader
+        open={
+          isLoading ||
+          payMethodsLoading ||
+          paymentTypesLoading ||
+          profileLoading
+        }
+        absolute
+      />
       <span style={{ alignSelf: "flex-start" }}>
         <Typography
           textColor="blue"
           size={23}
           weight={500}
-          content={`You are about to pay N ${total}`}
+          content={`You are about to pay ${currencyFormat(total)}`}
         />
       </span>
       <div className="summary">
@@ -212,7 +217,7 @@ export const PaySummary = ({ page, setPage }: Props) => {
           <Typography
             variant="subtitle"
             textColor="blue"
-            content={paymentFee || "0"}
+            content={currencyFormat(details.fees)}
           />
         </div>
         <div className="summary-field">
@@ -228,7 +233,7 @@ export const PaySummary = ({ page, setPage }: Props) => {
           <Typography
             variant="subtitle"
             textColor="blue"
-            content={`${amountCharged}`}
+            content={`${currencyFormat(Math.abs(+details.outstandingBalance))}`}
           />
         </div>
         <div className="summary-field" style={{ height: "89px" }}>
@@ -237,18 +242,18 @@ export const PaySummary = ({ page, setPage }: Props) => {
             textColor="blue"
             size={23}
             weight={500}
-            content={`N ${total}`}
+            content={`${currencyFormat(total)}`}
           />
         </div>
       </div>
       {selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet ? (
-        <Button text={`Pay ${total}`} onClick={walletPayment} />
+        <Button text={`Pay ${currencyFormat(total)}`} onClick={walletPayment} />
       ) : (
         <PaystackButton
           {...{
             ...payStackBtn,
             publicKey: process.env.REACT_APP_PAYSTACK_KEY as string,
-            text: `Pay ${total}`,
+            text: `Pay ${currencyFormat(total)}`,
           }}
           // @ts-ignore
           onSuccess={onPaySuccess}
