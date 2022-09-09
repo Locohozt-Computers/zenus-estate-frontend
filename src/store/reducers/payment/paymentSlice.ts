@@ -7,25 +7,20 @@ export interface PaymentState {
   amount: number | null;
   outstandingBalance: number;
   payment_method_id: number | null;
-
-  charges: number;
+  fees: number;
+  final_amount: number;
   successResponse: Partial<typeof PostBillPayment.Res>;
 }
 
 const initialState: PaymentState = {
-  payment_type_id: 1,
+  payment_type_id: null,
   amount: 0,
   outstandingBalance: 0,
   payment_method_id: null,
   successResponse: {},
-
-  charges: 0,
-  // fee: 200,
+  fees: 0,
+  final_amount: 0,
 };
-
-export interface Item {
-  special_name: string;
-}
 
 export const paymentSlice = createSlice({
   name: "payment",
@@ -47,6 +42,11 @@ export const paymentSlice = createSlice({
       if (action.payload.outstandingBalance) {
         state.outstandingBalance = action.payload.outstandingBalance || 0;
       }
+      state.fees = action.payload.fees || 0;
+      state.final_amount = action.payload.final_amount || 0;
+    },
+    resetValues: () => {
+      return initialState;
     },
   },
 });
@@ -56,7 +56,6 @@ export const paymentActions = { ...paymentSlice.actions };
 export const paymentSelectors = {
   paymentTypeId: (state: RootState) => state.payment.payment_type_id,
   paymentMethodId: (state: RootState) => state.payment.payment_method_id,
-  charges: (state: RootState) => state.payment.charges,
   state: (state: RootState) => state.payment,
 };
 

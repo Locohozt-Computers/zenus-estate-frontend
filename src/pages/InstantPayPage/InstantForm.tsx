@@ -5,9 +5,15 @@ import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import { getPaymentType } from "pages/request";
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { paymentActions } from "store/reducers/payment/paymentSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  paymentActions,
+  paymentSelectors,
+} from "store/reducers/payment/paymentSlice";
 import { Button, Typography, FormikInput, Select } from "components/atoms";
+import { currencyFormat } from "utils/helpers";
+
+// Todo: amount is read only
 
 const StyledForm = styled.form`
   width: 100%;
@@ -19,7 +25,6 @@ const StyledForm = styled.form`
 `;
 
 const validationSchema = yup.object({
-  amount: VALIDATIONS.amount,
   payment_type_id: VALIDATIONS.paymentType,
 });
 
@@ -33,6 +38,8 @@ export const InstantForm = ({ page, setPage }: Props) => {
     ["paymentType"],
     getPaymentType
   );
+
+  const details = useSelector(paymentSelectors.state);
 
   const dispatch = useDispatch();
 
@@ -50,17 +57,22 @@ export const InstantForm = ({ page, setPage }: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      amount: "",
-      payment_type_id: "",
-      outstandingBalance: 0,
+      amount: currencyFormat(details.amount?.toString() || 0),
+      payment_type_id: details.payment_type_id as number,
+      outstandingBalance: currencyFormat(details.outstandingBalance || 0),
+      fees: details.fees,
+      final_amount: details.final_amount,
     },
     validationSchema,
     onSubmit: (values) => {
       dispatch(
         setValues({
+          ...values,
           payment_type_id: +values.payment_type_id,
-          amount: +values.amount,
-          outstandingBalance: values.outstandingBalance,
+          amount: +currencyFormat.removeFormat(values.amount),
+          outstandingBalance: +currencyFormat.removeFormat(
+            values.outstandingBalance
+          ),
         })
       );
       setPage(page + 1);
@@ -72,9 +84,15 @@ export const InstantForm = ({ page, setPage }: Props) => {
     if (pos && paymentTypes) {
       formik.setFieldValue(e.target.name, e.target.value);
       formik.setFieldValue(
-        "outstandingBalance",
-        paymentTypes[+pos].user_levy_outstanding_balance
+        "amount",
+        currencyFormat(paymentTypes[+pos].invoice_amount)
       );
+      formik.setFieldValue(
+        "outstandingBalance",
+        currencyFormat(paymentTypes[+pos].user_levy_outstanding_balance)
+      );
+      formik.setFieldValue("fees", paymentTypes[+pos].fees);
+      formik.setFieldValue("final_amount", paymentTypes[+pos].final_amount);
     }
   };
 
@@ -103,13 +121,16 @@ export const InstantForm = ({ page, setPage }: Props) => {
             formik.errors.payment_type_id
           }
         />
-        <FormikInput numbersOnly label="Amount" name="amount" />
+        <FormikInput readOnly label="Amount" name="amount" />
         <FormikInput
-          label="Outstanding Payment Balance"
+          label="Account Balance"
           name="outstandingBalance"
           readOnly
           style={{
-            color: "var(--blue)",
+            color:
+              +currencyFormat.removeFormat(formik.values.outstandingBalance) < 0
+                ? "var(--pink)"
+                : "var(--blue)",
             pointerEvents: "none",
           }}
         />

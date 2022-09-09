@@ -4,8 +4,11 @@ import { Typography, Button } from "components/atoms";
 import { IconMasterCard, IconWallet } from "assets/icons";
 import { useQuery } from "@tanstack/react-query";
 import { getPaymentMethod } from "pages/request";
-import { paymentActions } from "store/reducers/payment/paymentSlice";
-import { useDispatch } from "react-redux";
+import {
+  paymentActions,
+  paymentSelectors,
+} from "store/reducers/payment/paymentSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import * as yup from "yup";
@@ -83,6 +86,8 @@ export const PayOption = ({ page, setPage }: Props) => {
 
   const dispatch = useDispatch();
 
+  const details = useSelector(paymentSelectors.state);
+
   const { setValues } = paymentActions;
 
   const { data, isLoading } = useQuery(["getPaymentMethod"], getPaymentMethod);
@@ -91,7 +96,7 @@ export const PayOption = ({ page, setPage }: Props) => {
     initialValues: { payment_method_id: null },
     validationSchema,
     onSubmit: (values) => {
-      dispatch(setValues(values));
+      dispatch(setValues({ ...details, ...values }));
       setPage(page + 1);
     },
   });

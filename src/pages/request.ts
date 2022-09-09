@@ -10,7 +10,13 @@ import appRequest, {
   GetOutstandingBalance,
   PutUpdateEmergency,
   PostBillPayment,
+  GetDashboard,
 } from "api";
+
+export const getDashboard = async () => {
+  const res = await appRequest.get<typeof GetDashboard.Res>(GetDashboard.Route);
+  return res.data.data;
+};
 
 export const getUserProfile = async () => {
   const res = await appRequest.get<typeof GetProfile.Res>(GetProfile.Route);

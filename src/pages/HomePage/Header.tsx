@@ -6,6 +6,9 @@ import { MdLocationPin } from "react-icons/md";
 import { pxToEm } from "utils";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { useOnClickOutside } from "hooks";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProfile } from "pages/request";
+import { Loader } from "components/atoms/Loader";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -117,13 +120,17 @@ const Search = React.memo(
   }
 );
 
-export const HomeHeader = ({ name }: { name: string }) => {
+export const HomeHeader = () => {
+  const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
   const { ref, visible, setVisible } = useOnClickOutside(false);
 
   const makeSearch = useCallback(() => {}, []);
 
+  const name = (data?.tenant_name || data?.landlord_name) as string;
+
   return (
-    <Card style={{ marginBottom: 16 }}>
+    <Card style={{ marginBottom: 16, position: "relative" }}>
+      <Loader absolute open={isLoading} />
       <HeaderStyles>
         <div style={{ gridArea: "text", maxWidth: 400 }}>
           <Typography variant="heading4" className="text-truncate_2">
