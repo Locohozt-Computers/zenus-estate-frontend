@@ -5,7 +5,6 @@ import Arrow from "assets/images/arrowright.png";
 import { Typography } from "components";
 
 const StyledDiv = styled.div`
-  width: 480px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -36,7 +35,7 @@ export const WithdrawSuccess = ({ page, setPage }: Props) => {
           size={16}
           weight={500}
           textColor="med-gray"
-          content="Pay bills"
+          content="My wallet/withdraw/successful"
         />
       </span>
       <img

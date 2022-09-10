@@ -7,29 +7,27 @@ import {
   WithdrawSuccess,
 } from "components";
 import styled from "styled-components";
-import Arrow from "assets/images/arrowright.png";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
+import { pxToEm } from "utils";
 
 const StyledDiv = styled.div`
-  padding: 39px 80px 47px;
+  padding: ${pxToEm(32)} ${pxToEm(32)};
   border-radius: 16px;
-  width: 804px;
-  height: 757px;
+  width: ${pxToEm(840)};
+  height: ${pxToEm(757)};
   background-color: var(--white);
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 
   .arrow-icon {
     display: flex;
+    align-self: flex-start;
+    margin-bottom: ${pxToEm(32)};
   }
-
-  .paymentDetails {
-    align-self: center;
-    width: 570px;
+  .page-content {
+    width: ${pxToEm(570)};
     height: 100%;
+    margin: 0 auto;
   }
 `;
 
@@ -42,33 +40,11 @@ const WalletPage = () => {
 
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
-        </button>
-        <Typography size={16} weight={500} textColor="med-gray" content="" />
-      </span>
-      <div className="paymentDetails">
-        {/* {page === 0 && <InstantForm page={page} setPage={setPage} />}
-        {page === 1 && <PayOption page={page} setPage={setPage} />}
-        {page === 2 && (
-          <PaySummary
-            page={page}
-            setPage={setPage}
-            setPayStatus={setPayStatus}
-          />
-        )}
-        {page === 3 && payStatus && <PaySuccess />}
-        {page === 3 && !payStatus && <PayFailed />} */}
-      </div>
-      <div className="content">
-        <WalletOverview page={page} setPage={setPage} />
-        <AddAccount page={page} setPage={setPage} />
-        <WithdrawSuccess page={page} setPage={setPage} />
+      <div className="page-content">
+        {page === 3 && <WalletOverview page={page} setPage={setPage} />}
+        {page === 1 && <AddAccount page={page} setPage={setPage} />}
+        {page === 0 && <WithdrawView page={page} setPage={setPage} />}
+        {page === 3 && <WithdrawSuccess page={page} setPage={setPage} />}
       </div>
     </StyledDiv>
   );
