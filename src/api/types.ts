@@ -302,6 +302,11 @@ export interface PayStackResponseI {
   trxref: string;
 }
 
+export enum TransactionTypeEnum {
+  Credit = "c",
+  Debit = "d",
+}
+
 export interface PaymentHistoryI {
   id: number;
   user_id: number;
@@ -341,7 +346,7 @@ export interface PaymentHistoryI {
   bank: null;
   transaction_type: {
     id: number;
-    name: string;
+    name: TransactionTypeEnum;
   };
 }
 
@@ -349,6 +354,25 @@ export interface BalancesI {
   id: number;
   special_name: string;
   user_levy_outstanding_balance: number;
+}
+
+interface PaginationI {
+  current_page: number;
+  first_page_url: string;
+  from: string;
+  last_page: number;
+  last_page_url: string;
+  links: Array<{
+    url: string | null;
+    label: string;
+    active: boolean;
+  }>;
+  next_page_url: string;
+  path: string;
+  per_page: number;
+  prev_page_url: null | string;
+  to: number;
+  total: number;
 }
 
 export class GetDashboard {
@@ -398,5 +422,70 @@ export class PostMakeComplaint {
       created_at: string;
       updated_at: string;
     }>;
+  };
+}
+
+export class GetCustomerTransaction {
+  static Route = "/customer-transactions";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      current_page: number;
+      data: Array<PaymentHistoryI>;
+    } & PaginationI;
+  };
+}
+
+export class GetWalletTransactions {
+  static Route = "/wallet-transactions";
+
+  static Res: {
+    data: {
+      data: Array<{
+        id: number;
+        user_id: number;
+        description: string;
+        amount: number;
+        reference: string;
+        trans_id: string;
+        transaction_type_id: 1;
+        status: boolean;
+        created_at: string;
+        updated_at: string;
+        transaction_type: {
+          id: number;
+          name: TransactionTypeEnum;
+        };
+      }>;
+    } & PaginationI;
+  };
+}
+
+export class PostFundWallet {
+  static Route = "/fund-wallet";
+
+  static Body: {
+    amount: 6000;
+    reference: string;
+    trans_id: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      amount: number;
+      reference: string;
+      trans_id: string;
+      status: boolean;
+      user_id: number;
+      description: string;
+      transaction_type_id: number;
+      updated_at: string;
+      created_at: string;
+      id: number;
+    };
   };
 }
