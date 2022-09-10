@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button, Typography } from "components/atoms";
-import { PaystackButton } from "react-paystack";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPaymentMethod,
@@ -9,7 +8,7 @@ import {
   getUserProfile,
   postBillPayment,
 } from "pages/request";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   paymentActions,
   paymentSelectors,
@@ -21,11 +20,9 @@ import {
 } from "utils/helpers";
 import { PaymentOptionNameEnum, PayStackResponseI } from "api";
 import { Loader } from "components/atoms/Loader";
-
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
+import { notification } from "services";
+import { CustomPayStackButton } from "pages/InstantPayPage/PayStackButton";
+import { PageProps } from ".";
 
 const StyledDiv = styled.div`
   width: 100%;
@@ -72,6 +69,10 @@ const StyledDiv = styled.div`
     span {
       width: 40%;
     }
+
+    :last-child {
+      border-bottom: none;
+    }
   }
 
   .summary-title {
@@ -82,7 +83,9 @@ const StyledDiv = styled.div`
   }
 `;
 
-export const PaySummary = ({ page, setPage }: Props) => {
+export const PaySummary = ({ page, setPage }: PageProps) => {
+  const queryClient = useQueryClient();
+
   const { data: profile, isLoading: profileLoading } = useQuery(
     ["getUserProfile"],
     getUserProfile
@@ -122,16 +125,40 @@ export const PaySummary = ({ page, setPage }: Props) => {
   const total = details.final_amount;
 
   const onPaySuccess = useCallback(
-    (pRes: PayStackResponseI) => {
+    (pRes?: PayStackResponseI) => {
       mutate(
         {
-          amount: details?.amount || 0,
+          amount: details?.amountToCharge || 0,
           fee: details.fees,
           payment_method_id: details.payment_method_id as number,
           payment_type_id: details.payment_type_id as number,
           final_amount: total,
-          reference: pRes.reference,
-          trxref: pRes.trxref,
+          reference: pRes?.reference,
+          trxref: pRes?.trxref,
+        },
+        {
+          onSuccess: (res: Record<string, any>) => {
+            queryClient.invalidateQueries(["paymentType"]).then(() => {
+              dispatch(setValues({ ...details, successResponse: res }));
+              setPage(page + 1);
+            });
+          },
+          onError: () => {
+            setPage(page + 2);
+          },
+        }
+      );
+    },
+    [details, dispatch, mutate, page, queryClient, setPage, setValues, total]
+  );
+
+  const walletPayment = useCallback(() => {
+    if ((profile?.walletBalance || 0) > total) {
+      mutate(
+        {
+          amount: details?.amountToCharge || 0,
+          payment_method_id: details.payment_method_id as number,
+          payment_type_id: details.payment_type_id as number,
         },
         {
           onSuccess: (res: Record<string, any>) => {
@@ -143,23 +170,26 @@ export const PaySummary = ({ page, setPage }: Props) => {
           },
         }
       );
-    },
-    [details, dispatch, mutate, page, setPage, setValues, total]
-  );
 
-  const walletPayment = () => {
-    // if (walletBalance > total) {
-    //   setPayStatus(true);
-    //   setPage(page + 1);
-    // } else {
-    //   setPayStatus(false);
-    //   setPage(page + 1);
-    // }
-  };
+      setPage(page + 1);
+    } else {
+      notification.error("You don't have enough wallet balance");
+    }
+  }, [
+    details,
+    dispatch,
+    mutate,
+    page,
+    profile?.walletBalance,
+    setPage,
+    setValues,
+    total,
+  ]);
 
   useEffect(() => {
     setPayStackBtn({
       email: `${profile?.landlord_email}`,
+      // amount: Math.ceil(total * 100), // use to test until fixed
       amount: total * 100, // convert to kobo
     });
   }, [
@@ -189,7 +219,11 @@ export const PaySummary = ({ page, setPage }: Props) => {
         />
       </span>
       <div className="summary">
-        <div className="summary-title">{selectedPaymentType?.special_name}</div>
+        <div className="summary-title">
+          <Typography textColor="blue">
+            {selectedPaymentType?.special_name}
+          </Typography>
+        </div>
         <div className="summary-field">
           <span>Name</span>
           <Typography
@@ -247,17 +281,19 @@ export const PaySummary = ({ page, setPage }: Props) => {
         </div>
       </div>
       {selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet ? (
-        <Button text={`Pay ${currencyFormat(total)}`} onClick={walletPayment} />
+        <Button
+          text={`Pay ${currencyFormat(total)}`}
+          onClick={walletPayment}
+          disabled={!total}
+        />
       ) : (
-        <PaystackButton
-          {...{
-            ...payStackBtn,
-            publicKey: process.env.REACT_APP_PAYSTACK_KEY as string,
+        <CustomPayStackButton
+          {...payStackBtn}
+          onSuccess={onPaySuccess}
+          buttonProps={{
+            disabled: !total,
             text: `Pay ${currencyFormat(total)}`,
           }}
-          // @ts-ignore
-          onSuccess={onPaySuccess}
-          className="paystack-button"
         />
       )}
     </StyledDiv>

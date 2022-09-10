@@ -16,11 +16,8 @@ import { PaymentOptionNameEnum } from "api";
 import { AppIcon } from "utils";
 import { VALIDATIONS } from "app-constants";
 import { currencyFormat } from "utils/helpers";
-
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
+import { notification } from "services";
+import { PageProps } from ".";
 
 const StyledDiv = styled.div`
   width: 100%;
@@ -79,11 +76,11 @@ const getLabel = (name: string) => {
   return { label: "", icon: null };
 };
 
-export const PayOption = ({ page, setPage }: Props) => {
-  // TODO: Get wallet balance
+export const PayOption = ({ page, setPage }: PageProps) => {
   const { isLoading: profileLoading, data: profileData } = useQuery(
-    ["getUserProfile"],
-    getUserProfile
+    ["getUserProfileWallet"],
+    getUserProfile,
+    { cacheTime: 0, refetchOnWindowFocus: "always" }
   );
 
   const [payOption, setPayOption] = useState("");
@@ -110,6 +107,11 @@ export const PayOption = ({ page, setPage }: Props) => {
       name === PaymentOptionNameEnum.Wallet &&
       (profileData?.walletBalance || 0) <= 0
     ) {
+      notification.info(
+        profileLoading
+          ? "Please wait, retrieving wallet balance"
+          : "You don't have enough wallet balance"
+      );
       return null;
     }
     setPayOption(name);
@@ -134,7 +136,15 @@ export const PayOption = ({ page, setPage }: Props) => {
             </small>
           )}
       </div>
-      {isLoading && "loading..."}
+      {isLoading && (
+        <div style={{ padding: "20px 0" }}>
+          <Typography
+            size={14}
+            textColor="blue"
+            content="Getting payment methods..."
+          />
+        </div>
+      )}
       {!isLoading &&
         data &&
         data.map((el) => (
@@ -165,16 +175,17 @@ export const PayOption = ({ page, setPage }: Props) => {
           Wallet Balance
         </span>
         <span>
-          {profileLoading
-            ? "Getting Balance..."
-            : currencyFormat(profileData?.walletBalance || 0)}
+          {profileLoading ? (
+            <Typography size={14} content="Getting Balance..." />
+          ) : (
+            currencyFormat(profileData?.walletBalance || 0)
+          )}
         </span>
       </div>
       <div className="center-contents">
         <Button
           text="Next"
           type="submit"
-          disabled={payOption === PaymentOptionNameEnum.Wallet}
           onClick={() => formik.handleSubmit()}
           style={{ marginTop: 130 }}
         />

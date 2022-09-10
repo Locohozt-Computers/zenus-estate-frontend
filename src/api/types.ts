@@ -147,41 +147,52 @@ export class GetPaymentMethod {
   };
 }
 
+export interface PaymentSuccessResponse {
+  payment_type_id: number;
+  amount: number;
+  fee: number;
+  final_amount: number;
+  levy_setup_id: number;
+  user_id: number;
+  description: string;
+  ref_no: number;
+  receipt_no: string;
+  branch_id: number;
+  paid: boolean;
+  reference: string;
+  trans_id: string;
+  chart_of_account_id: number;
+  updated_at: string;
+  created_at: string;
+  id: number;
+}
+
 export class PostBillPayment {
   static Route = "/bill-payment";
 
   static Body: {
     payment_method_id: number;
     amount: number; // kobo
+    payment_type_id: number;
+  } & Partial<{
     fee: number;
     final_amount: number;
-    payment_type_id: number;
     reference: string;
     trxref: string;
-  };
+  }>;
 
   static Res: {
     status: number;
     message: string;
-    data: {
-      payment_type_id: number;
-      amount: number;
-      fee: number;
-      final_amount: number;
-      levy_setup_id: number;
-      user_id: number;
-      description: string;
-      ref_no: number;
-      receipt_no: string;
-      branch_id: number;
-      paid: boolean;
-      reference: string;
-      trans_id: string;
-      chart_of_account_id: number;
-      updated_at: string;
-      created_at: string;
-      id: number;
-    };
+    data: PaymentSuccessResponse;
+  };
+}
+
+export class PostWalletPayment extends PostBillPayment {
+  static Body: {
+    payment_method_id: number;
+    amount: number; // kobo
+    payment_type_id: number;
   };
 }
 

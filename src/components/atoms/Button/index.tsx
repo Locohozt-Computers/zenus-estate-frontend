@@ -2,18 +2,15 @@ import React, { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import { ReactComponent as Loader } from "assets/images/btn-loader.svg";
 import { ButtonLoader, ButtonWrapper } from "./style";
 
-interface ButtonProps extends PropsWithChildren {
+interface Props extends PropsWithChildren {
   text?: string;
   loading?: { loader: any; state: boolean } | boolean;
   secondary?: boolean;
 }
 
-export const Button = ({
-  children,
-  text,
-  loading,
-  ...rest
-}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
+export type ButtonProps = Props & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export const Button = ({ children, text, loading, ...rest }: ButtonProps) => {
   return (
     <ButtonWrapper
       btnDisable={!!loading}

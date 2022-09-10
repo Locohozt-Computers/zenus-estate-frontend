@@ -77,7 +77,7 @@ export const LoginForm = () => {
         </Form>
         <Typography>
           Dont have an account?{" "}
-          <Link to={ROUTES.other.fullPath} style={{ color: "var(--blue)" }}>
+          <Link to={ROUTES.signUp.fullPath} style={{ color: "var(--blue)" }}>
             Sign up here
           </Link>
         </Typography>

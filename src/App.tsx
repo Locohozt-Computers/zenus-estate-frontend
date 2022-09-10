@@ -7,7 +7,6 @@ import { AuthLayout, DashboardLayout } from "layouts";
 import { useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
 import NotFoundPage from "pages/NotFoundPage";
-import SignUpPage from "pages/SignUpPage";
 
 const LazyHomePage = React.lazy(() => import("pages/HomePage"));
 const LazyReportEmergencyPage = React.lazy(
@@ -19,6 +18,7 @@ const LazyInstantPayPage = React.lazy(() => import("pages/InstantPayPage"));
 const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
 const LazyWalletPage = React.lazy(() => import("pages/WalletPage"));
+const LazySignUpPage = React.lazy(() => import("pages/SignUpPage"));
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -50,17 +50,11 @@ function App() {
     <Suspense fallback={<PageLoad />}>
       <Routes>
         <Route path="/" element={<ProtectedRoute />}>
+          <Route path={ROUTES.signUp.path} element={<LazySignUpPage />} />
           <Route path={ROUTES.login.path} element={<LoginPage />} />
           <Route
             path="/"
             element={<Navigate replace to={ROUTES.login.path} />}
-          />
-        </Route>
-        <Route path="/" element={<ProtectedRoute />}>
-          <Route path={ROUTES.signUp.path} element={<SignUpPage />} />
-          <Route
-            path="/"
-            element={<Navigate replace to={ROUTES.signUp.path} />}
           />
         </Route>
 

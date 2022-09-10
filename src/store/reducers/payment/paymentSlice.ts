@@ -5,6 +5,7 @@ import { PostBillPayment } from "api";
 export interface PaymentState {
   payment_type_id: number | null;
   amount: number | null;
+  amountToCharge: number | null;
   outstandingBalance: number;
   payment_method_id: number | null;
   fees: number;
@@ -14,6 +15,7 @@ export interface PaymentState {
 
 const initialState: PaymentState = {
   payment_type_id: null,
+  amountToCharge: 0,
   amount: 0,
   outstandingBalance: 0,
   payment_method_id: null,
@@ -27,8 +29,11 @@ export const paymentSlice = createSlice({
   initialState,
   reducers: {
     setValues: (state, action: PayloadAction<Partial<PaymentState>>) => {
-      if (action.payload.amount) {
+      if (typeof action.payload.amount === "number") {
         state.amount = +action.payload.amount;
+      }
+      if (typeof action.payload.amountToCharge === "number") {
+        state.amountToCharge = +action.payload.amountToCharge;
       }
       if (typeof action.payload.payment_type_id === "number") {
         state.payment_type_id = action.payload.payment_type_id;

@@ -12,6 +12,7 @@ import {
 } from "store/reducers/payment/paymentSlice";
 import { Button, Typography, Select, Input } from "components/atoms";
 import { currencyFormat } from "utils/helpers";
+import { PageProps } from ".";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -19,19 +20,20 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  gap: 35px;
 `;
 
 const validationSchema = yup.object({
   payment_type_id: VALIDATIONS.paymentType,
 });
 
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+const setColor = (bal: number) => {
+  if (bal < 0) return "var(--pink)";
+  if (bal === 0) return "var(--blue)";
+  return "var(--green)";
 };
 
-export const InstantForm = ({ page, setPage }: Props) => {
+export const InstantForm = ({ page, setPage }: PageProps) => {
   const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
     ["paymentType"],
     getPaymentType
@@ -63,14 +65,15 @@ export const InstantForm = ({ page, setPage }: Props) => {
     },
     validationSchema,
     onSubmit: (values) => {
+      const oustd = +currencyFormat.removeFormat(values.outstandingBalance);
+      const amt = +currencyFormat.removeFormat(values.amount);
       dispatch(
         setValues({
           ...values,
+          amountToCharge: oustd >= 0 ? amt : Math.abs(oustd),
           payment_type_id: +values.payment_type_id,
-          amount: +currencyFormat.removeFormat(values.amount),
-          outstandingBalance: +currencyFormat.removeFormat(
-            values.outstandingBalance
-          ),
+          amount: amt,
+          outstandingBalance: oustd,
         })
       );
       setPage(page + 1);
@@ -131,14 +134,13 @@ export const InstantForm = ({ page, setPage }: Props) => {
           value={formik.values.outstandingBalance}
           readOnly
           style={{
-            color:
-              +currencyFormat.removeFormat(formik.values.outstandingBalance) < 0
-                ? "var(--pink)"
-                : "var(--blue)",
+            color: setColor(
+              +currencyFormat.removeFormat(formik.values.outstandingBalance)
+            ),
             pointerEvents: "none",
           }}
         />
-        <Button text="Next" type="submit" />
+        <Button text="Next" type="submit" disabled={paymentTypesLoading} />
       </StyledForm>
     </FormikProvider>
   );

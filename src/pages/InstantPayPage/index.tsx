@@ -18,27 +18,38 @@ import { getPaymentMethod } from "pages/request";
 import { AppIcon } from "utils";
 import { IconArrowLeft } from "assets/icons";
 
+const StyledCard = styled(Card)`
+  max-width: 804px;
+  max-height: 757px;
+  width: 100%;
+  padding: 60px;
+`;
+
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: calc(100vh - 40px);
 
   .arrow-icon {
     display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 16px;
   }
 
   .paymentDetails {
     align-self: center;
-    width: 570px;
     height: 100%;
+    padding: 0 40px;
   }
 `;
 
-const StyledCard = styled(Card)`
-  width: 804px;
-  max-height: 757px;
-`;
+export type PageProps = {
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+};
 
 const InstantPayPage = () => {
   const [page, setPage] = useState(0);
@@ -84,11 +95,14 @@ const InstantPayPage = () => {
     <DashboardContent>
       <StyledDiv>
         <StyledCard>
-          <span className="arrow-icon">
+          <div className="arrow-icon">
             <button
               type="button"
               onClick={handleBackBtn}
-              style={{ display: page < 1 ? "none" : "block" }}
+              style={{
+                display: page < 1 ? "none" : "block",
+                cursor: "pointer",
+              }}
             >
               <AppIcon size={45} render={IconArrowLeft} />
             </button>
@@ -96,9 +110,9 @@ const InstantPayPage = () => {
               size={16}
               weight={500}
               textColor="med-gray"
-              content={`Pay bills${pageDetails(page)}`}
+              content={page ? `Pay bills${pageDetails(page)}` : ""}
             />
-          </span>
+          </div>
           <div className="paymentDetails">
             {
               [
