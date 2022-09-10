@@ -11,6 +11,7 @@ import appRequest, {
   PutUpdateEmergency,
   PostBillPayment,
   GetDashboard,
+  PostWalletPayment,
 } from "api";
 
 export const getDashboard = async () => {
@@ -93,6 +94,16 @@ export const getPaymentMethod = async () => {
 export const postBillPayment = async (data: typeof PostBillPayment.Body) => {
   const res = await appRequest.post<typeof PostBillPayment.Res>(
     PostBillPayment.Route,
+    data
+  );
+  return res.data.data;
+};
+
+export const postWalletPayment = async (
+  data: typeof PostWalletPayment.Body
+) => {
+  const res = await appRequest.post<typeof PostWalletPayment.Res>(
+    PostWalletPayment.Route,
     data
   );
   return res.data.data;
