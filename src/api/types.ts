@@ -363,3 +363,40 @@ export class GetDashboard {
     };
   };
 }
+
+export class GetComplaintCategory {
+  static Route = "/complaint-category";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<{
+      id: number;
+      name: string;
+      status: boolean;
+      created_at: string;
+      updated_at: string;
+    }>;
+  };
+}
+
+export class PostMakeComplaint {
+  static Route = "/complaint";
+
+  static Body: {
+    complaint_category_id: number;
+    description: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<{
+      id: number;
+      name: string;
+      status: boolean;
+      created_at: string;
+      updated_at: string;
+    }>;
+  };
+}

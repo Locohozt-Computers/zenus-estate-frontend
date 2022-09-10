@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Card, Select, Typography } from "components";
+import { Button, Card, Select, TextArea, Typography } from "components";
 import { Link } from "react-router-dom";
 import { ROUTES } from "app-constants";
 import { Loader } from "components/atoms/Loader";
-import { TextArea } from "pages/ReportEmergencyPage/style";
 
 const PlayPage = () => {
   return (

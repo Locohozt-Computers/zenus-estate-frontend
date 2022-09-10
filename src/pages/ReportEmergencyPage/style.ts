@@ -67,19 +67,3 @@ export const DivContent = styled(Card)`
     padding: 56px 96px;
   }
 `;
-
-export const TextArea = styled.textarea`
-  background-color: var(--light-gray);
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  width: 100%;
-  row-span: 12;
-  font-family: inherit;
-  padding: ${pxToEm(33)};
-  padding-bottom: 0;
-
-  :focus {
-    border: 1px solid var(--blue);
-  }
-`;

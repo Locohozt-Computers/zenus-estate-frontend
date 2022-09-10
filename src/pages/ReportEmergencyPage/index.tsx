@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createEmergency, getAllEmergencyTypes } from "pages/request";
 import { Loader } from "components/atoms/Loader";
-import { Button, Typography } from "components";
+import { Button, TextArea, Typography } from "components";
 import {
   IconArrowLeft,
   IconEmergencyAdd,
@@ -17,14 +17,7 @@ import { EmergencyTypesI, EmergencyTypesStatusEnum } from "api";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import successImg from "assets/images/successEmergency.png";
-import {
-  ButtonStyle,
-  DivContent,
-  GoBack,
-  Selections,
-  TextArea,
-  Wrapper,
-} from "./style";
+import { ButtonStyle, DivContent, GoBack, Selections, Wrapper } from "./style";
 
 const getIcon = (icon: string) => {
   switch (icon) {

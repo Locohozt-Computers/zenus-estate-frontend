@@ -12,6 +12,8 @@ import appRequest, {
   PostBillPayment,
   GetDashboard,
   PostWalletPayment,
+  GetComplaintCategory,
+  PostMakeComplaint,
 } from "api";
 
 export const getDashboard = async () => {
@@ -105,6 +107,21 @@ export const postWalletPayment = async (
   const res = await appRequest.post<typeof PostWalletPayment.Res>(
     PostWalletPayment.Route,
     data
+  );
+  return res.data.data;
+};
+
+export const postComplaint = async (data: typeof PostMakeComplaint.Body) => {
+  const res = await appRequest.post<typeof PostMakeComplaint.Res>(
+    PostMakeComplaint.Route,
+    data
+  );
+  return res.data;
+};
+
+export const getComplaints = async () => {
+  const res = await appRequest.get<typeof GetComplaintCategory.Res>(
+    GetComplaintCategory.Route
   );
   return res.data.data;
 };

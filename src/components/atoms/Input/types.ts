@@ -1,4 +1,8 @@
-import { InputHTMLAttributes } from "react";
+import {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+} from "react";
 
 interface BaseProps {
   name: string;
@@ -9,6 +13,9 @@ interface BaseProps {
 }
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & BaseProps;
+
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
+  BaseProps;
 
 type SelectT = InputHTMLAttributes<HTMLSelectElement> & BaseProps;
 
