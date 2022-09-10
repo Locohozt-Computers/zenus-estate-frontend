@@ -15,10 +15,16 @@ const LazyReportEmergencyPage = React.lazy(
 const LazyContactAdminPage = React.lazy(() => import("pages/ContactAdminPage"));
 const LazyPrintReceiptPage = React.lazy(() => import("pages/PrintReceiptPage"));
 const LazyInstantPayPage = React.lazy(() => import("pages/InstantPayPage"));
-const LazyOtherPage = React.lazy(() => import("pages/OtherPage"));
+const LazyMyAccountPage = React.lazy(() => import("pages/MyAccountPage"));
 const LazyPlayPage = React.lazy(() => import("pages/PlayPage"));
 const LazyWalletPage = React.lazy(() => import("pages/WalletPage"));
 const LazySignUpPage = React.lazy(() => import("pages/SignUpPage"));
+const LazyEstateBanksPage = React.lazy(() => import("pages/EstateBanksPage"));
+const LazyAccountStatementPage = React.lazy(
+  () => import("pages/AccountStatementPage")
+);
+const LazyForgetPassword = React.lazy(() => import("pages/ForgetPasswordPage"));
+const LazyResetPassword = React.lazy(() => import("pages/ResetPasswordPage"));
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -53,6 +59,14 @@ function App() {
           <Route path={ROUTES.signUp.path} element={<LazySignUpPage />} />
           <Route path={ROUTES.login.path} element={<LoginPage />} />
           <Route
+            path={ROUTES.forgetPassword.path}
+            element={<LazyForgetPassword />}
+          />
+          <Route
+            path={ROUTES.resetPassword.path}
+            element={<LazyResetPassword />}
+          />
+          <Route
             path="/"
             element={<Navigate replace to={ROUTES.login.path} />}
           />
@@ -79,19 +93,22 @@ function App() {
           <Route path={ROUTES.myBills.path} element={<Outlet />}>
             <Route
               path={ROUTES.accountStatements.path}
-              element={<LazyOtherPage />}
+              element={<LazyAccountStatementPage />}
             />
             <Route
               path={ROUTES.instantPay.path}
               element={<LazyInstantPayPage />}
             />
           </Route>
-          <Route path={ROUTES.myAccount.path} element={<LazyOtherPage />} />
+          <Route path={ROUTES.myAccount.path} element={<LazyMyAccountPage />} />
           <Route
             path={ROUTES.printReceipt.path}
             element={<LazyPrintReceiptPage />}
           />
-          <Route path={ROUTES.estateBanks.path} element={<LazyOtherPage />} />
+          <Route
+            path={ROUTES.estateBanks.path}
+            element={<LazyEstateBanksPage />}
+          />
           <Route
             path={ROUTES.contactAdmin.path}
             element={<LazyContactAdminPage />}

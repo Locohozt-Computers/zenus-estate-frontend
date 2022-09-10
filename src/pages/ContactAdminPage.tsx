@@ -78,11 +78,11 @@ const ContactAdminPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      complaint_category_id: undefined,
+      complaint_category_id: "",
       description: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       mutate(
         {
           ...values,
@@ -91,6 +91,7 @@ const ContactAdminPage = () => {
         },
         {
           onSuccess: (r) => {
+            resetForm();
             notification.success(r.message || "Success");
           },
         }

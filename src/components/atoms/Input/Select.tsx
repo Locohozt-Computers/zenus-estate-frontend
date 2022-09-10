@@ -24,7 +24,6 @@ export const Select = ({
             id={name || id}
             name={name}
             className={`input-input ${className ?? ""}`.trim()}
-            defaultValue={rest.value}
             {...rest}
             placeholder={placeholder}
           >

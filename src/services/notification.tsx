@@ -17,7 +17,9 @@ const Styling = styled.div`
   > button {
     background: white;
     width: 20px;
+    min-width: 20px;
     height: 20px;
+    min-height: 20px;
     color: var(--blue);
     cursor: pointer;
     border-radius: 10px;

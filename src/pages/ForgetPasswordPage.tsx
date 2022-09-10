@@ -4,16 +4,14 @@ import { useMutation } from "@tanstack/react-query";
 import { FormikProvider, useFormik } from "formik";
 import * as yup from "yup";
 import { ROUTES, VALIDATIONS } from "app-constants";
-import { authActions } from "store/reducers/auth/authDocSlice";
-import { useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
 import { Link } from "react-router-dom";
-import { loginUser } from "pages/LoginPage/request";
+import { notification } from "services";
+import { forgetPassword } from "./request";
 
 const validationSchema = yup.object({
   email: VALIDATIONS.email,
-  password: VALIDATIONS.password,
 });
 
 const Form = styled.form`
@@ -24,25 +22,16 @@ const Form = styled.form`
   gap: 50px;
 `;
 
-const ForgetPassword = styled.div`
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-export const LoginForm = () => {
-  const dispatch = useDispatch();
-  const { isLoading, mutate } = useMutation(loginUser);
-
-  const { authUser } = authActions;
+const ForgetPasswordPage = () => {
+  const { isLoading, mutate } = useMutation(forgetPassword);
 
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: { email: "" },
     validationSchema,
     onSubmit: (values) => {
       mutate(values, {
         onSuccess: (response) => {
-          dispatch(authUser(response));
+          notification.success(response.message);
         },
       });
     },
@@ -52,7 +41,7 @@ export const LoginForm = () => {
     <FormikProvider value={formik}>
       <div style={{ width: "100%", maxWidth: 572 }}>
         <Typography.Heading variant="heading3">
-          Login my ZENUS account
+          Forget ZENUS account Password
         </Typography.Heading>
         <Typography.Heading variant="bodyBig">
           Estate management made easy
@@ -63,27 +52,19 @@ export const LoginForm = () => {
             label="Email Address"
             name="email"
           />
-          <div>
-            <FormikInput type="password" name="password" label="Password" />
-            <ForgetPassword>
-              <Typography textColor="blue">
-                <Link to={ROUTES.forgetPassword.fullPath}>
-                  Forget Password?
-                </Link>
-              </Typography>
-            </ForgetPassword>
-          </div>
           <div className="center-contents">
-            <Button type="submit" text="login" loading={isLoading} />
+            <Button type="submit" text="Continue" loading={isLoading} />
           </div>
         </Form>
         <Typography>
-          Dont have an account?{" "}
-          <Link to={ROUTES.signUp.fullPath} style={{ color: "var(--blue)" }}>
-            Sign up here
+          Have an account?{" "}
+          <Link to={ROUTES.login.fullPath} style={{ color: "var(--blue)" }}>
+            Login
           </Link>
         </Typography>
       </div>
     </FormikProvider>
   );
 };
+
+export default ForgetPasswordPage;
