@@ -1,9 +1,25 @@
-import React from "react";
-import { Button, Card, Select, Typography } from "components";
-import { TextArea } from "pages/ReportEmergencyPage/style";
+import React, { useMemo } from "react";
+import {
+  Button,
+  Card,
+  FormikSelect,
+  Typography,
+  FormikTextArea,
+} from "components";
 import { DashboardContent } from "layouts";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { FormikProvider, useFormik } from "formik";
+import * as yup from "yup";
+import { VALIDATIONS } from "app-constants";
+import { notification } from "services";
+import { getComplaints, postComplaint } from "./request";
+
+const validationSchema = yup.object({
+  complaint_category_id: VALIDATIONS.complaintCategory,
+  description: VALIDATIONS.description.required("Description is required"),
+});
 
 const ContactAdminStyle = styled.div`
   width: 100%;
@@ -42,18 +58,52 @@ const ContactAdminStyle = styled.div`
     margin-top: 35px;
   }
 `;
+
 const ContactAdminPage = () => {
+  const { data: categories, isLoading } = useQuery(
+    ["getComplaints"],
+    getComplaints
+  );
+  const { mutate, isLoading: isSubmitting } = useMutation(postComplaint);
+
+  const categoriesOption = useMemo(() => {
+    if (categories) {
+      return categories.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+    }
+    return [];
+  }, [categories]);
+
+  const formik = useFormik({
+    initialValues: {
+      complaint_category_id: undefined,
+      description: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      mutate(
+        {
+          ...values,
+          complaint_category_id:
+            values.complaint_category_id as unknown as number,
+        },
+        {
+          onSuccess: (r) => {
+            notification.success(r.message || "Success");
+          },
+        }
+      );
+    },
+  });
+
   return (
     <DashboardContent>
       <ContactAdminStyle>
         <Card className="contact-card">
           <div className="contact-admin-content">
-            <Typography
-              className="p-tag-one"
-              textColor="black"
-              weight={400}
-              color="#131313"
-            >
+            <Typography className="p-tag-one" textColor="black">
               Contact admin
             </Typography>
             <Typography
@@ -64,27 +114,32 @@ const ContactAdminPage = () => {
             >
               Got a problem? Send us a message immediately
             </Typography>
-            <Typography className="" textColor="med-gray" weight={400}>
+            <Typography className="" textColor="med-gray">
               We’ll reply you as soon as possible.
             </Typography>
 
-            <form>
-              <div className="complaints-select">
-                <Select
-                  label="Complaints Category"
-                  options={["Payment Issues"]}
-                  name="Complaints Category"
-                />{" "}
-              </div>
-              <TextArea
-                placeholder="Describe the emergency type here"
-                name="description"
-                rows={10}
-              />
-              <div className="btn-container">
-                <Button text="Send" />
-              </div>
-            </form>
+            <FormikProvider value={formik}>
+              <form onSubmit={formik.handleSubmit}>
+                <div className="complaints-select">
+                  <FormikSelect
+                    label="Complaints Category"
+                    options={categoriesOption}
+                    name="complaint_category_id"
+                    loading={isLoading}
+                  />
+                </div>
+                <FormikTextArea
+                  placeholder="Describe the emergency type here"
+                  name="description"
+                  onChange={formik.handleChange}
+                  value={formik.values.description}
+                  rows={10}
+                />
+                <div className="btn-container">
+                  <Button type="submit" text="Send" loading={isSubmitting} />
+                </div>
+              </form>
+            </FormikProvider>
           </div>
         </Card>
       </ContactAdminStyle>

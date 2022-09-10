@@ -11,6 +11,10 @@ export const VALIDATIONS = {
     .transform((v) => +v)
     .min(50)
     .nullable(),
+  complaintCategory: yup
+    .string()
+    .required("Complaint Category is required")
+    .nullable(),
   paymentType: yup.string().required("Payment Type is required").nullable(),
   paymentMethod: yup.string().required("Payment Method is required").nullable(),
 };
