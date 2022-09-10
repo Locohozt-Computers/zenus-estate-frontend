@@ -16,6 +16,7 @@ import appRequest, {
   PostMakeComplaint,
   PostForgotPassword,
   PostResetPassword,
+  GetCustomerTransaction,
 } from "api";
 
 export const getDashboard = async () => {
@@ -124,6 +125,13 @@ export const postComplaint = async (data: typeof PostMakeComplaint.Body) => {
 export const getComplaints = async () => {
   const res = await appRequest.get<typeof GetComplaintCategory.Res>(
     GetComplaintCategory.Route
+  );
+  return res.data.data;
+};
+
+export const getAllTransactions = async () => {
+  const res = await appRequest.get<typeof GetCustomerTransaction.Res>(
+    GetCustomerTransaction.Route
   );
   return res.data.data;
 };

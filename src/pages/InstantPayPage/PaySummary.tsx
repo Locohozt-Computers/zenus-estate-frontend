@@ -138,10 +138,16 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
         },
         {
           onSuccess: (res: Record<string, any>) => {
-            queryClient.invalidateQueries(["paymentType"]).then(() => {
-              dispatch(setValues({ ...details, successResponse: res }));
-              setPage(page + 1);
-            });
+            queryClient
+              .invalidateQueries([
+                "paymentType",
+                "getDashboard",
+                "getAllTransactions",
+              ])
+              .then(() => {
+                dispatch(setValues({ ...details, successResponse: res }));
+                setPage(page + 1);
+              });
           },
           onError: () => {
             setPage(page + 2);
@@ -189,7 +195,6 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
   useEffect(() => {
     setPayStackBtn({
       email: `${profile?.landlord_email}`,
-      // amount: Math.ceil(total * 100), // use to test until fixed
       amount: total * 100, // convert to kobo
     });
   }, [
