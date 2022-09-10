@@ -14,6 +14,8 @@ import appRequest, {
   PostWalletPayment,
   GetComplaintCategory,
   PostMakeComplaint,
+  PostForgotPassword,
+  PostResetPassword,
 } from "api";
 
 export const getDashboard = async () => {
@@ -124,4 +126,20 @@ export const getComplaints = async () => {
     GetComplaintCategory.Route
   );
   return res.data.data;
+};
+
+export const forgetPassword = async (data: typeof PostForgotPassword.Body) => {
+  const res = await appRequest.post<typeof PostForgotPassword.Res>(
+    PostForgotPassword.Route,
+    data
+  );
+  return res.data;
+};
+
+export const resetPassword = async (data: typeof PostResetPassword.Body) => {
+  const res = await appRequest.post<typeof PostResetPassword.Res>(
+    PostResetPassword.Route,
+    data
+  );
+  return res.data;
 };

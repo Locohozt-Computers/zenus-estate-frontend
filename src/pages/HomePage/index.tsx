@@ -44,6 +44,7 @@ const HomePage = () => {
             <AccountList>
               {data?.balances.map((t) => (
                 <BalanceCard
+                  key={t.special_name}
                   name={t.special_name}
                   amount={currencyFormat(t.user_levy_outstanding_balance)}
                 />

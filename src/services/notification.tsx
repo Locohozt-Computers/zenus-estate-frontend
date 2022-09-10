@@ -1,11 +1,13 @@
 import toast, { Toast, ToastOptions } from "react-hot-toast";
 import styled from "styled-components/macro";
 import { CgClose } from "react-icons/cg";
+import { HTMLAttributes } from "react";
 
 const Styling = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  color: white;
 
   .content {
     display: flex;
@@ -13,10 +15,12 @@ const Styling = styled.div`
   }
 
   > button {
-    background: var(--blue);
+    background: white;
     width: 20px;
+    min-width: 20px;
     height: 20px;
-    color: white;
+    min-height: 20px;
+    color: var(--blue);
     cursor: pointer;
     border-radius: 10px;
     display: flex;
@@ -28,12 +32,13 @@ const Styling = styled.div`
 const NotificationBody = ({
   toastInstance: t,
   message,
-}: {
+  ...rest
+}: HTMLAttributes<HTMLDivElement> & {
   toastInstance: Toast;
   message: any;
 }) => {
   return (
-    <Styling>
+    <Styling {...rest}>
       <div>{message}</div>
       <button type="button" onClick={() => toast.dismiss(t.id)}>
         <CgClose />
@@ -49,16 +54,40 @@ interface NotificationType {
 }
 
 const success = (message: string, options?: ToastOptions) => {
-  return toast.success(message, options);
+  return toast(
+    (t) => <NotificationBody message={message} toastInstance={t} />,
+    {
+      ...options,
+      style: {
+        ...options?.style,
+        backgroundColor: "var(--green)",
+      },
+    }
+  );
 };
 const error = (message: string, options?: ToastOptions) => {
-  return toast.error(message, options);
+  return toast(
+    (t) => <NotificationBody message={message} toastInstance={t} />,
+    {
+      ...options,
+      style: {
+        ...options?.style,
+        backgroundColor: "var(--pink)",
+      },
+    }
+  );
 };
 
 const info = (message: string, options?: ToastOptions) => {
   return toast(
     (t) => <NotificationBody message={message} toastInstance={t} />,
-    options
+    {
+      ...options,
+      style: {
+        ...options?.style,
+        backgroundColor: "var(--blue)",
+      },
+    }
   );
 };
 

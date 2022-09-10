@@ -4,44 +4,45 @@ import { DashboardContent } from "layouts";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
 
-const PrintReceiptPage = () => {
-  const ContactAdminStyle = styled.div`
-    width: 100%;
-    height: calc(100vh - 40px);
+const ContactAdminStyle = styled.div`
+  width: 100%;
+  height: calc(100vh - 40px);
 
+  @media screen and (min-width: ${pxToEm(900)}) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .contact-card {
+    width: 100%;
+    max-width: 810px;
+  }
+  .contact-admin-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     @media screen and (min-width: ${pxToEm(900)}) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0 96px 48px 96px;
     }
-    .contact-card {
-      width: 100%;
-      max-width: 810px;
-    }
-    .contact-admin-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      @media screen and (min-width: ${pxToEm(900)}) {
-        margin: 0 96px 48px 96px;
-      }
-    }
-    .p-tag-one {
-      margin-top: 61px;
-    }
-    .p-tag-two {
-      margin: 29px 0 19px 0;
-    }
-    .select {
-      margin: 44px 0 44px 0;
-    }
-    .btn-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 105px;
-    }
-  `;
+  }
+  .p-tag-one {
+    margin-top: 61px;
+  }
+  .p-tag-two {
+    margin: 29px 0 19px 0;
+  }
+  .select {
+    margin: 44px 0 44px 0;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 105px;
+  }
+`;
+
+const PrintReceiptPage = () => {
   return (
     <DashboardContent>
       <ContactAdminStyle>
