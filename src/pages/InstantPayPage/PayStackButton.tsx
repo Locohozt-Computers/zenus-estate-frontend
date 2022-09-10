@@ -24,7 +24,7 @@ export const CustomPayStackButton = ({
   } as PaystackProps);
   return (
     <Button
-      className={clsx("paystack-button", buttonProps?.className)}
+      className={clsx("paystack-button", buttonProps?.className as string)}
       text={buttonProps?.text}
       {...buttonProps}
       onClick={(): void => initializePayment(onSuccess, onClose)}

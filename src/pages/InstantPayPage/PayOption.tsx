@@ -63,7 +63,7 @@ const validationSchema = yup.object({
   payment_method_id: VALIDATIONS.paymentMethod,
 });
 
-const getLabel = (name: string) => {
+const getLabel = (name: PaymentOptionNameEnum) => {
   if (name === PaymentOptionNameEnum.Wallet) {
     return {
       label: "My Zenus Wallet Balance",
