@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, FormikInput, Typography } from "components/atoms";
 import { useMutation } from "@tanstack/react-query";
 import { FormikProvider, useFormik } from "formik";
@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { ROUTES, VALIDATIONS } from "app-constants";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { notification } from "services";
 import { resetPassword } from "./request";
 
@@ -28,6 +28,9 @@ const Form = styled.form`
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
+
+  const location = useLocation();
+
   const { isLoading, mutate } = useMutation(resetPassword);
 
   const formik = useFormik({
@@ -42,7 +45,9 @@ const ResetPasswordPage = () => {
       mutate(values, {
         onSuccess: (response) => {
           notification.success(response.message);
-          notification.info("You will be redirected shortly");
+          setTimeout(() => {
+            notification.info("You will be redirected to Login shortly");
+          }, 1000);
           setTimeout(() => {
             navigate(ROUTES.login.fullPath);
           }, 3000);
@@ -50,6 +55,20 @@ const ResetPasswordPage = () => {
       });
     },
   });
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const token = query.get("token");
+    const email = query.get("email");
+
+    if (token) {
+      formik.setFieldValue("email", email);
+      formik.setFieldValue("token", token);
+    } else {
+      navigate(ROUTES.login.fullPath, { replace: true });
+    }
+    // eslint-disable-next-line
+  }, [location.search]);
 
   return (
     <FormikProvider value={formik}>
