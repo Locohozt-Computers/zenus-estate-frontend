@@ -103,9 +103,6 @@ const ContactAdminPage = () => {
       <ContactAdminStyle>
         <Card className="contact-card">
           <div className="contact-admin-content">
-            <Typography className="p-tag-one" textColor="black">
-              Contact admin
-            </Typography>
             <Typography
               className="p-tag-two"
               textColor="blue"

@@ -1,8 +1,4 @@
-import {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  TextareaHTMLAttributes,
-} from "react";
+import { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 interface BaseProps {
   name: string;

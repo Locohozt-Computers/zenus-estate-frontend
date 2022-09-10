@@ -1,5 +1,5 @@
 /* eslint-disable */
-import styled, { css } from "styled-components/macro";
+import styled, { css, CSSObject } from "styled-components/macro";
 import { pxToEm } from "utils";
 import { cssObjectToString } from "utils/helpers";
 import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
@@ -32,6 +32,7 @@ export interface TextProps extends Text {
   size?: number;
   weight?: number;
   className?: string;
+  transform?: CSSObject["transform"];
 }
 
 const setVariant = (variant: TextVariant) => {
@@ -72,13 +73,14 @@ const setVariant = (variant: TextVariant) => {
 };
 
 export const TextWrapper = styled.p<TextProps>`
+  font-weight: ${({ weight }) => weight && weight};
+  font-size: ${({ size }) => (size ? pxToEm(size) : pxToEm(16))};
   ${({ variant }) =>
     variant &&
     css`
       ${setVariant(variant)}
     `};
-  font-weight: ${({ weight }) => weight && weight};
-  font-size: ${({ size }) => size && pxToEm(size)};
+  text-transform: ${({ transform }) => transform};
   ${({ textColor, color }) =>
     (textColor || color) &&
     css`

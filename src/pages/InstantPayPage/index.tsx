@@ -53,7 +53,9 @@ export type PageProps = {
 
 const InstantPayPage = () => {
   const [page, setPage] = useState(0);
+
   const { data: payMethods } = useQuery(["getPaymentMethod"], getPaymentMethod);
+
   const pId = useSelector(paymentSelectors.paymentMethodId);
 
   const dispatch = useDispatch();

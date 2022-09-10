@@ -57,7 +57,7 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
 
   const formik = useFormik({
     initialValues: {
-      amount: currencyFormat(details.amount?.toString() || 0),
+      amount: currencyFormat(details.amount || 0),
       payment_type_id: details.payment_type_id as number,
       outstandingBalance: currencyFormat(details.outstandingBalance || 0),
       fees: details.fees,
