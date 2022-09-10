@@ -267,7 +267,9 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
           <Typography
             variant="subtitle"
             textColor="blue"
-            content={`${currencyFormat(Math.abs(+details.outstandingBalance))}`}
+            content={`${currencyFormat(
+              Math.abs(details?.amountToCharge || 0)
+            )}`}
           />
         </div>
         <div className="summary-field" style={{ height: "89px" }}>
