@@ -12,7 +12,7 @@ const StyledDiv = styled.div`
   padding: ${pxToEm(32)} ${pxToEm(32)};
   border-radius: 16px;
   width: ${pxToEm(840)};
-  height: ${pxToEm(757)};
+  height: calc(100vh - 40px);
   background-color: var(--white);
   margin: 0 auto;
 
@@ -38,9 +38,9 @@ const WalletPage = () => {
   return (
     <StyledDiv>
       <div className="page-content">
-        {page === 3 && <WalletOverview page={page} setPage={setPage} />}
+        {page === 0 && <WalletOverview page={page} setPage={setPage} />}
         {page === 1 && <AddAccount page={page} setPage={setPage} />}
-        {page === 0 && <WithdrawView page={page} setPage={setPage} />}
+        {page === 2 && <WithdrawView page={page} setPage={setPage} />}
         {page === 3 && <WithdrawSuccess page={page} setPage={setPage} />}
       </div>
     </StyledDiv>

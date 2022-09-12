@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Arrow from "assets/images/arrowright.png";
-import balanceimg from "assets/images/balanceimg.png";
+import Balanceimg from "assets/images/balanceimg.png";
 import { Typography, Button, Select } from "components";
 import { WalletCard } from "components/molecules/WalletCard";
 import { pxToEm } from "utils";
@@ -28,7 +28,7 @@ const StyledDiv = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-image: url(${balanceimg}) no-repeat center;
+    background: url(${Balanceimg}) no-repeat center;
     background-size: cover;
   }
   .wallet-select {
@@ -69,7 +69,7 @@ export const WalletOverview = ({ page, setPage }: Props) => {
         </span>
         <div
           className="wallet-balance"
-          // style={{ backgroundImage: `url(${balanceimg})  no-repeat center` }}
+          // style={{ backgroundImage: `url(${Balanceimg})` }}
         >
           <Typography
             content="Your balance"

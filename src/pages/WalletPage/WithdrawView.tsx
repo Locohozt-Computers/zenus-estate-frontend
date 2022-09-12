@@ -4,6 +4,7 @@ import { Typography, Button, Input, Select } from "components";
 import Arrow from "assets/images/arrowright.png";
 import Bankimg from "assets/images/firstbank.png";
 import { pxToEm } from "utils";
+import { AiOutlinePlus } from "react-icons/ai";
 
 type Props = {
   page: number;
@@ -13,25 +14,43 @@ type Props = {
 const StyledDiv = styled.div`
   width: ${pxToEm(570)};
   height: 100%;
-  border: 1px solid red;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
+  align-items: flex-start;
+  justify-content: center;
 
-  .saved-account-div {
+  .display-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wallet-content {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: flex-start;
+  }
+
+  .saved-account {
     padding: ${pxToEm(35)};
     height: ${pxToEm(185)};
     background: #fdfafd;
     border-radius: 10px;
     display: flex;
-    justify-content: space-between;
-    align-self: stretch;
+    justify-content: flex-start;
+    width: 100%;
+
+    &-text {
+      align-items: flex-start;
+      align-self: flex-start;
+      flex-direction: column;
+      margin-left: ${pxToEm(22)};
+      min-height: ${pxToEm(90)};
+    }
   }
 `;
 
 export const WithdrawView = ({ page, setPage }: Props) => {
-  const Bank = "FIrst Bank";
+  const Bank = "First Bank PLC";
   const Name = "Daniel Mbazu";
   const Account = "11111111111111";
 
@@ -44,12 +63,12 @@ export const WithdrawView = ({ page, setPage }: Props) => {
         <button
           type="button"
           onClick={() => setPage(page - 1)}
-          style={{ visibility: page < 1 ? "hidden" : "visible" }}
+          // style={{ visibility: page < 1 ? "hidden" : "visible" }}
         >
           <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
         </button>
       </span>
-      <div className="wallet-content">
+      <div className="display-flex wallet-content">
         <span className="arrow-icon">
           <Typography
             size={16}
@@ -58,25 +77,46 @@ export const WithdrawView = ({ page, setPage }: Props) => {
             content="My Wallet"
           />
         </span>
-        <div className="saved-account-div">
+        <div className="saved-account">
           <img
             src={Bankimg}
             alt="bank"
             style={{ width: `${pxToEm(85)}`, height: `${pxToEm(85)}` }}
           />
-          <div className="saved-account-text">
-            <Typography variant="subtitle" content={Bank} />
-            <Typography variant="subtitle" content={newAccount} />
+          <div className="saved-account-text display-flex ">
+            <Typography variant="heading5" content={Bank} />
+            <Typography
+              variant="subtitle"
+              content={newAccount}
+              textColor="med-gray"
+            />
             <Typography variant="bodyBig">
               Recipient Name: <span>{Name}</span>
             </Typography>
           </div>
         </div>
-        <Typography variant="subtitle" content="Amount to withdraw" />
-        <Input name="amount" placeholder="N200,000" />
+        <div style={{ alignSelf: "flex-end" }} className="display-flex">
+          <button type="button" style={{ color: "var(--blue)" }}>
+            <AiOutlinePlus />
+          </button>
+          <Typography
+            variant="bodyBig"
+            textColor="blue"
+            content="Add New Account"
+          />
+        </div>
+        <Input
+          name="amount"
+          placeholder="N200,000"
+          label="Amount to withdraw"
+        />
         <Button
           text="Withdraw"
-          style={{ marginTop: `${pxToEm(32)}`, alignSelf: "center" }}
+          style={{
+            marginBottom: `${pxToEm(75)}`,
+            marginTop: `${pxToEm(60)}`,
+            alignSelf: "center",
+          }}
           disabled
         />
       </div>
