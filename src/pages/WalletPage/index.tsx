@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import {
-  WalletOverview,
-  AddAccount,
-  WithdrawView,
-  WithdrawSuccess,
-} from "components";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
 import { pxToEm } from "utils";
+import { WalletOverview } from "./WalletOverview";
+import { AddAccount } from "./AddAccount";
+import { WithdrawView } from "./WithdrawView";
+import { WithdrawSuccess } from "./WithdrawSuccess";
 
 const StyledDiv = styled.div`
   padding: ${pxToEm(32)} ${pxToEm(32)};

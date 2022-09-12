@@ -13,15 +13,20 @@ type Props = {
 const StyledDiv = styled.div`
   width: ${pxToEm(570)};
   height: 100%;
+  border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: stretch;
 
-  .saved-account {
+  .saved-account-div {
     padding: ${pxToEm(35)};
     height: ${pxToEm(185)};
     background: #fdfafd;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-self: stretch;
   }
 `;
 
@@ -53,19 +58,25 @@ export const WithdrawView = ({ page, setPage }: Props) => {
             content="My Wallet"
           />
         </span>
-        <div className="saved-account">
-          <img src={Bankimg} alt="bank" />
-          <Typography variant="subtitle" content={Bank} />
-          <Typography variant="subtitle" content={newAccount} />
-          <Typography variant="bodyBig">
-            Recipient Name: <span>{Name}</span>
-          </Typography>
+        <div className="saved-account-div">
+          <img
+            src={Bankimg}
+            alt="bank"
+            style={{ width: `${pxToEm(85)}`, height: `${pxToEm(85)}` }}
+          />
+          <div className="saved-account-text">
+            <Typography variant="subtitle" content={Bank} />
+            <Typography variant="subtitle" content={newAccount} />
+            <Typography variant="bodyBig">
+              Recipient Name: <span>{Name}</span>
+            </Typography>
+          </div>
         </div>
         <Typography variant="subtitle" content="Amount to withdraw" />
         <Input name="amount" placeholder="N200,000" />
         <Button
           text="Withdraw"
-          style={{ marginTop: `${pxToEm(32)}` }}
+          style={{ marginTop: `${pxToEm(32)}`, alignSelf: "center" }}
           disabled
         />
       </div>
