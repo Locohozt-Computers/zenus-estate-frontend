@@ -2,6 +2,7 @@ import React from "react";
 import { SelectProps } from "components/atoms/Input/types";
 import { useFormikContext } from "formik";
 import { InputWrapper } from "components/atoms/Input/style";
+import { IconSpinner } from "assets/icons";
 
 export const Select = ({
   className,
@@ -11,48 +12,55 @@ export const Select = ({
   error,
   placeholder,
   options,
+  loading,
   ...rest
 }: SelectProps) => {
   return (
-    <InputWrapper>
+    <InputWrapper loading={loading}>
       <label htmlFor={name || id}>
         {label && <span className="input-label">{label}</span>}
-        <select
-          id={name || id}
-          name={name}
-          className={`input-input ${className ?? ""}`.trim()}
-          {...rest}
-        >
-          {placeholder && (
-            <option
-              value=""
-              disabled
-              selected
-              style={{
-                fontSize: "17px",
-                fontWeight: "500",
-                color: "var(--med-gray)",
-              }}
-            >
-              {placeholder}
+        <div className="input-container">
+          <select
+            id={name || id}
+            name={name}
+            className={`input-input ${className ?? ""}`.trim()}
+            {...rest}
+            placeholder={placeholder}
+          >
+            <option value="" style={{ pointerEvents: "none" }}>
+              {loading ? "Loading..." : placeholder ?? "Select..."}
             </option>
-          )}
-          {options &&
-            options.map((option, i) =>
-              typeof option === "string" ? (
-                <option key={`${option}-${i.toString()}`} value={option}>
-                  {option}
-                </option>
-              ) : (
-                <option
-                  key={`${option.label}-${i.toString()}`}
-                  value={option.value}
-                >
-                  {option.label}
-                </option>
-              )
+            {options &&
+              options.map((option, i) =>
+                typeof option === "string" ? (
+                  <option
+                    key={`${option}-${i.toString()}`}
+                    data-pos={i}
+                    value={option}
+                  >
+                    {option}
+                  </option>
+                ) : (
+                  <option
+                    data-pos={i}
+                    key={`${option.label}-${i.toString()}`}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                )
+              )}
+          </select>
+          <div className="input-suffix">
+            {loading && (
+              <IconSpinner
+                style={{
+                  fontSize: 45,
+                }}
+              />
             )}
-        </select>
+          </div>
+        </div>
       </label>
       {error && typeof error === "string" ? (
         <small className="input-error">{error}</small>

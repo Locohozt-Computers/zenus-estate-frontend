@@ -20,6 +20,7 @@ const persistConfig = {
   storage,
   version: persistVersion,
   migrate: persistMigrate,
+  blacklist: ["payment"],
 };
 
 const store = configureStore({

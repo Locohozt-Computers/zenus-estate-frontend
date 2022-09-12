@@ -3,6 +3,18 @@ export const ROUTES = {
     path: "login",
     fullPath: "/login",
   },
+  signUp: {
+    path: "signUp",
+    fullPath: "/signUp",
+  },
+  forgetPassword: {
+    path: "forgetPassword",
+    fullPath: "/forgetPassword",
+  },
+  resetPassword: {
+    path: "resetPassword",
+    fullPath: "/resetPassword",
+  },
   other: {
     path: "other",
     fullPath: "/other",

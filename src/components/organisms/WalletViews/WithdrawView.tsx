@@ -13,6 +13,16 @@ type Props = {
 const StyledDiv = styled.div`
   width: ${pxToEm(570)};
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .saved-account {
+    padding: ${pxToEm(35)};
+    height: ${pxToEm(185)};
+    background: #fdfafd;
+    border-radius: 10px;
+  }
 `;
 
 export const WithdrawView = ({ page, setPage }: Props) => {

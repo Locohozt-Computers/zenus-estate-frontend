@@ -7,11 +7,10 @@ import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import { pxToEm } from "utils";
 
-const validationSchema = yup.object({
-  address: VALIDATIONS.address,
-  paymentSelect: VALIDATIONS.select,
-});
-
+// const validationSchema = yup.object({
+//   address: VALIDATIONS.address,
+//   paymentSelect: VALIDATIONS.select,
+// });
 const StyledDiv = styled.div`
   width: 100%;
   height: 100%;
@@ -49,7 +48,7 @@ export const AddAccount = ({ page, setPage }: Props) => {
       bankName: "",
       amount: "",
     },
-    validationSchema,
+    // validationSchema,
     onSubmit: (values) => {
       setPage(page + 1);
       //  dispatch(setValues({ values, chosenType }));

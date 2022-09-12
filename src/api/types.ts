@@ -106,6 +106,7 @@ export class GetProfile {
       charge_svc: boolean;
       created_at: string;
       updated_at: string;
+      walletBalance: number;
     };
   };
 }
@@ -120,8 +121,17 @@ export class GetAllPaymentType {
       id: number;
       special_name: string;
       income_gl_code_id: number;
+      invoice_amount: number;
+      user_levy_outstanding_balance: number;
+      fees: number;
+      final_amount: number;
     }>;
   };
+}
+
+export enum PaymentOptionNameEnum {
+  Wallet = "Wallet",
+  Card = "Card",
 }
 
 export class GetPaymentMethod {
@@ -132,9 +142,29 @@ export class GetPaymentMethod {
     message: string;
     data: Array<{
       id: number;
-      name: string;
+      name: PaymentOptionNameEnum;
     }>;
   };
+}
+
+export interface PaymentSuccessResponse {
+  payment_type_id: number;
+  amount: number;
+  fee: number;
+  final_amount: number;
+  levy_setup_id: number;
+  user_id: number;
+  description: string;
+  ref_no: number;
+  receipt_no: string;
+  branch_id: number;
+  paid: boolean;
+  reference: string;
+  trans_id: string;
+  chart_of_account_id: number;
+  updated_at: string;
+  created_at: string;
+  id: number;
 }
 
 export class PostBillPayment {
@@ -143,41 +173,38 @@ export class PostBillPayment {
   static Body: {
     payment_method_id: number;
     amount: number; // kobo
+    payment_type_id: number;
+  } & Partial<{
     fee: number;
     final_amount: number;
-    payment_type_id: number;
     reference: string;
     trxref: string;
-  };
+  }>;
 
   static Res: {
     status: number;
     message: string;
-    data: {
-      payment_type_id: number;
-      amount: number;
-      fee: number;
-      final_amount: number;
-      levy_setup_id: number;
-      user_id: number;
-      description: string;
-      ref_no: number;
-      receipt_no: string;
-      branch_id: number;
-      paid: boolean;
-      reference: string;
-      trans_id: string;
-      chart_of_account_id: number;
-      updated_at: string;
-      created_at: string;
-      id: number;
-    };
+    data: PaymentSuccessResponse;
   };
 }
 
-interface EmergencyTypesI {
+export class PostWalletPayment extends PostBillPayment {
+  static Body: {
+    payment_method_id: number;
+    amount: number; // kobo
+    payment_type_id: number;
+  };
+}
+
+export enum EmergencyTypesStatusEnum {
+  Add = "Add New",
+  Fire = "Fire Alarm",
+  Flood = "Flood Alarm",
+}
+
+export interface EmergencyTypesI {
   id: number;
-  name: string;
+  name: EmergencyTypesStatusEnum;
   status: boolean;
   created_at: string;
   updated_at: string;
@@ -201,14 +228,13 @@ export class GetAllEmergencies {
     }[];
   };
 }
-// .concat(["add new", "add new", "add new"])
 
 export class PostCreateEmergency {
   static Route = "/emergency";
 
   static Body: {
     emergency_type_id?: number;
-    description: string;
+    description?: string;
   };
 
   static Res: {
@@ -256,12 +282,210 @@ export class GetAllEmergenciesTypes {
   };
 }
 
-export class GetOustandingBalance {
-  static Route = "/user-levy-type-balance/1";
+export class GetOutstandingBalance {
+  static Route = "/user-levy-type-balance/:id";
 
   static Res: {
     status: number;
     message: string;
     data: { user_levy_outstanding_balance: string };
+  };
+}
+
+export interface PayStackResponseI {
+  message: string;
+  redirecturl: string;
+  reference: string;
+  status: string;
+  trans: string;
+  transaction: string;
+  trxref: string;
+}
+
+export enum TransactionTypeEnum {
+  Credit = "c",
+  Debit = "d",
+}
+
+export interface PaymentHistoryI {
+  id: number;
+  user_id: number;
+  description: string;
+  amount: number;
+  fee: number;
+  ref_no: string;
+  receipt_no: string;
+  chart_of_account_id: number;
+  levy_setup_id: number;
+  payment_type_id: number;
+  bank_id: string | null;
+  branch_id: number;
+  transaction_status_id: number;
+  transaction_type_id: number;
+  paid: boolean;
+  approved: boolean;
+  payment_by: null;
+  value_date: string;
+  reference: string;
+  trans_id: string;
+  created_at: string;
+  updated_at: string;
+  levy: {
+    id: number;
+    special_name: string;
+    user_levy_outstanding_balance: number;
+  };
+  payment_type: {
+    id: number;
+    name: string;
+  };
+  transaction_status: {
+    id: number;
+    name: string;
+  };
+  bank: null;
+  transaction_type: {
+    id: number;
+    name: TransactionTypeEnum;
+  };
+}
+
+export interface BalancesI {
+  id: number;
+  special_name: string;
+  user_levy_outstanding_balance: number;
+}
+
+interface PaginationI {
+  current_page: number;
+  first_page_url: string;
+  from: string;
+  last_page: number;
+  last_page_url: string;
+  links: Array<{
+    url: string | null;
+    label: string;
+    active: boolean;
+  }>;
+  next_page_url: string;
+  path: string;
+  per_page: number;
+  prev_page_url: null | string;
+  to: number;
+  total: number;
+}
+
+export class GetDashboard {
+  static Route = "/user-dashboard";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      balances: Array<BalancesI>;
+      payment_history: Array<PaymentHistoryI>;
+    };
+  };
+}
+
+export class GetComplaintCategory {
+  static Route = "/complaint-category";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<{
+      id: number;
+      name: string;
+      status: boolean;
+      created_at: string;
+      updated_at: string;
+    }>;
+  };
+}
+
+export class PostMakeComplaint {
+  static Route = "/complaint";
+
+  static Body: {
+    complaint_category_id: number;
+    description: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<{
+      id: number;
+      name: string;
+      status: boolean;
+      created_at: string;
+      updated_at: string;
+    }>;
+  };
+}
+
+export class GetCustomerTransaction {
+  static Route = "/customer-transactions";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      current_page: number;
+      data: Array<PaymentHistoryI>;
+    } & PaginationI;
+  };
+}
+
+export class GetWalletTransactions {
+  static Route = "/wallet-transactions";
+
+  static Res: {
+    data: {
+      data: Array<{
+        id: number;
+        user_id: number;
+        description: string;
+        amount: number;
+        reference: string;
+        trans_id: string;
+        transaction_type_id: 1;
+        status: boolean;
+        created_at: string;
+        updated_at: string;
+        transaction_type: {
+          id: number;
+          name: TransactionTypeEnum;
+        };
+      }>;
+    } & PaginationI;
+  };
+}
+
+export class PostFundWallet {
+  static Route = "/fund-wallet";
+
+  static Body: {
+    amount: 6000;
+    reference: string;
+    trans_id: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      amount: number;
+      reference: string;
+      trans_id: string;
+      status: boolean;
+      user_id: number;
+      description: string;
+      transaction_type_id: number;
+      updated_at: string;
+      created_at: string;
+      id: number;
+    };
   };
 }

@@ -1,8 +1,8 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 interface BaseProps {
   name: string;
-  loading?: { loader: any; state: boolean } | boolean;
+  loading?: boolean;
   label?: string;
   error?: any;
   suffix?: any;
@@ -10,8 +10,11 @@ interface BaseProps {
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & BaseProps;
 
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
+  BaseProps;
+
 type SelectT = InputHTMLAttributes<HTMLSelectElement> & BaseProps;
 
 export interface SelectProps extends SelectT {
-  options: Array<string> | Array<{ label: string; value: string }>;
+  options: Array<string> | Array<{ label: string; value: any }>;
 }

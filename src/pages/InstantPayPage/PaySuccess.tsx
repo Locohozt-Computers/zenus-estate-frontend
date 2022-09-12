@@ -15,7 +15,6 @@ const StyledDiv = styled.div`
 `;
 
 export const PaySuccess = () => {
-  const selectMethod = () => {};
   return (
     <StyledDiv>
       <img

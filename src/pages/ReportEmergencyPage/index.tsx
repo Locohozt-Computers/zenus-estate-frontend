@@ -1,71 +1,74 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createEmergency, getAllEmergency } from "pages/request";
+import { createEmergency, getAllEmergencyTypes } from "pages/request";
 import { Loader } from "components/atoms/Loader";
-import { Button, Typography } from "components";
-import { IconArrowLeft, IconEmergencyAdd, IconFire } from "assets/icons";
+import { Button, TextArea, Typography } from "components";
+import {
+  IconArrowLeft,
+  IconEmergencyAdd,
+  IconFire,
+  IconFlood,
+} from "assets/icons";
 import { DashboardContent } from "layouts";
 import { AppIcon } from "utils";
 import { useFormik } from "formik";
 import { GoPrimitiveDot } from "react-icons/go";
-import { PostCreateEmergency } from "api";
+import { EmergencyTypesI, EmergencyTypesStatusEnum } from "api";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import successImg from "assets/images/successEmergency.png";
-import {
-  ButtonStyle,
-  DivContent,
-  GoBack,
-  Selections,
-  TextArea,
-  Wrapper,
-} from "./style";
+import { ButtonStyle, DivContent, GoBack, Selections, Wrapper } from "./style";
 
 const getIcon = (icon: string) => {
   switch (icon) {
-    case "fire":
-      return <IconFire style={{ fontSize: 35, color: "var(--blue)" }} />;
-    case "add new":
+    case EmergencyTypesStatusEnum.Fire:
       return (
-        <IconEmergencyAdd style={{ fontSize: 35, color: "var(--blue)" }} />
+        <AppIcon render={IconFire} size={35} style={{ color: "var(--blue)" }} />
+      );
+    case EmergencyTypesStatusEnum.Flood:
+      return (
+        <AppIcon
+          render={IconFlood}
+          size={35}
+          style={{ color: "var(--blue)" }}
+        />
+      );
+    case EmergencyTypesStatusEnum.Add:
+      return (
+        <AppIcon
+          render={IconEmergencyAdd}
+          size={35}
+          style={{ color: "var(--blue)" }}
+        />
       );
     default:
       return <GoPrimitiveDot size={35} color="var(--blue)" />;
   }
 };
 
-enum CONST {
-  Add = "Add New",
-}
-
 const addMore = {
-  emergency_type_id: 2,
-  description:
-    "My name is Gbolagade Winner and i love to leave my footprint on every project i touch which is why am making my name reflect in test decription for CREATE EMERGENCIES",
-  user_id: 1,
-  branch_id: 1,
-  updated_at: "2022-09-03T11:30:20.000000Z",
-  created_at: "2022-09-03T11:30:20.000000Z",
-  id: 12,
-  emergency_type: {
-    id: 2,
-    name: "Add New",
-    status: true,
-    created_at: "2022-08-29T00:11:26.000000Z",
-    updated_at: "2022-08-29T00:11:26.000000Z",
-  },
-};
+  status: true,
+  name: EmergencyTypesStatusEnum.Add,
+} as EmergencyTypesI;
 
 const validationSchema = yup.object({
   type: yup.string().required(),
-  description: VALIDATIONS.description.when("type", (type, field) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    type === "Add New" ? field.required("Description is required") : field
+  description: VALIDATIONS.description.when(
+    "type",
+    (field, originalFieldProp) =>
+      field === EmergencyTypesStatusEnum.Add
+        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          originalFieldProp.required("Description is required")
+        : originalFieldProp
   ),
 });
 
 const ReportEmergencyPage = () => {
-  const { isLoading, data } = useQuery(["getAllEmergency"], getAllEmergency);
+  const { isLoading, data } = useQuery(
+    ["getAllEmergencyTypes"],
+    getAllEmergencyTypes
+  );
+
   const mutation = useMutation(["createEmergency"], createEmergency);
 
   const [selected, setSelected] = useState<number | null>(null);
@@ -75,19 +78,31 @@ const ReportEmergencyPage = () => {
     validationSchema,
     validateOnMount: true,
     onSubmit: (values) => {
-      mutation.mutate({
-        description: values.description,
-      });
+      if (values.type !== EmergencyTypesStatusEnum.Add) {
+        mutation.mutate({
+          emergency_type_id: values.emergency_type_id,
+        });
+      } else {
+        mutation.mutate({
+          description: values.description,
+        });
+      }
     },
   });
 
-  const handleSelection =
-    (idx: number, d: typeof PostCreateEmergency["Res"]["data"]) => () => {
-      setSelected(idx);
-      if (d.emergency_type.name === CONST.Add) {
-        formik.setFieldValue("type", d.emergency_type.name, true);
-      }
-    };
+  const handleReset = () => {
+    setSelected(null);
+    formik.resetForm();
+    formik.validateForm();
+    mutation.reset();
+  };
+
+  const handleSelection = (idx: number, d: EmergencyTypesI) => () => {
+    setSelected(idx);
+    formik.setFieldValue("type", d.name, true);
+    formik.setFieldValue("emergency_type_id", d.id, true);
+    formik.handleBlur({ emergency_type_id: d.id, type: d.name });
+  };
 
   return (
     <>
@@ -97,10 +112,7 @@ const ReportEmergencyPage = () => {
           <Wrapper aria-label="success page">
             {mutation.isSuccess ? (
               <DivContent>
-                <GoBack
-                  aria-label="go back to start"
-                  onClick={() => mutation.reset()}
-                >
+                <GoBack aria-label="go back to start" onClick={handleReset}>
                   <AppIcon size={40} render={IconArrowLeft} />
                   <Typography
                     variant="bodyBig"
@@ -137,15 +149,11 @@ const ReportEmergencyPage = () => {
                 <Selections>
                   {data &&
                     data.concat([addMore]).map((d, i: number) => {
-                      const {
-                        description,
-                        emergency_type: { name, status, id },
-                      } = d;
+                      const { name, status } = d;
                       return (
                         <ButtonStyle
-                          title={description}
+                          key={`${i.toString()}`}
                           active={i === selected}
-                          key={id}
                           disabled={!status}
                           type="button"
                           onClick={handleSelection(i, d)}
@@ -157,21 +165,34 @@ const ReportEmergencyPage = () => {
                     })}
                 </Selections>
                 <div style={{ marginTop: 50 }}>
-                  {formik.values.type === CONST.Add && (
-                    <TextArea
-                      placeholder="Describe the emergency type here"
-                      name="description"
-                      rows={10}
-                      value={formik.values.description}
-                      onChange={formik.handleChange}
-                    />
+                  {formik.values.type === EmergencyTypesStatusEnum.Add && (
+                    <>
+                      <TextArea
+                        placeholder="Describe the emergency type here"
+                        name="description"
+                        rows={10}
+                        value={formik.values.description}
+                        onChange={formik.handleChange}
+                      />
+                      {formik.errors.description &&
+                        formik.touched.description && (
+                          <small style={{ color: "var(--pink)" }}>
+                            {formik.errors.description}
+                          </small>
+                        )}
+                    </>
                   )}
                 </div>
                 <div className="center-contents">
                   <Button
                     type="submit"
-                    text={formik.values.type !== CONST.Add ? "Next" : "Send"}
-                    disabled={!formik.isValid}
+                    loading={mutation.isLoading}
+                    text={
+                      formik.values.type !== EmergencyTypesStatusEnum.Add
+                        ? "Next"
+                        : "Send"
+                    }
+                    disabled={!formik.dirty && !formik.isValid}
                   />
                 </div>
               </DivContent>

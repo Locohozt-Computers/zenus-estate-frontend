@@ -33,9 +33,9 @@ const StyledDiv = styled.div`
 const WalletPage = () => {
   const [page, setPage] = useState(0);
   const [payStatus, setPayStatus] = useState(false);
-  const payOption = useSelector(
-    (state: RootState) => state.payment.payOption.name
-  );
+  // const payOption = useSelector(
+  //   (state: RootState) => state.payment.payOption.name
+  // );
 
   return (
     <StyledDiv>

@@ -25,10 +25,9 @@ export const Selections = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   margin-top: 30px;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 20px;
 
-  @media screen and (min-width: ${pxToEm(900)}) {
+  @media screen and (min-width: 900px) {
     flex-direction: row;
   }
 `;
@@ -40,8 +39,8 @@ export const ButtonStyle = styled.button<{ active?: boolean }>`
   height: 80px;
   padding: 5px;
   border-radius: 8px;
-  border: 1px solid
-    ${({ active }) => (active ? "var(--blue)" : "var(--med-gray)")};
+  border: ${({ active }) =>
+    active ? "2px solid var(--blue)" : "1px solid var(--med-gray)"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,28 +63,7 @@ export const DivContent = styled(Card)`
   display: grid;
   grid-template-rows: auto auto 1fr auto;
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
   @media screen and (min-width: ${pxToEm(900)}) {
     padding: 56px 96px;
-  }
-`;
-
-export const TextArea = styled.textarea`
-  background-color: var(--light-gray);
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  width: 100%;
-  row-span: 12;
-  font-family: inherit;
-  padding: ${pxToEm(33)};
-  padding-bottom: 0;
-
-  :focus {
-    border: 1px solid var(--blue);
   }
 `;
