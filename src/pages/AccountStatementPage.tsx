@@ -1,7 +1,11 @@
-import React, { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getAllTransactions } from "pages/request";
-import { Table, Tag, TFilter, THeader, Typography } from "components";
+import React, { useCallback, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getAllTransactions,
+  getAllTransactionsByLevyType,
+  getPaymentType,
+} from "pages/request";
+import { Card, Table, Tag, TFilter, THeader, Typography } from "components";
 import {
   ExpanderComponentProps,
   TableColumn,
@@ -72,6 +76,19 @@ const TabStyling = styled.table`
   }
 `;
 
+const UlStyle = styled.ul`
+  list-style: none;
+  white-space: nowrap;
+  > li {
+    padding: 10px 15px;
+    :hover {
+      color: white;
+      cursor: pointer;
+      background-color: var(--blue);
+    }
+  }
+`;
+
 const ExpandedComponent = ({
   data,
 }: ExpanderComponentProps<PaymentHistoryI>) => {
@@ -124,51 +141,119 @@ const ExpandedComponent = ({
 };
 
 const AccountStatementPage = () => {
-  // const queryClient = useQueryClient();
-  const { isLoading, data } = useQuery(
-    ["getAllTransactions"],
-    getAllTransactions
+  const queryClient = useQueryClient();
+
+  const [pId, setPid] = useState<string | null>(null);
+  const [hasFilter, setHasFilter] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
+    ["paymentType"],
+    getPaymentType
   );
 
-  // const handlePerRowsChange = (
-  //   currentRowsPerPage: number,
-  //   currentPage: number
-  // ) => {};
+  const { isLoading, data } = useQuery(
+    ["getAllTransactions", page],
+    () => getAllTransactions(page),
+    {
+      keepPreviousData: true,
+      enabled: !hasFilter && !pId,
+    }
+  );
 
-  // const handlePageChange = (page: number, totalRows: number) => {
-  // };
+  const { data: dataFiltered, isFetching: mLoading } = useQuery(
+    ["getAllTransactionsByLevyType", page, pId],
+    () =>
+      getAllTransactionsByLevyType({
+        payment_type_id: pId as string,
+        page,
+      }),
+    { keepPreviousData: true, enabled: !!pId && hasFilter }
+  );
 
-  // Prefetch the next page!
-  // React.useEffect(() => {
-  //   if (data?.next_page_url) {
-  //     queryClient.prefetchQuery(
-  //       ["getAllTransactions", data.current_page + 1],
-  //       () => getAllTransactions()
-  //     );
-  //   }
-  // }, [data, queryClient]);
+  const paymentTypeOptions = useMemo(() => {
+    if (paymentTypes) {
+      return paymentTypes.map((item) => ({
+        label: item.special_name,
+        value: item.id.toString(),
+      }));
+    }
+    return [];
+  }, [paymentTypes]);
+
+  const handleFilter = useCallback((e: { target: Record<string, any> }) => {
+    setPage(1);
+    const id = e.target.id;
+    if (id !== "null") {
+      setPid(id as string);
+      setHasFilter(true);
+    } else {
+      setPid(null);
+      setHasFilter(false);
+    }
+  }, []);
+
+  const handlePageChange = useCallback(
+    (p: number) => {
+      setPage(p);
+      // Prefetch the next page!
+      if (hasFilter) {
+        if (pId) {
+          queryClient.prefetchQuery(
+            ["getAllTransactionsByLevyType", p + 1],
+            () =>
+              getAllTransactionsByLevyType({
+                page: p + 1,
+                payment_type_id: pId,
+              })
+          );
+        }
+      } else if (data?.current_page) {
+        queryClient.prefetchQuery(["getAllTransactions", p + 1], () =>
+          getAllTransactions(p + 1)
+        );
+      }
+    },
+    [data, hasFilter, pId, queryClient]
+  );
 
   return (
-    <div>
+    <Card style={{ padding: 0, overflow: "hidden" }}>
       <Table
-        progressPending={isLoading}
+        style={{ marginTop: 50 }}
+        progressPending={isLoading || paymentTypesLoading || mLoading}
         title={
           <THeader style={{ height: 66 }}>
             <Typography weight={500} size={17} content="All Levy Statements" />
-            <TFilter>content</TFilter>
+            <TFilter
+              active={hasFilter}
+              renderSetVisible={({ setVisible }) => setVisible(false)}
+            >
+              <UlStyle onClick={handleFilter}>
+                {[{ label: "All", value: "null" }]
+                  .concat(paymentTypeOptions)
+                  .map(({ label, value }) => (
+                    <li key={label} id={value}>
+                      {label}
+                    </li>
+                  ))}
+              </UlStyle>
+            </TFilter>
           </THeader>
         }
         columns={columns}
-        data={data?.data || []}
+        data={hasFilter ? dataFiltered?.data || [] : data?.data || []}
         expandableRows
         expandableRowsComponent={ExpandedComponent}
         pagination
         paginationServer
-        paginationTotalRows={data?.total}
-        // onChangeRowsPerPage={handlePerRowsChange}
-        // onChangePage={handlePageChange}
+        paginationDefaultPage={page}
+        paginationTotalRows={hasFilter ? dataFiltered?.total : data?.total}
+        paginationPerPage={10}
+        onChangePage={handlePageChange}
+        paginationRowsPerPageOptions={[10]}
       />
-    </div>
+    </Card>
   );
 };
 

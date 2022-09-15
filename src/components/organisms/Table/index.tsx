@@ -46,10 +46,12 @@ export const THeader = styled.div`
   align-items: flex-end;
   flex-direction: column;
   gap: 20px;
+  height: 78px;
 
   @media screen and (min-width: ${pxToEm(900)}) {
     flex-direction: row;
     align-items: center;
+    height: 55px;
   }
 `;
 
@@ -67,10 +69,16 @@ const TFStyling = styled.div`
     border-radius: 8px;
     background-color: white;
     z-index: 2;
+    overflow: hidden;
   }
 `;
 
-export const TFilter = ({ children }: PropsWithChildren) => {
+interface TFI extends PropsWithChildren {
+  renderSetVisible: (props: { setVisible: (arg: boolean) => void }) => void;
+  active?: boolean;
+}
+
+export const TFilter = ({ children, renderSetVisible, active }: TFI) => {
   const { visible, setVisible, ref } = useOnClickOutside(false);
 
   return (
@@ -80,38 +88,61 @@ export const TFilter = ({ children }: PropsWithChildren) => {
         type="button"
         onClick={() => setVisible(!visible)}
       >
-        <Typography weight={500} size={17} textColor="gray" content="Filter" />
+        <Typography
+          weight={500}
+          size={17}
+          textColor={active ? "blue" : "gray"}
+          content="Filter"
+        />
       </button>
-      {visible && <div className="tf--content">{children}</div>}
+      {visible && (
+        <div
+          role="presentation"
+          className="tf--content"
+          onClick={() => renderSetVisible({ setVisible })}
+        >
+          {children}
+        </div>
+      )}
     </TFStyling>
   );
 };
 
+const DTStyling = styled.div`
+  .rdt_TableHeader {
+    > div:last-child {
+      display: none;
+    }
+  }
+`;
+
 export const Table = ({ ...props }: TableProps<any>) => {
   return (
-    <DataTable
-      customStyles={customStyles}
-      {...props}
-      noDataComponent={
-        <div
-          style={{
-            padding: "6rem 1rem",
-          }}
-        >
-          <img
-            src={imgData}
-            alt=""
-            style={{ marginBottom: 30, maxWidth: 156 }}
-          />
-          <Typography content="You are yet to make any transaction" />
-        </div>
-      }
-      fixedHeader
-      progressComponent={
-        <div style={{ position: "relative", height: 200 }}>
-          <Loader open absolute />
-        </div>
-      }
-    />
+    <DTStyling>
+      <DataTable
+        customStyles={customStyles}
+        {...props}
+        noDataComponent={
+          <div
+            style={{
+              padding: "6rem 1rem",
+              textAlign: "center",
+            }}
+          >
+            <img
+              src={imgData}
+              alt=""
+              style={{ marginBottom: 30, maxWidth: 156 }}
+            />
+            <Typography content="You are yet to make any transaction" />
+          </div>
+        }
+        progressComponent={
+          <div style={{ position: "relative", height: 200 }}>
+            <Loader open absolute />
+          </div>
+        }
+      />
+    </DTStyling>
   );
 };
