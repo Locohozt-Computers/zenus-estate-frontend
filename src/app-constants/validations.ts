@@ -5,6 +5,9 @@ export const VALIDATIONS = {
   password: yup.string().required("Password is required"),
   description: yup.string(),
   address: yup.string().required("Address is required"),
+  account: yup.number().required("Account Number is required"),
+  accountName: yup.string().required("Account Name is required"),
+  bankName: yup.string().required("Bank Name is required"),
   amount: yup
     .number()
     .required("Amount is required")

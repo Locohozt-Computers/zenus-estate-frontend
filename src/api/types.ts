@@ -388,6 +388,25 @@ export class GetDashboard {
   };
 }
 
+export class GetAllBanks {
+  static Route = "/all-banks";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      data: Array<{
+        id: 302;
+        name: string;
+        pay_with_bank: false;
+        active: true;
+        country: string;
+        currency: string;
+      }>;
+    };
+  };
+}
+
 export class GetComplaintCategory {
   static Route = "/complaint-category";
 
@@ -443,7 +462,7 @@ export class GetCustomerTransactionByLevyType extends GetCustomerTransaction {
 }
 
 export class GetWalletTransactions {
-  static Route = "/wallet-transactions";
+  static Route = "wallet-transactions";
 
   static Res: {
     data: {
@@ -461,6 +480,10 @@ export class GetWalletTransactions {
         transaction_type: {
           id: number;
           name: TransactionTypeEnum;
+        };
+        transaction_source: {
+          name: string;
+          status: boolean;
         };
       }>;
     } & PaginationI;

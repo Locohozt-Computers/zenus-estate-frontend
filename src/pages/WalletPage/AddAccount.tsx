@@ -2,8 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import Arrow from "assets/images/arrowright.png";
 import { FormikProvider, useFormik } from "formik";
-import { FormikInput, Button, Typography } from "components/atoms";
+import {
+  FormikInput,
+  Button,
+  Typography,
+  FormikSelect,
+} from "components/atoms";
 import { pxToEm } from "utils";
+import * as yup from "yup";
+import { VALIDATIONS } from "app-constants";
+import { useQuery } from "@tanstack/react-query";
+import { getAllBanks } from "pages/request";
 
 const StyledDiv = styled.div`
   width: 100%;
@@ -34,6 +43,13 @@ type Props = {
   setPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
+const validationSchema = yup.object({
+  accName: VALIDATIONS.accountName,
+  accNumber: VALIDATIONS.account,
+  bankName: VALIDATIONS.bankName,
+  amount: VALIDATIONS.amount,
+});
+
 export const AddAccount = ({ page, setPage }: Props) => {
   const formik = useFormik({
     initialValues: {
@@ -42,11 +58,18 @@ export const AddAccount = ({ page, setPage }: Props) => {
       bankName: "",
       amount: "",
     },
+    validationSchema,
     onSubmit: () => {
-      setPage(page + 1);
+      setPage(page + 2);
       //  dispatch(setValues({ values, chosenType }));
     },
   });
+
+  const { data: banks } = useQuery(["getAllBank"], getAllBanks);
+  console.log(banks);
+  // const BankNames = banks?.map((item)=>{
+
+  // })
   return (
     <StyledDiv>
       <span className="arrow-icon">
@@ -82,9 +105,10 @@ export const AddAccount = ({ page, setPage }: Props) => {
               label="Account Number to Pay"
               placeholder="3119378455"
             />
-            <FormikInput
+            <FormikSelect
               name="bankName"
               label="Bank Name"
+              options={[]}
               placeholder="First Bank PLC"
             />
             <FormikInput

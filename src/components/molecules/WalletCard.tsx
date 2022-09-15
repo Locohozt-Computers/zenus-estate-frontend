@@ -4,12 +4,13 @@ import styled from "styled-components";
 import { pxToEm } from "utils";
 import withdraw from "assets/images/withdrawcash.png";
 import add from "assets/images/addcash.png";
+import { BiPlus } from "react-icons/bi";
 
 type Props = {
   action: string;
   id: number | string;
-  amount: string;
-  date: number;
+  amount: number;
+  date: string;
 };
 const StyledDiv = styled.div`
   width: 100%;
@@ -42,21 +43,44 @@ const StyledDiv = styled.div`
   }
 `;
 export const WalletCard = ({ action, id, amount, date }: Props) => {
+  const topUp = "Account Top up";
+  // function toMonthName(monthNumber) {
+  //   const date = new Date();
+  //   date.setMonth(monthNumber - 1);
+
+  //   return date.toLocaleString("en-US", {
+  //     month: "long",
+  //   });
+  // }
   return (
     <StyledDiv>
-      <img src={action === "Account Topup" ? add : withdraw} alt={action} />
+      <img src={action === topUp ? add : withdraw} alt={action} />
       <div className="text-div">
         <div className="text-div-section">
           <Typography content={action} variant="bodyBig" />
-          <Typography content={id} variant="helperText" />
+          <Typography content={`id-#${id}`} variant="helperText" />
         </div>
         <div className="text-div-section">
           <Typography
-            content={amount}
             variant="subtitle"
-            textColor={action === "Account Topup" ? "green" : "red"}
+            textColor={action === topUp ? "green" : "pink"}
+          >
+            <span
+              style={{
+                fontSize: "10px",
+                // display: "flex",
+                // alignItems: "center",
+              }}
+            >
+              {action === topUp ? <BiPlus /> : ""}
+            </span>
+            ₦{amount}
+          </Typography>
+          <Typography
+            content={date.substring(0, 10)}
+            variant="bodySmall"
+            textColor="med-gray"
           />
-          <Typography content={date} variant="bodySmall" textColor="med-gray" />
         </div>
       </div>
     </StyledDiv>
