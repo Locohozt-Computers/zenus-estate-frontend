@@ -104,5 +104,19 @@ export const hexToHSL = (hex: string, lighten?: number | string) => {
   return hex;
 };
 
+export const getStatusColor = (status: string) => {
+  const fn = (c: string) => hexToHSL(c, 10);
+  switch (status) {
+    case "failed":
+      return { bg: fn("#ff006e"), text: "var(--pink)" };
+    case "processing":
+      return { bg: fn("#003085"), text: "var(--blue)" };
+    case "completed":
+      return { bg: fn("#007416"), text: "var(--green)" };
+    default:
+      return { bg: fn("#003085"), text: "var(--blue)" };
+  }
+};
+
 // @ts-ignore
 window.hexToHSL = hexToHSL;
