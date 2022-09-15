@@ -105,102 +105,100 @@ const ReportEmergencyPage = () => {
   };
 
   return (
-    <>
-      <Loader absolute fill open={isLoading} />
-      <DashboardContent>
-        <form onSubmit={formik.handleSubmit}>
-          <Wrapper aria-label="success page">
-            {mutation.isSuccess ? (
-              <DivContent>
-                <GoBack aria-label="go back to start" onClick={handleReset}>
-                  <AppIcon size={40} render={IconArrowLeft} />
-                  <Typography
-                    variant="bodyBig"
-                    textColor="gray"
-                    style={{ marginLeft: 5 }}
-                  >
-                    Report Emergency
-                  </Typography>
-                </GoBack>
-                <div className="center-contents flex-column text-center">
-                  <img
-                    style={{ maxWidth: 440, maxHeight: 332 }}
-                    src={successImg}
-                    alt=""
-                  />
-                  <Typography
-                    style={{
-                      maxWidth: 440,
-                      marginTop: 10,
-                    }}
-                    variant="subtitle"
-                    textColor="blue"
-                  >
-                    Thank you for informing us, we will come to your resque as
-                    soon as possible.
-                  </Typography>
-                </div>
-              </DivContent>
-            ) : (
-              <DivContent>
-                <Typography variant="heading5" style={{ marginTop: 30 }}>
-                  What type of emergency will you like to report?
+    <DashboardContent>
+      <form onSubmit={formik.handleSubmit}>
+        <Wrapper aria-label="success page">
+          {mutation.isSuccess ? (
+            <DivContent>
+              <GoBack aria-label="go back to start" onClick={handleReset}>
+                <AppIcon size={40} render={IconArrowLeft} />
+                <Typography
+                  variant="bodyBig"
+                  textColor="gray"
+                  style={{ marginLeft: 5 }}
+                >
+                  Report Emergency
                 </Typography>
-                <Selections>
-                  {data &&
-                    data.concat([addMore]).map((d, i: number) => {
-                      const { name, status } = d;
-                      return (
-                        <ButtonStyle
-                          key={`${i.toString()}`}
-                          active={i === selected}
-                          disabled={!status}
-                          type="button"
-                          onClick={handleSelection(i, d)}
-                        >
-                          <div>{getIcon(name)}</div>
-                          <Typography variant="subtitle">{name}</Typography>
-                        </ButtonStyle>
-                      );
-                    })}
-                </Selections>
-                <div style={{ marginTop: 50 }}>
-                  {formik.values.type === EmergencyTypesStatusEnum.Add && (
-                    <>
-                      <TextArea
-                        placeholder="Describe the emergency type here"
-                        name="description"
-                        rows={10}
-                        value={formik.values.description}
-                        onChange={formik.handleChange}
-                      />
-                      {formik.errors.description &&
-                        formik.touched.description && (
-                          <small style={{ color: "var(--pink)" }}>
-                            {formik.errors.description}
-                          </small>
-                        )}
-                    </>
-                  )}
-                </div>
-                <div className="center-contents">
-                  <Button
-                    type="submit"
-                    loading={mutation.isLoading}
-                    text={
-                      formik.values.type !== EmergencyTypesStatusEnum.Add
-                        ? "Next"
-                        : "Send"
-                    }
-                    disabled={!formik.dirty && !formik.isValid}
-                  />
-                </div>
-              </DivContent>
-            )}
-          </Wrapper>
-        </form>
-      </DashboardContent>
-    </>
+              </GoBack>
+              <div className="center-contents flex-column text-center">
+                <img
+                  style={{ maxWidth: 440, maxHeight: 332 }}
+                  src={successImg}
+                  alt=""
+                />
+                <Typography
+                  style={{
+                    maxWidth: 440,
+                    marginTop: 10,
+                  }}
+                  variant="subtitle"
+                  textColor="blue"
+                >
+                  Thank you for informing us, we will come to your resque as
+                  soon as possible.
+                </Typography>
+              </div>
+            </DivContent>
+          ) : (
+            <DivContent>
+              <Loader absolute open={isLoading} />
+              <Typography variant="heading5" style={{ marginTop: 30 }}>
+                What type of emergency will you like to report?
+              </Typography>
+              <Selections>
+                {data &&
+                  data.concat([addMore]).map((d, i: number) => {
+                    const { name, status } = d;
+                    return (
+                      <ButtonStyle
+                        key={`${i.toString()}`}
+                        active={i === selected}
+                        disabled={!status}
+                        type="button"
+                        onClick={handleSelection(i, d)}
+                      >
+                        <div>{getIcon(name)}</div>
+                        <Typography variant="subtitle">{name}</Typography>
+                      </ButtonStyle>
+                    );
+                  })}
+              </Selections>
+              <div style={{ marginTop: 50 }}>
+                {formik.values.type === EmergencyTypesStatusEnum.Add && (
+                  <>
+                    <TextArea
+                      placeholder="Describe the emergency type here"
+                      name="description"
+                      rows={10}
+                      value={formik.values.description}
+                      onChange={formik.handleChange}
+                    />
+                    {formik.errors.description &&
+                      formik.touched.description && (
+                        <small style={{ color: "var(--pink)" }}>
+                          {formik.errors.description}
+                        </small>
+                      )}
+                  </>
+                )}
+              </div>
+              <div className="center-contents">
+                <Button
+                  type="submit"
+                  loading={mutation.isLoading}
+                  text={
+                    formik.values.type !== EmergencyTypesStatusEnum.Add
+                      ? "Next"
+                      : "Send"
+                  }
+                  disabled={!formik.dirty && !formik.isValid}
+                />
+              </div>
+            </DivContent>
+          )}
+        </Wrapper>
+      </form>
+    </DashboardContent>
   );
 };
 

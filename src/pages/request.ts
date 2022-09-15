@@ -17,6 +17,7 @@ import appRequest, {
   PostForgotPassword,
   PostResetPassword,
   GetCustomerTransaction,
+  GetCustomerTransactionByLevyType,
 } from "api";
 
 export const getDashboard = async () => {
@@ -129,9 +130,26 @@ export const getComplaints = async () => {
   return res.data.data;
 };
 
-export const getAllTransactions = async () => {
+export const getAllTransactions = async (page?: number) => {
   const res = await appRequest.get<typeof GetCustomerTransaction.Res>(
-    GetCustomerTransaction.Route
+    GetCustomerTransaction.Route,
+    { params: { page } }
+  );
+  return res.data.data;
+};
+
+export const getAllTransactionsByLevyType = async ({
+  payment_type_id: id,
+  page,
+}: {
+  payment_type_id: string;
+  page?: number;
+}) => {
+  const res = await appRequest.get<typeof GetCustomerTransactionByLevyType.Res>(
+    GetCustomerTransactionByLevyType.Route.replace(":payment_type_id", id),
+    {
+      params: { page },
+    }
   );
   return res.data.data;
 };
