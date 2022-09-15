@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllTransactions } from "pages/request";
-import { Loader } from "components/atoms/Loader";
-import { Typography } from "components";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { Table, Tag, TFilter, THeader, Typography } from "components";
+import {
+  ExpanderComponentProps,
+  TableColumn,
+} from "react-data-table-component";
 import { PaymentHistoryI } from "api";
 import { format } from "date-fns";
-import { currencyFormat } from "utils/helpers";
+import { currencyFormat, getStatusColor, hexToHSL } from "utils/helpers";
+import styled from "styled-components/macro";
 
 const columns: TableColumn<PaymentHistoryI>[] = [
   {
-    name: "Payment Type",
-    selector: (row) => row.payment_type.name,
-    format: (v) => <Typography content={v.payment_type.name} />,
+    name: "Levy Type",
+    selector: (row) => row.levy.special_name,
+    format: (v) => <Typography content={v.levy.special_name} />,
     style: {
       paddingLeft: 40,
     },
@@ -26,18 +29,25 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     center: true,
   },
   {
-    name: "Amount",
+    name: "Balance",
     selector: (row) => row.amount,
-    format: (v) => <Typography content={currencyFormat(v.amount)} />,
+    format: (v) => (
+      <Typography
+        style={{
+          color: v.amount < 0 ? "var(--pink)" : "var(--green)",
+        }}
+        content={currencyFormat(v.amount)}
+      />
+    ),
     center: true,
   },
   {
-    name: "Balance",
+    name: "Status",
     selector: (row) => row.transaction_status.name,
     format: (v) => (
-      <Typography
-        content={currencyFormat(v.amount)}
-        textColor={v.amount < 0 ? "pink" : "blue"}
+      <Tag
+        label={v.transaction_status.name}
+        colors={getStatusColor(v.transaction_status.name)}
       />
     ),
     right: true,
@@ -47,9 +57,74 @@ const columns: TableColumn<PaymentHistoryI>[] = [
   },
 ];
 
+const TabStyling = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  tr:nth-child(even) {
+    background-color: ${hexToHSL("#003085", 80)};
+    color: white;
+  }
+
+  td {
+    border: 1px solid var(--light-gray);
+    padding: 8px;
+  }
+`;
+
+const ExpandedComponent = ({
+  data,
+}: ExpanderComponentProps<PaymentHistoryI>) => {
+  const expD = useMemo(
+    () => [
+      {
+        label: "Description:",
+        data: data.description,
+      },
+      {
+        label: "Fee",
+        data: currencyFormat(data.fee),
+      },
+      {
+        label: "Ref No",
+        data: data.ref_no,
+      },
+      {
+        label: "Bank",
+        data: data.bank,
+      },
+      {
+        label: "Payment By",
+        data: data.payment_by,
+      },
+      {
+        label: "Payment Type",
+        data: data.payment_type.name,
+      },
+    ],
+    [data]
+  );
+
+  return (
+    <TabStyling>
+      <tbody>
+        {expD.map(({ label, data: value }) => (
+          <tr key={label}>
+            <td>
+              <Typography>{label}</Typography>
+            </td>
+            <td>
+              <Typography>{value}</Typography>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </TabStyling>
+  );
+};
+
 const AccountStatementPage = () => {
   // const queryClient = useQueryClient();
-
   const { isLoading, data } = useQuery(
     ["getAllTransactions"],
     getAllTransactions
@@ -75,12 +150,18 @@ const AccountStatementPage = () => {
 
   return (
     <div>
-      <Loader open={isLoading} />
-      <DataTable
-        title="Users"
+      <Table
+        progressPending={isLoading}
+        title={
+          <THeader style={{ height: 66 }}>
+            <Typography weight={500} size={17} content="All Levy Statements" />
+            <TFilter>content</TFilter>
+          </THeader>
+        }
         columns={columns}
         data={data?.data || []}
-        progressPending={isLoading}
+        expandableRows
+        expandableRowsComponent={ExpandedComponent}
         pagination
         paginationServer
         paginationTotalRows={data?.total}

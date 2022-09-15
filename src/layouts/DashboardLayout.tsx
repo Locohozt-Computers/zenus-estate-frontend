@@ -15,6 +15,7 @@ const DashboardStyling = styled.div<{ sidebar?: boolean }>`
   height: 100vh;
 
   .dashboard-container {
+    position: relative;
     width: 100%;
     max-width: 1120px;
   }
