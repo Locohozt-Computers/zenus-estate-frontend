@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Typography, Button, Input, Select } from "components";
+import { Button, Input, Typography } from "components";
 import Arrow from "assets/images/arrowright.png";
 import Bankimg from "assets/images/firstbank.png";
 import { pxToEm } from "utils";
@@ -23,6 +23,7 @@ const StyledDiv = styled.div`
     align-items: center;
     justify-content: space-between;
   }
+
   .wallet-content {
     flex-direction: column;
     width: 100%;

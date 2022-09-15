@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { RootState } from "store/reducers";
 import { pxToEm } from "utils";
 import { WalletOverview } from "./WalletOverview";
 import { AddAccount } from "./AddAccount";
@@ -21,6 +19,7 @@ const StyledDiv = styled.div`
     align-self: flex-start;
     margin-bottom: ${pxToEm(32)};
   }
+
   .page-content {
     width: ${pxToEm(570)};
     height: 100%;
@@ -30,7 +29,6 @@ const StyledDiv = styled.div`
 
 const WalletPage = () => {
   const [page, setPage] = useState(0);
-  const [payStatus, setPayStatus] = useState(false);
   // const payOption = useSelector(
   //   (state: RootState) => state.payment.payOption.name
   // );

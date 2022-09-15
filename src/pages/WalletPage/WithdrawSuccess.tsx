@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import withdraw from "assets/images/withdrawsuccess.png";
 import Arrow from "assets/images/arrowright.png";
@@ -19,8 +19,6 @@ type Props = {
   setPage: React.Dispatch<React.SetStateAction<number>>;
 };
 export const WithdrawSuccess = ({ page, setPage }: Props) => {
-  const selectMethod = () => {};
-
   return (
     <StyledDiv>
       <span className="arrow-icon">

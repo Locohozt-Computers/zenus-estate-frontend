@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Arrow from "assets/images/arrowright.png";
 import { FormikProvider, useFormik } from "formik";
 import { FormikInput, Button, Typography } from "components/atoms";
-import { VALIDATIONS } from "app-constants";
-import * as yup from "yup";
 import { pxToEm } from "utils";
 
-// const validationSchema = yup.object({
-//   address: VALIDATIONS.address,
-//   paymentSelect: VALIDATIONS.select,
-// });
 const StyledDiv = styled.div`
   width: 100%;
   height: 100%;
@@ -48,8 +42,7 @@ export const AddAccount = ({ page, setPage }: Props) => {
       bankName: "",
       amount: "",
     },
-    // validationSchema,
-    onSubmit: (values) => {
+    onSubmit: () => {
       setPage(page + 1);
       //  dispatch(setValues({ values, chosenType }));
     },

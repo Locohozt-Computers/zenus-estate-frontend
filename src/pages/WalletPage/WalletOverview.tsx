@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Arrow from "assets/images/arrowright.png";
 import Balanceimg from "assets/images/balanceimg.png";
-import { Typography, Button, Select } from "components";
+import { Button, Select, Typography } from "components";
 import { WalletCard } from "components/molecules/WalletCard";
 import { pxToEm } from "utils";
 
@@ -22,6 +22,7 @@ const StyledDiv = styled.div`
     justify-content: space-between;
     flex-direction: column;
   }
+
   .wallet-balance {
     display: flex;
     height: 10rem;
@@ -31,10 +32,12 @@ const StyledDiv = styled.div`
     background: url(${Balanceimg}) no-repeat center;
     background-size: cover;
   }
+
   .wallet-select {
     background: #ffffff;
     border-radius: 16px;
   }
+
   .wallet-buttons {
     display: flex;
     align-items: stretch;
