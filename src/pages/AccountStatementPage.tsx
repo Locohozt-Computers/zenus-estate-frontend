@@ -218,7 +218,7 @@ const AccountStatementPage = () => {
   );
 
   return (
-    <Card style={{ padding: 0, overflow: "hidden" }}>
+    <Card style={{ padding: 0, overflow: "hidden", marginTop: 80 }}>
       <Table
         style={{ marginTop: 50 }}
         progressPending={isLoading || paymentTypesLoading || mLoading}
