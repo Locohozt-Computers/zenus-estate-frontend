@@ -16,6 +16,7 @@ const customStyles: TableStyles = {
       minHeight: 40,
       fontSize: 17,
       borderBottom: "1px solid #0000001f",
+      overflow: "unset",
     },
   },
   headCells: {
@@ -52,16 +53,37 @@ export const THeader = styled.div`
   }
 `;
 
+const TFStyling = styled.div`
+  position: relative;
+  .tf--button {
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .tf--content {
+    position: absolute;
+    right: 0;
+    box-shadow: 2px 5px 10px 1px #00000026;
+    border-radius: 8px;
+    background-color: white;
+    z-index: 2;
+  }
+`;
+
 export const TFilter = ({ children }: PropsWithChildren) => {
   const { visible, setVisible, ref } = useOnClickOutside(false);
 
   return (
-    <div ref={ref}>
-      <button type="button" onClick={() => setVisible(!visible)}>
-        filter
+    <TFStyling ref={ref}>
+      <button
+        className="tf--button"
+        type="button"
+        onClick={() => setVisible(!visible)}
+      >
+        <Typography weight={500} size={17} textColor="gray" content="Filter" />
       </button>
-      {visible && <div>{children}</div>}
-    </div>
+      {visible && <div className="tf--content">{children}</div>}
+    </TFStyling>
   );
 };
 
