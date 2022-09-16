@@ -1,47 +1,45 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { pxToEm } from "utils";
+import { DashboardContent } from "layouts";
+import { Card, NavigationController } from "components";
 import { WalletOverview } from "./WalletOverview";
 import { AddAccount } from "./AddAccount";
 import { WithdrawView } from "./WithdrawView";
 import { WithdrawSuccess } from "./WithdrawSuccess";
 
-const StyledDiv = styled.div`
-  padding: ${pxToEm(32)} ${pxToEm(32)};
-  border-radius: 16px;
-  width: ${pxToEm(840)};
-  height: calc(100vh - 40px);
-  background-color: var(--white);
+const StyledDiv = styled(Card)`
+  padding: 50px 100px;
+  max-width: 824px;
   margin: 0 auto;
 
-  .arrow-icon {
-    display: flex;
-    align-self: flex-start;
-    margin-bottom: ${pxToEm(32)};
-  }
-
-  .page-content {
-    width: ${pxToEm(570)};
-    height: 100%;
-    margin: 0 auto;
+  .nav {
+    margin-bottom: 30px;
   }
 `;
 
 const WalletPage = () => {
-  const [page, setPage] = useState(0);
-  // const payOption = useSelector(
-  //   (state: RootState) => state.payment.payOption.name
-  // );
+  const [page, setPage] = useState(1);
 
   return (
-    <StyledDiv>
-      <div className="page-content">
-        {page === 0 && <WalletOverview page={page} setPage={setPage} />}
-        {page === 1 && <AddAccount page={page} setPage={setPage} />}
-        {page === 2 && <WithdrawView page={page} setPage={setPage} />}
-        {page === 3 && <WithdrawSuccess page={page} setPage={setPage} />}
-      </div>
-    </StyledDiv>
+    <DashboardContent>
+      <StyledDiv>
+        <div className="nav">
+          <NavigationController
+            pages={["My Wallet", "Withdraw", "Add New Account"]}
+            active={page}
+            onPageChange={setPage}
+          />
+        </div>
+        {
+          [
+            <WalletOverview page={page} setPage={setPage} />,
+            <AddAccount page={page} setPage={setPage} />,
+            <WithdrawView page={page} setPage={setPage} />,
+            <WithdrawSuccess page={page} setPage={setPage} />,
+          ][page - 1]
+        }
+      </StyledDiv>
+    </DashboardContent>
   );
 };
 

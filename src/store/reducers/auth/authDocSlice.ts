@@ -51,6 +51,7 @@ export const authSelectors = {
   profileId: (state: RootState) => state.auth.user.profile_id,
   userId: (state: RootState) => state.auth.user.user_id,
   token: (state: RootState) => state.auth.user.token,
+  user: (state: RootState) => state.auth.user,
 };
 
 export default authDocSlice.reducer;

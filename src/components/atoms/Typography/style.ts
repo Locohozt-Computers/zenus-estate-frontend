@@ -69,6 +69,12 @@ const setVariant = (variant: TextVariant) => {
         fontSize: pxToEm(17),
         color: "var(--black)",
       });
+    case "helperText":
+      return cssObjectToString({
+        fontWeight: 400,
+        fontSize: pxToEm(12),
+        color: "var(--med-gray)",
+      });
     default:
       return "";
   }

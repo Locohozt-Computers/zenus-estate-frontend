@@ -8,11 +8,12 @@ import {
   Typography,
   FormikSelect,
 } from "components/atoms";
-import { pxToEm } from "utils";
+import { AppIcon, pxToEm } from "utils";
 import * as yup from "yup";
 import { VALIDATIONS } from "app-constants";
 import { useQuery } from "@tanstack/react-query";
 import { getAllBanks } from "pages/request";
+import { IconArrowLeft } from "assets/icons";
 
 const StyledDiv = styled.div`
   width: 100%;
@@ -72,19 +73,6 @@ export const AddAccount = ({ page, setPage }: Props) => {
   // })
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img
-            src={Arrow}
-            alt="arrow"
-            style={{ margin: ` 0 ${pxToEm(14)} 0 -${pxToEm(32)}` }}
-          />
-        </button>
-      </span>
       <div className="withdraw-items">
         <span className="arrow-icon">
           <Typography

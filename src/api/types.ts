@@ -459,10 +459,14 @@ export class GetCustomerTransaction {
 
 export class GetCustomerTransactionByLevyType extends GetCustomerTransaction {
   static Route = "/customer-transactions/payment-type/:payment_type_id";
+
+  static Params: Partial<{
+    page: number;
+  }>;
 }
 
 export class GetWalletTransactions {
-  static Route = "wallet-transactions";
+  static Route = "/wallet-transactions";
 
   static Res: {
     data: {

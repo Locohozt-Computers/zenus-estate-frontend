@@ -1,15 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { Button, Input, Typography } from "components";
-import Arrow from "assets/images/arrowright.png";
 import Bankimg from "assets/images/firstbank.png";
 import { pxToEm } from "utils";
 import { AiOutlinePlus } from "react-icons/ai";
-
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
+import { PropsI } from "pages/WalletPage/types";
 
 const StyledDiv = styled.div`
   width: ${pxToEm(570)};
@@ -50,7 +45,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-export const WithdrawView = ({ page, setPage }: Props) => {
+export const WithdrawView = ({ page, setPage }: PropsI) => {
   const Bank = "First Bank PLC";
   const Name = "Daniel Mbazu";
   const Account = "11111111111111";
@@ -60,15 +55,6 @@ export const WithdrawView = ({ page, setPage }: Props) => {
 
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          // style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
-        </button>
-      </span>
       <div className="display-flex wallet-content">
         <span className="arrow-icon">
           <Typography

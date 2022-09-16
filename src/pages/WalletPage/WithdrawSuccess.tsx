@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import withdraw from "assets/images/withdrawsuccess.png";
-import Arrow from "assets/images/arrowright.png";
 import { Typography } from "components";
+import { PropsI } from "pages/WalletPage/types";
 
 const StyledDiv = styled.div`
   height: 100%;
@@ -14,28 +14,9 @@ const StyledDiv = styled.div`
   margin: 0 auto;
 `;
 
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
-export const WithdrawSuccess = ({ page, setPage }: Props) => {
+export const WithdrawSuccess = ({ page, setPage }: PropsI) => {
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
-        </button>
-        <Typography
-          size={16}
-          weight={500}
-          textColor="med-gray"
-          content="My wallet/withdraw/successful"
-        />
-      </span>
       <img
         src={withdraw}
         alt="successful payment"

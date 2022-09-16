@@ -118,5 +118,11 @@ export const getStatusColor = (status: string) => {
   }
 };
 
+export const getBalColor = (bal: number) => {
+  if (bal < 0) return "var(--pink)";
+  if (bal === 0) return "var(--blue)";
+  return "var(--green)";
+};
+
 // @ts-ignore
 window.hexToHSL = hexToHSL;

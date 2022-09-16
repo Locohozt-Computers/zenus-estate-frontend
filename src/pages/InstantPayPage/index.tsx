@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Typography, Card } from "components/atoms";
+import { Card } from "components/atoms";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { DashboardContent } from "layouts";
@@ -7,11 +7,9 @@ import {
   paymentActions,
   paymentSelectors,
 } from "store/reducers/payment/paymentSlice";
-import { PaymentOptionNameEnum } from "api";
 import { useQuery } from "@tanstack/react-query";
-import { getPaymentMethod } from "pages/request";
-import { AppIcon } from "utils";
-import { IconArrowLeft } from "assets/icons";
+import { getPaymentMethod, getPaymentType } from "pages/request";
+import { NavigationController } from "components";
 import { InstantForm } from "./InstantForm";
 import { PayOption } from "./PayOption";
 import { PaySummary } from "./PaySummary";
@@ -23,6 +21,10 @@ const StyledCard = styled(Card)`
   max-height: 757px;
   width: 100%;
   padding: 60px;
+
+  .nav {
+    margin-bottom: 30px;
+  }
 `;
 
 const StyledDiv = styled.div`
@@ -47,9 +49,10 @@ const StyledDiv = styled.div`
 `;
 
 const InstantPayPage = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const { data: payMethods } = useQuery(["getPaymentMethod"], getPaymentMethod);
+  const { refetch } = useQuery(["paymentType"], getPaymentType);
 
   const pId = useSelector(paymentSelectors.paymentMethodId);
 
@@ -62,52 +65,30 @@ const InstantPayPage = () => {
     [pId, payMethods]
   );
 
-  const pageDetails = (p: number) => {
-    if (p === 1) {
-      return "/payment methods";
-    }
-    if (p === 2 && payM?.name === PaymentOptionNameEnum.Wallet) {
-      return "/wallet payment";
-    }
-    if (p === 2 && payM?.name === PaymentOptionNameEnum.Card) {
-      return "/card payment";
-    }
-    if (p === 3) {
-      return "/payment methods/successful";
-    }
-    if (p === 4) {
-      return "/payment methods/failed";
-    }
-    return "";
-  };
-
-  const handleBackBtn = () => {
-    if (page > 2) {
+  const handleBackBtn = (p: number) => {
+    setPage(p);
+    if (page > 3) {
       dispatch(resetValues());
-      setPage(0);
-    } else setPage(page - 1);
+      setPage(1);
+      refetch();
+    } else setPage(p);
   };
 
   return (
     <DashboardContent>
       <StyledDiv>
         <StyledCard>
-          <div className="arrow-icon">
-            <button
-              type="button"
-              onClick={handleBackBtn}
-              style={{
-                display: page < 1 ? "none" : "block",
-                cursor: "pointer",
-              }}
-            >
-              <AppIcon size={45} render={IconArrowLeft} />
-            </button>
-            <Typography
-              size={16}
-              weight={500}
-              textColor="med-gray"
-              content={page ? `Pay bills${pageDetails(page)}` : ""}
+          <div className="nav">
+            <NavigationController
+              pages={[
+                "Pay Bills",
+                "Payment Methods",
+                `Make ${payM?.name} Payment`,
+                page !== 5 && "Successful",
+                "Failed",
+              ]}
+              active={page}
+              onPageChange={handleBackBtn}
             />
           </div>
           <div className="paymentDetails">
@@ -118,7 +99,7 @@ const InstantPayPage = () => {
                 <PaySummary page={page} setPage={setPage} />,
                 <PaySuccess />,
                 <PayFailed />,
-              ][page]
+              ][page - 1]
             }
           </div>
         </StyledCard>
