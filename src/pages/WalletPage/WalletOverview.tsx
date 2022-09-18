@@ -9,7 +9,7 @@ import { getUserProfile, getWalletTransactions } from "pages/request";
 import { currencyFormat } from "utils/helpers";
 import { Loader } from "components/atoms/Loader";
 import { PropsI } from "pages/WalletPage/types";
-import { TransactionTypeEnum } from "api";
+import { TransactionI, TransactionTypeEnum } from "api";
 import { getBankAccounts } from "pages/WalletPage/request";
 import { FundWallet } from "pages/WalletPage/FundWallet";
 import { notification } from "services";
@@ -67,6 +67,14 @@ const CustomButton = styled(Button)`
   width: 100%;
 `;
 
+const TransactionSnippetLoader = styled.div`
+  position: relative;
+  height: 98px;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+`;
+
 const filterOptions = [
   { label: "All", value: "null" },
   { label: "Credit", value: TransactionTypeEnum.Credit },
@@ -74,11 +82,13 @@ const filterOptions = [
 ];
 
 export const WalletOverview = ({ setPage }: PropsI) => {
+  const [transactions, setTransactions] = useState<Array<TransactionI>>([]);
+
   const [withdrawState, setWithdrawState] = useState<
     "no-funds" | "no-account" | null
   >(null);
 
-  const [filterTransactionsId, setFilterTransactionsId] = useState("");
+  const [filterTransactions, setFilterTransaction] = useState("");
 
   const [transPaginationInfo, setTransPaginationInfo] = useState({
     current: 1,
@@ -88,20 +98,31 @@ export const WalletOverview = ({ setPage }: PropsI) => {
   });
 
   const {
-    data: transactions,
+    data: transactionsData,
     isLoading: transactionsLoading,
     refetch: refetchTransaction,
     isFetching: isFetchingTransaction,
-  } = useQuery(
-    ["getWalletTransactions", filterTransactionsId],
-    getWalletTransactions
+  } = useQuery(["getWalletTransactions", filterTransactions], () =>
+    getWalletTransactions()
   );
 
   const transactionPagination = useCallback(() => {
     if (transPaginationInfo.hasNext) {
-      // do something
+      (async () => {
+        const res = await getWalletTransactions({
+          page: transPaginationInfo.current + 1,
+          filter: filterTransactions,
+        });
+        setTransactions(transactions.concat(res.data));
+        setTransPaginationInfo({
+          perPage: res?.per_page,
+          current: res.current_page,
+          total: res.total,
+          hasNext: res.next_page_url,
+        });
+      })();
     }
-  }, [transPaginationInfo.hasNext]);
+  }, [filterTransactions, transPaginationInfo, transactions]);
 
   const { ref: transactionRef } = useScrollWithin(transactionPagination, []);
 
@@ -121,7 +142,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
     const id = (event.target as any)?.id;
     if (id) {
       // Todo: implement param filter
-      setFilterTransactionsId(id as string);
+      setFilterTransaction(id as string);
     }
   };
 
@@ -147,15 +168,16 @@ export const WalletOverview = ({ setPage }: PropsI) => {
   };
 
   useEffect(() => {
-    if (transactions && !isFetchingTransaction) {
+    if (transactionsData) {
+      setTransactions(transactionsData.data);
       setTransPaginationInfo({
-        perPage: transactions?.per_page,
-        current: transactions.current_page,
-        total: transactions.total,
-        hasNext: transactions.next_page_url,
+        perPage: transactionsData?.per_page,
+        current: transactionsData.current_page,
+        total: transactionsData.total,
+        hasNext: transactionsData.next_page_url,
       });
     }
-  }, [isFetchingTransaction, transactions]);
+  }, [transactionsData]);
 
   return (
     <StyledDiv>
@@ -222,19 +244,24 @@ export const WalletOverview = ({ setPage }: PropsI) => {
           </TFilter>
         </div>
       </PaymentHistory>
-      <TransactionList ref={transactionRef}>
-        {transactions?.data?.map((item) => (
-          <div ref={transactionRef}>
+      <TransactionList>
+        {transactions?.map((item, i) => (
+          <React.Fragment key={`${item.created_at}-${i.toString()}`}>
             <WalletCard
-              key={item.id}
               action={item.transaction_type.name}
               name={item.transaction_source.name}
               id={item.reference}
               amount={item.amount}
               date={item.created_at}
             />
-          </div>
+            <div ref={transactionRef} />
+          </React.Fragment>
         ))}
+        {transPaginationInfo.hasNext && (
+          <TransactionSnippetLoader>
+            <Loader open absolute />
+          </TransactionSnippetLoader>
+        )}
       </TransactionList>
       <Loader
         open={

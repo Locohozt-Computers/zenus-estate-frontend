@@ -465,31 +465,33 @@ export class GetCustomerTransactionByLevyType extends GetCustomerTransaction {
   }>;
 }
 
+export interface TransactionI {
+  id: number;
+  user_id: number;
+  description: string;
+  amount: number;
+  reference: string;
+  trans_id: string;
+  transaction_type_id: number;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+  transaction_type: {
+    id: number;
+    name: TransactionTypeEnum;
+  };
+  transaction_source: {
+    name: string;
+    status: boolean;
+  };
+}
+
 export class GetWalletTransactions {
   static Route = "/wallet-transactions";
 
   static Res: {
     data: {
-      data: Array<{
-        id: number;
-        user_id: number;
-        description: string;
-        amount: number;
-        reference: string;
-        trans_id: string;
-        transaction_type_id: 1;
-        status: boolean;
-        created_at: string;
-        updated_at: string;
-        transaction_type: {
-          id: number;
-          name: TransactionTypeEnum;
-        };
-        transaction_source: {
-          name: string;
-          status: boolean;
-        };
-      }>;
+      data: Array<TransactionI>;
     } & PaginationI;
   };
 }

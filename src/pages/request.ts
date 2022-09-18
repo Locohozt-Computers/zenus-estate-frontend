@@ -26,9 +26,13 @@ export const getDashboard = async () => {
   return res.data.data;
 };
 
-export const getWalletTransactions = async () => {
+export const getWalletTransactions = async (params?: {
+  page?: number;
+  filter?: string;
+}) => {
   const res = await appRequest.get<typeof GetWalletTransactions.Res>(
-    GetWalletTransactions.Route
+    GetWalletTransactions.Route,
+    { params }
   );
   return res.data.data;
 };
