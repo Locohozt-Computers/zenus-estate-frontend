@@ -6,6 +6,7 @@ import { getDashboard } from "pages/request";
 import { TableColumn } from "react-data-table-component";
 import { PaymentHistoryI } from "api";
 import { currencyFormat, getStatusColor } from "utils/helpers";
+import { DATE_FORMAT } from "app-constants";
 
 const columns: TableColumn<PaymentHistoryI>[] = [
   {
@@ -20,7 +21,7 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     name: "Date",
     selector: (row) => row.created_at,
     format: (v) => (
-      <Typography content={format(new Date(v.created_at), "do MMMM, yyyy")} />
+      <Typography content={format(new Date(v.created_at), DATE_FORMAT.main)} />
     ),
     center: true,
   },

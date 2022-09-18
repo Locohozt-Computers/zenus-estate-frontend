@@ -1,7 +1,8 @@
 import React, { FC, PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components/macro";
-import { pxToEm } from "utils";
+import { AppIcon, pxToEm } from "utils";
+import { CgClose } from "react-icons/cg";
 
 export type ModalType = {
   maxWidth?: number;
@@ -38,16 +39,37 @@ const PortalStyling = styled.div<{ maxWidth?: number; visible: boolean }>`
   }
 
   .modal-body {
+    position: relative;
     margin: auto;
     z-index: 1;
     width: 100%;
     max-width: ${({ maxWidth }) => pxToEm(maxWidth || 300)};
   }
+
+  .close-btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+
+    & > button {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const Modal: FC<
-  ModalType & PropsWithChildren & { visible: boolean }
-> = ({ children, disableOutsideClick, visible, closeModal, ...props }) => {
+  ModalType & PropsWithChildren & { visible: boolean; showCloseBtn?: boolean }
+> = ({
+  children,
+  showCloseBtn = true,
+  disableOutsideClick,
+  visible,
+  closeModal,
+  ...props
+}) => {
   if (!visible) return null;
 
   return (
@@ -63,6 +85,13 @@ export const Modal: FC<
             className="modal-body"
             onClick={(e) => e.stopPropagation()}
           >
+            {showCloseBtn && (
+              <div className="close-btn">
+                <button type="button" onClick={closeModal}>
+                  <AppIcon render={CgClose} />
+                </button>
+              </div>
+            )}
             {children}
           </div>
         </div>
