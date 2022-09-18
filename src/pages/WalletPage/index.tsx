@@ -24,6 +24,12 @@ const WalletPage = () => {
 
   const [page, setPage] = useState(1);
 
+  const handleSetPage = (p: number) => {
+    if (page > 2) {
+      setPage(1);
+    } else setPage(p);
+  };
+
   return (
     <DashboardContent>
       <StyledDiv>
@@ -35,7 +41,7 @@ const WalletPage = () => {
               "Add New Account",
             ]}
             active={page}
-            onPageChange={setPage}
+            onPageChange={handleSetPage}
           />
         </div>
         {
@@ -45,7 +51,7 @@ const WalletPage = () => {
               <WithdrawView page={page} setPage={setPage} />
             ),
             <AddAccount page={page} setPage={setPage} />,
-            <WithdrawSuccess page={page} setPage={setPage} />,
+            <WithdrawSuccess />,
           ].filter(Boolean)[page - 1]
         }
       </StyledDiv>

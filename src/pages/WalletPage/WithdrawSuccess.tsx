@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import withdraw from "assets/images/withdrawsuccess.png";
 import { Typography } from "components";
-import { PropsI } from "pages/WalletPage/types";
 
 const StyledDiv = styled.div`
   height: 100%;
@@ -14,7 +13,7 @@ const StyledDiv = styled.div`
   margin: 0 auto;
 `;
 
-export const WithdrawSuccess = ({ page, setPage }: PropsI) => {
+export const WithdrawSuccess = () => {
   return (
     <StyledDiv>
       <img
