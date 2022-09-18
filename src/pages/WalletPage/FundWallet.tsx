@@ -26,7 +26,7 @@ export const FundWallet = ({
     getUserProfile
   );
 
-  const { mutate } = useMutation(fundWallet);
+  const { mutate, isLoading } = useMutation(fundWallet);
 
   const [amount, setAmount] = useState(0);
   const [isSuccess, setIsSuccess] = useState("");
@@ -68,7 +68,7 @@ export const FundWallet = ({
 
   return (
     <>
-      <Loader open={profileLoading} />
+      <Loader absolute open={profileLoading || isLoading} />
       {isSuccess ? (
         <div style={{ padding: 80 }}>
           <Typography variant="heading4">Transaction {isSuccess}!</Typography>

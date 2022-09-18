@@ -31,8 +31,16 @@ export const truncateLongName = (str: string) => {
   return `${name.slice(0, 4)}...${name.slice(name.length - 5)}.${ending}`;
 };
 
-export const getInitials = (name: string) => {
-  return name ? `${name[0].toUpperCase()}`.trim() : "-";
+export const getInitials = (name: string, count = 2) => {
+  if (name) {
+    return name
+      .split(" ")
+      .slice(0, count)
+      .map((el) => el[0].toUpperCase())
+      .join("")
+      .trim();
+  }
+  return "-";
 };
 
 export const currencyFormat = (

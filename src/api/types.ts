@@ -549,12 +549,28 @@ export class PostAddBankAccount extends GetBankAccounts {
   static Body: {
     account_number: string;
     bank_code: string;
-    branch_id?: number;
   };
 
   static Res: {
     status: string;
     message: string;
     data: Array<Omit<BankAccountResI, "account_name">>;
+  };
+}
+
+export class PostResolveBankAccountName {
+  static Route = "/resolve-bank-account-name";
+
+  static Body: {
+    account_number: string;
+    bank_code: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      account_name: string;
+    };
   };
 }

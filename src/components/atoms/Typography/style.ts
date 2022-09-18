@@ -9,6 +9,7 @@ export type TextColor =
   | "light-blue"
   | "pink"
   | "gray"
+  | "gray-4"
   | "med-gray"
   | "black"
   | "white"

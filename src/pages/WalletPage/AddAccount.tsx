@@ -57,12 +57,11 @@ export const AddAccount = ({ setPage }: PropsI) => {
     validationSchema,
     onSubmit: async ({ accNumber, bankCode }) => {
       try {
-        const pRes = await resolveBank({
+        await resolveBank({
           account_number: accNumber,
           bank_code: bankCode,
         });
         await addBank({
-          ...pRes,
           account_number: accNumber,
           bank_code: bankCode,
         });

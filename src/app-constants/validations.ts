@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { currencyFormat } from "utils/helpers";
 
 export const VALIDATIONS = {
   email: yup.string().email().required("Email is required"),
@@ -12,7 +13,7 @@ export const VALIDATIONS = {
     .number()
     .required("Amount is required")
     .transform((v) => +v)
-    .min(50)
+    .min(10, `Minimum amount is ${currencyFormat(10)}`)
     .nullable(),
   complaintCategory: yup
     .string()
