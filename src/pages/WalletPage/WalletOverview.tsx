@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Balanceimg from "assets/images/balanceimg.png";
-import { Button, Card, Modal, TFilter, Typography } from "components";
+import { Button, Card, Modal, TFilter, Typography, UlStyle } from "components";
 import { WalletCard } from "components/molecules/WalletCard";
 import { pxToEm } from "utils";
 import { useQuery } from "@tanstack/react-query";
@@ -40,21 +40,6 @@ const TransactionList = styled.div`
   display: grid;
   gap: 10px;
   padding: 10px;
-`;
-
-const UlStyle = styled.ul`
-  list-style: none;
-  white-space: nowrap;
-
-  > li {
-    padding: 10px 15px;
-
-    :hover {
-      color: white;
-      cursor: pointer;
-      background-color: var(--blue);
-    }
-  }
 `;
 
 const CustomCard = styled(Card)`

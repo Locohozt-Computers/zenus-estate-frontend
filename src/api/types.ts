@@ -574,3 +574,39 @@ export class PostResolveBankAccountName {
     };
   };
 }
+
+export class GetMarkAllNotificationAsRead {
+  static Route = "/notifications-mark-as-read";
+
+  static Res: {
+    status: string;
+    message: string;
+  };
+}
+
+export class GetAllNotifications {
+  static Route = "/notifications";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<{
+      id: "5a425fe1-a1b5-48ab-bf7c-ff3a8fe0ae64";
+      message: "You  successfully funded your wallet with =N= 69000 ";
+      created_at: "2022-09-18T10:44:59.000000Z";
+      read_at: null;
+    }>;
+  };
+}
+
+export class PostReadNotification extends GetAllNotifications {
+  static Body: {
+    id: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: [];
+  };
+}
