@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { DashboardContent } from "layouts";
 import { Card, NavigationController } from "components";
+import { useQuery } from "@tanstack/react-query";
+import { getBankAccounts } from "pages/WalletPage/request";
 import { WalletOverview } from "./WalletOverview";
 import { AddAccount } from "./AddAccount";
 import { WithdrawView } from "./WithdrawView";
@@ -18,6 +20,8 @@ const StyledDiv = styled(Card)`
 `;
 
 const WalletPage = () => {
+  const { data: bankAccounts } = useQuery(["getBankAccounts"], getBankAccounts);
+
   const [page, setPage] = useState(1);
 
   return (
@@ -25,7 +29,11 @@ const WalletPage = () => {
       <StyledDiv>
         <div className="nav">
           <NavigationController
-            pages={["My Wallet", "Withdraw", "Add New Account"]}
+            pages={[
+              "My Wallet",
+              bankAccounts?.length ? "Withdraw" : undefined,
+              "Add New Account",
+            ]}
             active={page}
             onPageChange={setPage}
           />
@@ -33,10 +41,12 @@ const WalletPage = () => {
         {
           [
             <WalletOverview page={page} setPage={setPage} />,
+            !!bankAccounts?.length && (
+              <WithdrawView page={page} setPage={setPage} />
+            ),
             <AddAccount page={page} setPage={setPage} />,
-            <WithdrawView page={page} setPage={setPage} />,
             <WithdrawSuccess page={page} setPage={setPage} />,
-          ][page - 1]
+          ].filter(Boolean)[page - 1]
         }
       </StyledDiv>
     </DashboardContent>

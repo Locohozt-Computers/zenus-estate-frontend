@@ -396,11 +396,11 @@ export class GetAllBanks {
     message: string;
     data: {
       data: Array<{
-        id: 302;
+        id: number;
+        code: string;
         name: string;
-        pay_with_bank: false;
-        active: true;
-        country: string;
+        pay_with_bank: boolean;
+        active: boolean;
         currency: string;
       }>;
     };
@@ -494,11 +494,23 @@ export class GetWalletTransactions {
   };
 }
 
+interface BankAccountResI {
+  id: number;
+  user_id: number;
+  bank_code: number;
+  account_number: string;
+  account_name?: string;
+  status: number;
+  branch_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export class PostFundWallet {
   static Route = "/fund-wallet";
 
   static Body: {
-    amount: 6000;
+    amount: number;
     reference: string;
     trans_id: string;
   };
@@ -518,5 +530,29 @@ export class PostFundWallet {
       created_at: string;
       id: number;
     };
+  };
+}
+
+export class GetBankAccounts {
+  static Route = "/bank-account";
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<BankAccountResI>;
+  };
+}
+
+export class PostAddBankAccount extends GetBankAccounts {
+  static Body: {
+    account_number: string;
+    bank_code: string;
+    branch_id?: number;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: Array<Omit<BankAccountResI, "account_name">>;
   };
 }
