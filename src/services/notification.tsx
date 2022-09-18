@@ -1,7 +1,7 @@
 import toast, { Toast, ToastOptions } from "react-hot-toast";
 import styled from "styled-components/macro";
 import { CgClose } from "react-icons/cg";
-import { HTMLAttributes } from "react";
+import React, { HTMLAttributes } from "react";
 
 const Styling = styled.div`
   display: flex;

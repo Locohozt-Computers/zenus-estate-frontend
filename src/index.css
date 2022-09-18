@@ -42,7 +42,16 @@ input {
   align-items: center;
 }
 
+.direction-column {
+  flex-direction: column;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
 button {
+  cursor: pointer;
   background: none;
   border: none;
 }

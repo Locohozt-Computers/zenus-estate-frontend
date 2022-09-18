@@ -17,7 +17,7 @@ import { AppIcon } from "utils";
 import { VALIDATIONS } from "app-constants";
 import { currencyFormat } from "utils/helpers";
 import { notification } from "services";
-import { PageProps } from ".";
+import { PageProps } from "./Props";
 
 const StyledDiv = styled.div`
   width: 100%;

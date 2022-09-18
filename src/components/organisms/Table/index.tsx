@@ -4,8 +4,10 @@ import DataTable, { TableStyles } from "react-data-table-component";
 import { TableProps } from "react-data-table-component/dist/src/DataTable/types";
 import { Typography } from "components/atoms";
 import styled from "styled-components/macro";
-import { pxToEm } from "utils";
+import { AppIcon, pxToEm } from "utils";
 import { useOnClickOutside } from "hooks";
+import { TextColor } from "components/atoms/Typography/style";
+import { IconCaretDownFilled } from "assets/icons";
 import imgData from "./img.png";
 
 const customStyles: TableStyles = {
@@ -75,24 +77,29 @@ const TFStyling = styled.div`
 
 interface TFI extends PropsWithChildren {
   renderSetVisible: (props: { setVisible: (arg: boolean) => void }) => void;
-  active?: boolean;
+  active?: boolean | TextColor;
+  text?: string;
 }
 
-export const TFilter = ({ children, renderSetVisible, active }: TFI) => {
+export const TFilter = ({ children, text, renderSetVisible, active }: TFI) => {
   const { visible, setVisible, ref } = useOnClickOutside(false);
 
   return (
     <TFStyling ref={ref}>
       <button
-        className="tf--button"
+        className="tf--button center-contents"
         type="button"
         onClick={() => setVisible(!visible)}
       >
+        <AppIcon
+          render={IconCaretDownFilled}
+          textColor={active ? "blue" : "gray"}
+        />
         <Typography
           weight={500}
           size={17}
           textColor={active ? "blue" : "gray"}
-          content="Filter"
+          content={text || "Filter"}
         />
       </button>
       {visible && (

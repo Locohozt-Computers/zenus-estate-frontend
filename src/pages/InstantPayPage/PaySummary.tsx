@@ -22,7 +22,7 @@ import { PaymentOptionNameEnum, PayStackResponseI } from "api";
 import { Loader } from "components/atoms/Loader";
 import { notification } from "services";
 import { CustomPayStackButton } from "pages/InstantPayPage/PayStackButton";
-import { PageProps } from ".";
+import { PageProps } from "./Props";
 
 const StyledDiv = styled.div`
   width: 100%;

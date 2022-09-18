@@ -18,6 +18,7 @@ const DashboardStyling = styled.div<{ sidebar?: boolean }>`
     position: relative;
     width: 100%;
     max-width: 1120px;
+    height: 100%;
   }
 
   @media screen and (min-width: 900px) {
