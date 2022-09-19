@@ -62,7 +62,6 @@ export const NotificationDropdown = () => {
   };
 
   const markAllAsRead = () => {
-    setVisible(!visible);
     if (data?.length) {
       (async () => {
         await markAllNotificationAsRead();
