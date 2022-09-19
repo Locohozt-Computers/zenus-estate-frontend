@@ -71,7 +71,6 @@ export const NotificationDropdown = () => {
   };
 
   const toggleDrop = () => {
-    setVisible(!visible);
     if (data?.length) {
       setVisible(!visible);
     }
@@ -100,8 +99,11 @@ export const NotificationDropdown = () => {
                     type="button"
                     style={{ padding: "20px 10px 10px", whiteSpace: "nowrap" }}
                     onClick={markAllAsRead}
+                    disabled={!data?.length}
                   >
-                    <Typography textColor="blue">Clear all</Typography>
+                    <Typography textColor={data?.length ? "blue" : "gray"}>
+                      Clear all
+                    </Typography>
                   </button>
                 </div>
                 <UlStyle onClick={onNotificationClick}>

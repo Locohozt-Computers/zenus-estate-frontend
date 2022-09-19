@@ -1,2 +1,2 @@
-export * from "../organisms/NotificationDropdown";
 export * from "./NavigationController";
+export * from "./WalletCard";
