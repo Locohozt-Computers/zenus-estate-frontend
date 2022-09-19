@@ -1,35 +1,20 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
-import { Button, Input, Typography } from "components";
-import Arrow from "assets/images/arrowright.png";
-import Bankimg from "assets/images/firstbank.png";
+import { Button, FormikInput, Typography } from "components";
 import { pxToEm } from "utils";
 import { AiOutlinePlus } from "react-icons/ai";
-
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
+import { PropsI } from "pages/WalletPage/types";
+import { useQuery } from "@tanstack/react-query";
+import { getBankAccounts } from "pages/WalletPage/request";
+import { getAllBanks, getUserProfile } from "pages/request";
+import { Loader } from "components/atoms/Loader";
+import { currencyFormat, getInitials } from "utils/helpers";
+import { FormikProvider, useFormik } from "formik";
+import { VALIDATIONS } from "app-constants";
+import * as yup from "yup";
 
 const StyledDiv = styled.div`
-  width: ${pxToEm(570)};
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-
-  .display-flex {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .wallet-content {
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    align-items: flex-start;
-  }
+  position: relative;
 
   .saved-account {
     padding: ${pxToEm(35)};
@@ -39,6 +24,7 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: flex-start;
     width: 100%;
+    margin-bottom: 20px;
 
     &-text {
       align-items: flex-start;
@@ -48,78 +34,167 @@ const StyledDiv = styled.div`
       min-height: ${pxToEm(90)};
     }
   }
+
+  .initials {
+    border-radius: 22.5px;
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray);
+  }
+
+  .withdraw-btn {
+    margin-bottom: ${pxToEm(75)};
+    margin-top: ${pxToEm(60)};
+  }
+  .withdraw-btn .amount {
+    display: none;
+  }
+
+  @media screen and (min-width: ${pxToEm(750)}) {
+    .withdraw-btn .amount {
+      display: inline;
+    }
+  }
 `;
 
-export const WithdrawView = ({ page, setPage }: Props) => {
-  const Bank = "First Bank PLC";
-  const Name = "Daniel Mbazu";
-  const Account = "11111111111111";
+const truncate = (str: string) => `${str.slice(0, 2)}****${str.slice(6)}`;
 
-  // eslint-disable-next-line
-  const newAccount = String(Account.slice(0, 4) + "***" + Account.slice(6, 10));
+export const WithdrawView = ({ setPage }: PropsI) => {
+  const { isLoading: profileLoading, data: profileData } = useQuery(
+    ["getUserProfileWallet"],
+    getUserProfile,
+    { cacheTime: 0, refetchOnWindowFocus: "always" }
+  );
+
+  const { data: banks, isLoading: bankLoading } = useQuery(
+    ["getAllBank"],
+    getAllBanks
+  );
+
+  const { data: bankAccounts, isLoading } = useQuery(
+    ["getBankAccounts"],
+    getBankAccounts
+  );
+
+  const bankDetails = useMemo(() => {
+    if (bankAccounts) {
+      const res = banks?.data.find(
+        (el) => el.code.toString() === bankAccounts[0].bank_code.toString()
+      );
+      return {
+        bank: res?.name,
+        account: bankAccounts[0].account_name,
+        acc_number: bankAccounts[0].account_number,
+      };
+    }
+    return null;
+  }, [bankAccounts, banks?.data]);
+
+  const formik = useFormik({
+    initialValues: { amount: 0 },
+    validateOnMount: true,
+    validationSchema: yup.object({
+      amount: VALIDATIONS.amount.max(
+        profileData?.walletBalance as number,
+        `Your account balance is ${currencyFormat(
+          profileData?.walletBalance || 0
+        )}`
+      ),
+    }),
+    onSubmit: () => {},
+  });
 
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          // style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img src={Arrow} alt="arrow" style={{ margin: " 0 12px 0 -1rem" }} />
-        </button>
-      </span>
-      <div className="display-flex wallet-content">
-        <span className="arrow-icon">
-          <Typography
-            size={16}
-            weight={500}
-            textColor="med-gray"
-            content="My Wallet"
-          />
-        </span>
+      <Loader open={bankLoading || isLoading} absolute />
+      <div>
         <div className="saved-account">
-          <img
-            src={Bankimg}
-            alt="bank"
-            style={{ width: `${pxToEm(85)}`, height: `${pxToEm(85)}` }}
-          />
+          <div className="initials">
+            <Typography
+              variant="heading4"
+              color="white"
+              content={getInitials(bankDetails?.bank || "")}
+            />
+          </div>
           <div className="saved-account-text display-flex ">
-            <Typography variant="heading5" content={Bank} />
+            <Typography
+              variant="heading5"
+              content={bankDetails?.bank || "**********"}
+            />
             <Typography
               variant="subtitle"
-              content={newAccount}
-              textColor="med-gray"
+              content={`(${truncate(
+                bankDetails?.acc_number || "************"
+              )})`}
+              textColor="gray-4"
             />
-            <Typography variant="bodyBig">
-              Recipient Name: <span>{Name}</span>
+            <Typography variant="bodyBig" textColor="gray-4">
+              Recipient Name:{" "}
+              <span>{bankDetails?.account || "************"}</span>
             </Typography>
           </div>
         </div>
-        <div style={{ alignSelf: "flex-end" }} className="display-flex">
-          <button type="button" style={{ color: "var(--blue)" }}>
-            <AiOutlinePlus />
-          </button>
-          <Typography
-            variant="bodyBig"
-            textColor="blue"
-            content="Add New Account"
-          />
-        </div>
-        <Input
-          name="amount"
-          placeholder="N200,000"
-          label="Amount to withdraw"
-        />
-        <Button
-          text="Withdraw"
+        <div
           style={{
-            marginBottom: `${pxToEm(75)}`,
-            marginTop: `${pxToEm(60)}`,
-            alignSelf: "center",
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 40,
           }}
-          disabled
-        />
+        >
+          <button
+            type="button"
+            className="center-contents"
+            style={{ color: "var(--blue)" }}
+            onClick={() => setPage(!bankAccounts?.length ? 2 : 3)}
+          >
+            <AiOutlinePlus />
+            <Typography
+              variant="bodyBig"
+              textColor="blue"
+              content="Update Account"
+            />
+          </button>
+        </div>
+        <FormikProvider value={formik}>
+          <form onSubmit={formik.handleSubmit}>
+            <FormikInput
+              name="amount"
+              placeholder="Amount"
+              label="Amount to withdraw"
+            />
+            <Typography
+              size={14}
+              textColor="med-gray"
+              style={{ marginTop: 5 }}
+              content={
+                profileLoading
+                  ? "Getting Balance..."
+                  : `Wallet balance ${currencyFormat(
+                      profileData?.walletBalance || 0
+                    )}`
+              }
+            />
+            <div className="center-contents">
+              <Button
+                type="submit"
+                className="withdraw-btn"
+                disabled={!formik.isValid}
+              >
+                <span>Withdraw</span>{" "}
+                {!!formik.values.amount && (
+                  <span className="amount">
+                    {currencyFormat(formik.values.amount)}
+                  </span>
+                )}
+              </Button>
+            </div>
+          </form>
+        </FormikProvider>
       </div>
     </StyledDiv>
   );

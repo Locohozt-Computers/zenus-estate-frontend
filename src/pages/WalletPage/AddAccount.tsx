@@ -1,125 +1,107 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
-import Arrow from "assets/images/arrowright.png";
 import { FormikProvider, useFormik } from "formik";
-import {
-  FormikInput,
-  Button,
-  Typography,
-  FormikSelect,
-} from "components/atoms";
-import { pxToEm } from "utils";
+import { Button, FormikInput, FormikSelect } from "components/atoms";
 import * as yup from "yup";
 import { VALIDATIONS } from "app-constants";
 import { useQuery } from "@tanstack/react-query";
 import { getAllBanks } from "pages/request";
-
-const StyledDiv = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-
-  .withdraw-items {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-  }
-`;
-type Props = {
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-};
+import {
+  addBank,
+  getBankAccounts,
+  resolveBank,
+} from "pages/WalletPage/request";
+import { netErrorHandler, notification } from "services";
+import { AxiosError } from "axios";
+import { PropsI } from "./types";
 
 const validationSchema = yup.object({
-  accName: VALIDATIONS.accountName,
-  accNumber: VALIDATIONS.account,
-  bankName: VALIDATIONS.bankName,
-  amount: VALIDATIONS.amount,
+  accNumber: VALIDATIONS.accountNumber,
+  bankCode: VALIDATIONS.bankName,
 });
 
-export const AddAccount = ({ page, setPage }: Props) => {
+const StyledDiv = styled.div`
+  .form {
+    display: grid;
+    gap: 30px;
+  }
+`;
+
+export const AddAccount = ({ setPage }: PropsI) => {
+  const { data: banks, isLoading: bankLoading } = useQuery(
+    ["getAllBank"],
+    getAllBanks
+  );
+
+  const { refetch: refetchBankAccounts } = useQuery(
+    ["getBankAccounts"],
+    getBankAccounts
+  );
+
+  const bankList = useMemo(
+    () =>
+      banks?.data
+        .filter((el) => el.currency !== "USD")
+        .map((el) => ({
+          label: el.name,
+          value: el.code,
+        })),
+    [banks?.data]
+  );
+
   const formik = useFormik({
     initialValues: {
-      accName: "",
       accNumber: "",
-      bankName: "",
-      amount: "",
+      bankCode: "",
     },
     validationSchema,
-    onSubmit: () => {
-      setPage(page + 2);
-      //  dispatch(setValues({ values, chosenType }));
+    onSubmit: async ({ accNumber, bankCode }) => {
+      try {
+        await resolveBank({
+          account_number: accNumber,
+          bank_code: bankCode,
+        });
+        await addBank({
+          account_number: accNumber,
+          bank_code: bankCode,
+        });
+        const bb = await refetchBankAccounts();
+        if (bb?.data?.length) {
+          setPage(2);
+        }
+      } catch (e) {
+        const message = netErrorHandler(e as AxiosError);
+        notification.error(message);
+      }
     },
   });
 
-  const { data: banks } = useQuery(["getAllBank"], getAllBanks);
-  console.log(banks);
-  // const BankNames = banks?.map((item)=>{
-
-  // })
   return (
     <StyledDiv>
-      <span className="arrow-icon">
-        <button
-          type="button"
-          onClick={() => setPage(page - 1)}
-          style={{ visibility: page < 1 ? "hidden" : "visible" }}
-        >
-          <img
-            src={Arrow}
-            alt="arrow"
-            style={{ margin: ` 0 ${pxToEm(14)} 0 -${pxToEm(32)}` }}
+      <div className="withdraw-items" />
+      <FormikProvider value={formik}>
+        <form className="form" onSubmit={formik.handleSubmit}>
+          <FormikSelect
+            name="bankCode"
+            label="Bank Name"
+            options={bankList || []}
+            loading={bankLoading}
+            placeholder="Select Bank"
           />
-        </button>
-      </span>
-      <div className="withdraw-items">
-        <span className="arrow-icon">
-          <Typography
-            variant="bodyBig"
-            textColor="med-gray"
-            content="My wallet/withdraw"
+          <FormikInput
+            name="accNumber"
+            label="Account Number to Pay"
+            placeholder="Account Number"
           />
-        </span>
-        <FormikProvider value={formik}>
-          <form onSubmit={formik.handleSubmit}>
-            <FormikInput
-              name="accName"
-              label="Account Name to Pay"
-              placeholder="Daniel Mbazu"
+          <div className="center-contents">
+            <Button
+              type="submit"
+              text="Add Account"
+              loading={formik.isSubmitting}
             />
-            <FormikInput
-              name="accNumber"
-              label="Account Number to Pay"
-              placeholder="3119378455"
-            />
-            <FormikSelect
-              name="bankName"
-              label="Bank Name"
-              options={[]}
-              placeholder="First Bank PLC"
-            />
-            <FormikInput
-              name="amount"
-              label="Amount to Withdraw"
-              placeholder="N60,0000"
-            />
-            <Button text="Withdraw" />
-          </form>
-        </FormikProvider>
-      </div>
+          </div>
+        </form>
+      </FormikProvider>
     </StyledDiv>
   );
 };

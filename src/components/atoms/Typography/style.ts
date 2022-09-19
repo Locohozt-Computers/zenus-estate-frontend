@@ -9,6 +9,7 @@ export type TextColor =
   | "light-blue"
   | "pink"
   | "gray"
+  | "gray-4"
   | "med-gray"
   | "black"
   | "white"
@@ -68,6 +69,12 @@ const setVariant = (variant: TextVariant) => {
         fontWeight: 500,
         fontSize: pxToEm(17),
         color: "var(--black)",
+      });
+    case "helperText":
+      return cssObjectToString({
+        fontWeight: 400,
+        fontSize: pxToEm(12),
+        color: "var(--med-gray)",
       });
     default:
       return "";

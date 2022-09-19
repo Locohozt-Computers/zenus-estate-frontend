@@ -4,14 +4,19 @@ import styled from "styled-components";
 import { pxToEm } from "utils";
 import withdraw from "assets/images/withdrawcash.png";
 import add from "assets/images/addcash.png";
-import { BiPlus } from "react-icons/bi";
+import { currencyFormat, getBalColor } from "utils/helpers";
+import { format } from "date-fns";
+import { DATE_FORMAT } from "app-constants";
+import { TransactionTypeEnum } from "api";
 
 type Props = {
-  action: string;
+  action: TransactionTypeEnum;
   id: number | string;
   amount: number;
   date: string;
+  name: string;
 };
+
 const StyledDiv = styled.div`
   width: 100%;
   height: ${pxToEm(98)};
@@ -27,6 +32,7 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
 
     &-section,
     &-section-right {
@@ -41,46 +47,40 @@ const StyledDiv = styled.div`
       align-items: flex-end;
     }
   }
-`;
-export const WalletCard = ({ action, id, amount, date }: Props) => {
-  const topUp = "Account Top up";
-  // function toMonthName(monthNumber) {
-  //   const date = new Date();
-  //   date.setMonth(monthNumber - 1);
 
-  //   return date.toLocaleString("en-US", {
-  //     month: "long",
-  //   });
-  // }
+  .space-out {
+    justify-content: space-around;
+    height: 100%;
+  }
+
+  .flex-end {
+    align-items: flex-end;
+  }
+`;
+
+export const WalletCard = ({ action, name, id, amount, date }: Props) => {
   return (
     <StyledDiv>
-      <img src={action === topUp ? add : withdraw} alt={action} />
+      <img
+        src={action === TransactionTypeEnum.Credit ? add : withdraw}
+        alt={action}
+      />
       <div className="text-div">
-        <div className="text-div-section">
-          <Typography content={action} variant="bodyBig" />
+        <div className="text-div-section space-out">
+          <Typography content={name} variant="bodyBig" />
           <Typography content={`id-#${id}`} variant="helperText" />
         </div>
-        <div className="text-div-section">
+        <div className="text-div-section flex-end">
           <Typography
             variant="subtitle"
-            textColor={action === topUp ? "green" : "pink"}
-          >
-            <span
-              style={{
-                fontSize: "10px",
-                // display: "flex",
-                // alignItems: "center",
-              }}
-            >
-              {action === topUp ? <BiPlus /> : ""}
-            </span>
-            ₦{amount}
-          </Typography>
-          <Typography
-            content={date.substring(0, 10)}
-            variant="bodySmall"
-            textColor="med-gray"
+            color={getBalColor(amount)}
+            content={`${amount < 0 ? "-" : "+"}${currencyFormat(
+              Math.abs(amount)
+            )}`}
           />
+          <Typography variant="bodySmall" textColor="med-gray">
+            {format(new Date(date), DATE_FORMAT.shortMonth)}
+          </Typography>
         </div>
       </div>
     </StyledDiv>

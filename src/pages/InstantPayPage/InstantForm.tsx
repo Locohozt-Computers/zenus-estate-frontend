@@ -11,7 +11,7 @@ import {
   paymentSelectors,
 } from "store/reducers/payment/paymentSlice";
 import { Button, Typography, Select, Input } from "components/atoms";
-import { currencyFormat } from "utils/helpers";
+import { currencyFormat, getBalColor } from "utils/helpers";
 import { PageProps } from "./Props";
 
 const StyledForm = styled.form`
@@ -26,12 +26,6 @@ const StyledForm = styled.form`
 const validationSchema = yup.object({
   payment_type_id: VALIDATIONS.paymentType,
 });
-
-const setColor = (bal: number) => {
-  if (bal < 0) return "var(--pink)";
-  if (bal === 0) return "var(--blue)";
-  return "var(--green)";
-};
 
 export const InstantForm = ({ page, setPage }: PageProps) => {
   const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
@@ -134,7 +128,7 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
           value={formik.values.outstandingBalance}
           readOnly
           style={{
-            color: setColor(
+            color: getBalColor(
               +currencyFormat.removeFormat(formik.values.outstandingBalance)
             ),
             pointerEvents: "none",

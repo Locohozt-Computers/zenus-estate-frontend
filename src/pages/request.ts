@@ -1,25 +1,24 @@
 import appRequest, {
   DelEmergency,
+  GetAllBanks,
   GetAllEmergencies,
   GetAllEmergenciesTypes,
-  GetLandlordProfile,
-  GetProfile,
   GetAllPaymentType,
-  GetPaymentMethod,
-  PostCreateEmergency,
-  GetOutstandingBalance,
-  PutUpdateEmergency,
-  PostBillPayment,
-  GetDashboard,
-  PostWalletPayment,
   GetComplaintCategory,
-  PostMakeComplaint,
-  PostForgotPassword,
-  PostResetPassword,
   GetCustomerTransaction,
-  GetWalletTransactions,
-  GetAllBanks,
   GetCustomerTransactionByLevyType,
+  GetDashboard,
+  GetLandlordProfile,
+  GetOutstandingBalance,
+  GetPaymentMethod,
+  GetProfile,
+  GetWalletTransactions,
+  PostBillPayment,
+  PostCreateEmergency,
+  PostForgotPassword,
+  PostMakeComplaint,
+  PostResetPassword,
+  PutUpdateEmergency,
 } from "api";
 
 export const getDashboard = async () => {
@@ -27,11 +26,15 @@ export const getDashboard = async () => {
   return res.data.data;
 };
 
-export const getWalletTransactions = async () => {
+export const getWalletTransactions = async (params?: {
+  page?: number;
+  filter?: string;
+}) => {
   const res = await appRequest.get<typeof GetWalletTransactions.Res>(
-    GetWalletTransactions.Route
+    GetWalletTransactions.Route,
+    { params }
   );
-  return res.data.data.data;
+  return res.data.data;
 };
 export const getAllBanks = async () => {
   const res = await appRequest.get<typeof GetAllBanks.Res>(GetAllBanks.Route);
@@ -113,16 +116,6 @@ export const getPaymentMethod = async () => {
 export const postBillPayment = async (data: typeof PostBillPayment.Body) => {
   const res = await appRequest.post<typeof PostBillPayment.Res>(
     PostBillPayment.Route,
-    data
-  );
-  return res.data.data;
-};
-
-export const postWalletPayment = async (
-  data: typeof PostWalletPayment.Body
-) => {
-  const res = await appRequest.post<typeof PostWalletPayment.Res>(
-    PostWalletPayment.Route,
     data
   );
   return res.data.data;
