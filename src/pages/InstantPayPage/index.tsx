@@ -62,7 +62,7 @@ const InstantPayPage = () => {
     [pId, payMethods]
   );
 
-  const pageDetails = (p: number) => {
+  const nav = (p: number) => {
     if (p === 1) {
       return "/payment methods";
     }
@@ -107,7 +107,7 @@ const InstantPayPage = () => {
               size={16}
               weight={500}
               textColor="med-gray"
-              content={page ? `Pay bills${pageDetails(page)}` : ""}
+              content={page ? `Pay bills${nav(page)}` : ""}
             />
           </div>
           <div className="paymentDetails">

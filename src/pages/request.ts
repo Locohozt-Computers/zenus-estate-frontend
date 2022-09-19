@@ -17,11 +17,24 @@ import appRequest, {
   PostForgotPassword,
   PostResetPassword,
   GetCustomerTransaction,
+  GetWalletTransactions,
+  GetAllBanks,
   GetCustomerTransactionByLevyType,
 } from "api";
 
 export const getDashboard = async () => {
   const res = await appRequest.get<typeof GetDashboard.Res>(GetDashboard.Route);
+  return res.data.data;
+};
+
+export const getWalletTransactions = async () => {
+  const res = await appRequest.get<typeof GetWalletTransactions.Res>(
+    GetWalletTransactions.Route
+  );
+  return res.data.data.data;
+};
+export const getAllBanks = async () => {
+  const res = await appRequest.get<typeof GetAllBanks.Res>(GetAllBanks.Route);
   return res.data.data;
 };
 

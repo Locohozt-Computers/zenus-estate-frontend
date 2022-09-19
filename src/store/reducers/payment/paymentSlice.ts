@@ -11,6 +11,11 @@ export interface PaymentState {
   fees: number;
   final_amount: number;
   successResponse: Partial<typeof PostBillPayment.Res>;
+  saved_Accounts: {
+    bank_name: string;
+    account_name: string;
+    account: number;
+  };
 }
 
 const initialState: PaymentState = {
@@ -22,6 +27,7 @@ const initialState: PaymentState = {
   successResponse: {},
   fees: 0,
   final_amount: 0,
+  saved_Accounts: { bank_name: "", account_name: "string", account: 0 },
 };
 
 export const paymentSlice = createSlice({
