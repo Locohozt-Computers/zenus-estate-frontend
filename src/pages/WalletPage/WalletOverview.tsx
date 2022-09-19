@@ -1,8 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Balanceimg from "assets/images/balanceimg.png";
-import { Button, Card, Modal, TFilter, Typography, UlStyle } from "components";
-import { WalletCard } from "components/molecules/WalletCard";
+import {
+  Button,
+  Card,
+  Modal,
+  TFilter,
+  Typography,
+  UlStyle,
+  WalletCard,
+} from "components";
 import { pxToEm } from "utils";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile, getWalletTransactions } from "pages/request";
