@@ -6,10 +6,16 @@ import { MdLocationPin } from "react-icons/md";
 import { pxToEm } from "utils";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { useOnClickOutside } from "hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
 import { IconSpinner } from "assets/icons";
+import { Link } from "react-router-dom";
+import { IconGrayUser } from "assets/icons/";
+import { AppIcon } from "utils/iconRender";
+import { RiLogoutCircleFill } from "react-icons/ri";
+import { authActions } from "store/reducers/auth/authDocSlice";
+import { useDispatch } from "react-redux";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -98,7 +104,8 @@ const AccountDrop = styled.button`
 const Drop = styled.div`
   position: absolute;
   top: 65px;
-  left: 0;
+  left: -106px;
+  z-index: 1;
 
   > div {
     box-shadow: 2px 5px 10px 1px #00000026;
@@ -145,7 +152,9 @@ const Search = React.memo(
 export const HomeHeader = () => {
   const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
   const { ref, visible, setVisible } = useOnClickOutside(false);
+  const queryClient = useQueryClient();
 
+  const dispatch = useDispatch();
   const [searching, setSearching] = useState(false);
   const makeSearch = useCallback(() => {
     setSearching(true);
@@ -153,7 +162,10 @@ export const HomeHeader = () => {
       setSearching(false);
     }, 3000);
   }, []);
-
+  const logoutUser = () => {
+    dispatch(authActions.logoutUser());
+    queryClient.clear();
+  };
   const name = (data?.tenant_name || data?.landlord_name) as string;
 
   return (
@@ -186,7 +198,40 @@ export const HomeHeader = () => {
               </div>
               {visible && (
                 <Drop>
-                  <Card>YYYY</Card>
+                  <Card style={{ padding: "24px 32px", width: "180px" }}>
+                    <ul style={{ listStyle: "none" }}>
+                      <li>
+                        <Link
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                          to="/myAccount"
+                        >
+                          <IconGrayUser />
+                          <Typography textColor="gray">My Account</Typography>
+                        </Link>
+                      </li>
+                      <li>
+                        {" "}
+                        <button
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginTop: "40px",
+                          }}
+                          type="button"
+                          className="link"
+                          onClick={logoutUser}
+                        >
+                          <AppIcon size={23} render={RiLogoutCircleFill} />
+                          <Typography textColor="gray">Log Out</Typography>
+                        </button>
+                      </li>
+                    </ul>
+                  </Card>
                 </Drop>
               )}
             </AccountDrop>
