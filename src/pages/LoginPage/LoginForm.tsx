@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormikInput, Typography } from "components/atoms";
+import { Button, FormikInput, Typography } from "components";
 import { useMutation } from "@tanstack/react-query";
 import { FormikProvider, useFormik } from "formik";
 import * as yup from "yup";

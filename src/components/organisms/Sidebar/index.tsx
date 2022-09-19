@@ -206,7 +206,7 @@ export const Sidebar = ({ open }: { open: boolean }) => {
           </Li>
         </ul>
       </Nav>
-      <Modal visible={visible} maxWidth={620}>
+      <Modal visible={visible} maxWidth={620} showCloseBtn={false}>
         <Card style={{ padding: "50px 70px" }}>
           <Typography
             variant="heading4"
