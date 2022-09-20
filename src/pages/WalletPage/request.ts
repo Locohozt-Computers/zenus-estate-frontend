@@ -3,11 +3,21 @@ import appRequest, {
   PostAddBankAccount,
   PostFundWallet,
   PostResolveBankAccountName,
+  PostWalletTransferBank,
 } from "api";
 
 export const getBankAccounts = async () => {
   const res = await appRequest.get<typeof GetBankAccounts.Res>(
     GetBankAccounts.Route
+  );
+  return res.data.data;
+};
+export const walletTransferBank = async (
+  data: typeof PostWalletTransferBank.Body
+) => {
+  const res = await appRequest.post<typeof PostWalletTransferBank.Res>(
+    PostWalletTransferBank.Route,
+    data
   );
   return res.data.data;
 };

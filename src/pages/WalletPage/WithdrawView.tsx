@@ -4,14 +4,15 @@ import { Button, FormikInput, Typography } from "components";
 import { pxToEm } from "utils";
 import { AiOutlinePlus } from "react-icons/ai";
 import { PropsI } from "pages/WalletPage/types";
-import { useQuery } from "@tanstack/react-query";
-import { getBankAccounts } from "pages/WalletPage/request";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getBankAccounts, walletTransferBank } from "pages/WalletPage/request";
 import { getAllBanks, getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
 import { currencyFormat, getInitials } from "utils/helpers";
 import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
+import { notification } from "services";
 
 const StyledDiv = styled.div`
   position: relative;
@@ -94,6 +95,7 @@ export const WithdrawView = ({ setPage }: PropsI) => {
     }
     return null;
   }, [bankAccounts, banks?.data]);
+  const { mutate } = useMutation(walletTransferBank);
 
   const formik = useFormik({
     initialValues: { amount: 0 },
@@ -106,7 +108,19 @@ export const WithdrawView = ({ setPage }: PropsI) => {
         )}`
       ),
     }),
-    onSubmit: () => {},
+    onSubmit: (values, { resetForm }) => {
+      mutate(values, {
+        onSuccess: () => {
+          resetForm();
+          notification.success(
+            `You have successfully withdrawn ₦${values.amount}`
+          );
+        },
+        onError: () => {
+          notification.error(`Your ₦${values.amount} withdrawal Has Failed`);
+        },
+      });
+    },
   });
 
   return (
