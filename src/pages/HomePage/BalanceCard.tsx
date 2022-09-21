@@ -17,7 +17,7 @@ const Styling = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: ${pxToEm(50)} 50px;
+  padding: clamp(${pxToEm(10)}, 4vw, ${pxToEm(50)});
   border-radius: 8px;
   box-shadow: 5px 6px 9px 0 #b5b5b52b;
 `;
@@ -36,9 +36,8 @@ export const BalanceCard = ({
       </Typography>
       <Typography
         style={{ whiteSpace: "nowrap" }}
+        variant="heading3"
         textColor={currencyFormat.removeFormat(amount) < 0 ? "pink" : "blue"}
-        size={39}
-        weight={600}
       >
         {amount}
       </Typography>
