@@ -7,6 +7,9 @@ import styled from "styled-components/macro";
 import { Input, Card } from "components/atoms";
 import { Typography } from "components";
 import { DashboardContent } from "layouts";
+import { GoBack } from "pages/ReportEmergencyPage/style";
+import { AppIcon } from "utils";
+import { IconArrowLeft } from "assets/icons";
 import house from "../assets/images/img.png";
 
 const InputStyling = styled.input<{ error?: boolean }>``;
@@ -65,6 +68,7 @@ const MyAccountStyle = styled.div`
     width: 100%;
     max-width: 697px;
     margin: auto;
+    padding: 59px 42px;
   }
 `;
 
@@ -108,6 +112,16 @@ const MyAccountPage = () => {
       <MyAccountStyle>
         <Loader open={isLoading} absolute />
         <Card className="my-account-card">
+          <GoBack aria-label="go back to start">
+            <AppIcon size={40} render={IconArrowLeft} />
+            <Typography
+              variant="bodyBig"
+              textColor="gray"
+              style={{ marginLeft: 5 }}
+            >
+              My Account
+            </Typography>
+          </GoBack>
           <MyAccountHeader style={{ backgroundImage: `url(${house})` }}>
             <Typography
               style={{
