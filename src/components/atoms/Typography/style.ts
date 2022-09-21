@@ -43,31 +43,31 @@ const setVariant = (variant: TextVariant) => {
     case "bodyBig":
       return cssObjectToString({
         fontWeight: 400,
-        fontSize: pxToEm(16),
+        fontSize: `clamp(${pxToEm(14)}, 4vw, ${pxToEm(16)})`,
         color: "var(--black)",
       });
     case "heading3":
       return cssObjectToString({
         fontWeight: 500,
-        fontSize: pxToEm(39),
+        fontSize: `clamp(${pxToEm(25)}, 4vw, ${pxToEm(39)})`,
         color: "var(--blue)",
       });
     case "heading4":
       return cssObjectToString({
         fontWeight: 500,
-        fontSize: pxToEm(28),
+        fontSize: `clamp(${pxToEm(20)}, 4vw, ${pxToEm(28)})`,
         color: "var(--blue)",
       });
     case "heading5":
       return cssObjectToString({
         fontWeight: 500,
-        fontSize: pxToEm(23),
+        fontSize: `clamp(${pxToEm(18)}, 4vw, ${pxToEm(23)})`,
         color: "var(--blue)",
       });
     case "subtitle":
       return cssObjectToString({
         fontWeight: 500,
-        fontSize: pxToEm(17),
+        fontSize: `clamp(${pxToEm(15)}, 4vw, ${pxToEm(17)})`,
         color: "var(--black)",
       });
     case "helperText":
