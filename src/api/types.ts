@@ -634,3 +634,19 @@ export class PostReadNotification extends GetAllNotifications {
     data: [];
   };
 }
+
+export class GetSearchBlockOrName {
+  static Route = "/search/:search_block_name";
+
+  static Res: {
+    data: PaginationI & {
+      data: Array<{
+        id: number;
+        signup_email: string;
+        house_no: string;
+        tenant_name: string;
+        tenant_phone: string;
+      }>;
+    };
+  };
+}
