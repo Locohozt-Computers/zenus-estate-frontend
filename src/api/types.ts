@@ -188,6 +188,30 @@ export class PostBillPayment {
   };
 }
 
+export class PostWalletTransferBank {
+  static Route = "/wallet-transfer-bank";
+
+  static Body: {
+    amount: number;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      amount: number;
+      reference: string;
+      trans_id: string;
+      user_id: number;
+      description: string;
+      transaction_type_id: number;
+      transaction_id: number;
+      updated_at: string;
+      created_at: string;
+    };
+  };
+}
+
 export class PostWalletPayment extends PostBillPayment {
   static Body: {
     payment_method_id: number;
@@ -608,5 +632,21 @@ export class PostReadNotification extends GetAllNotifications {
     status: string;
     message: string;
     data: [];
+  };
+}
+
+export class GetSearchBlockOrName {
+  static Route = "/search/:search_block_name";
+
+  static Res: {
+    data: PaginationI & {
+      data: Array<{
+        id: number;
+        signup_email: string;
+        house_no: string;
+        tenant_name: string;
+        tenant_phone: string;
+      }>;
+    };
   };
 }

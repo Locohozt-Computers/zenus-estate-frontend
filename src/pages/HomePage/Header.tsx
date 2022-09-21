@@ -17,9 +17,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
 import { IconSpinner } from "assets/icons";
-import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
+import { Link } from "react-router-dom";
+import { IconGrayUser } from "assets/icons/";
+import { AppIcon } from "utils/iconRender";
+import { RiLogoutCircleFill } from "react-icons/ri";
 import { authActions } from "store/reducers/auth/authDocSlice";
 import { useDispatch } from "react-redux";
+import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -40,7 +44,8 @@ const HeaderStyles = styled.div`
 
 const SearchStyle = styled.div<{ loading?: boolean }>`
   position: relative;
-  max-width: 535px;
+  max-width: 650px;
+  min-width: 200px;
 
   > svg {
     position: absolute;
@@ -108,9 +113,11 @@ const AccountDrop = styled.button`
 const Drop = styled.div`
   position: absolute;
   top: 65px;
-  left: 0;
+  left: -106px;
+  z-index: 2;
   background-color: white;
   overflow: hidden;
+  right: 0;
 
   > ul {
     box-shadow: 2px 5px 10px 1px #00000026;
@@ -184,7 +191,7 @@ export const HomeHeader = () => {
       <Card style={{ marginBottom: 16, position: "relative" }}>
         <Loader absolute open={isLoading} />
         <HeaderStyles>
-          <div style={{ gridArea: "text", maxWidth: 400 }}>
+          <div style={{ gridArea: "text" }}>
             <Typography variant="heading4" className="text-truncate_2">
               Welcome Back {name && `, ${formatNameToDisplay(name)}`}
             </Typography>
@@ -198,11 +205,6 @@ export const HomeHeader = () => {
             <div style={{ position: "relative" }}>
               <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
                 <AiOutlineCaretDown size={20} color="var(--gray)" />
-                {/* <img */}
-                {/*  className="initials" */}
-                {/*  src="https://picsum.photos/200/300" */}
-                {/*  alt={name} */}
-                {/* /> */}
                 <div
                   className="initials"
                   aria-label={`name initial for ${name}`}
@@ -214,13 +216,33 @@ export const HomeHeader = () => {
                 {visible && (
                   <Drop>
                     <UlStyle>
-                      <li>account</li>
+                      <li>
+                        <Link
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                          to="/myAccount"
+                        >
+                          <IconGrayUser />
+                          <Typography textColor="gray">My Account</Typography>
+                        </Link>
+                      </li>
                       <li>
                         <button
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginTop: "40px",
+                          }}
                           type="button"
-                          onClick={() => setShowLogout(true)}
+                          className="link"
+                          onClick={logoutUser}
                         >
-                          logout
+                          <AppIcon size={23} render={RiLogoutCircleFill} />
+                          <Typography textColor="gray">Log Out</Typography>
                         </button>
                       </li>
                     </UlStyle>

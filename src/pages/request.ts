@@ -25,6 +25,7 @@ export const getDashboard = async () => {
   const res = await appRequest.get<typeof GetDashboard.Res>(GetDashboard.Route);
   return res.data.data;
 };
+getDashboard.key = "getDashboard";
 
 export const getWalletTransactions = async (params?: {
   page?: number;
@@ -36,15 +37,19 @@ export const getWalletTransactions = async (params?: {
   );
   return res.data.data;
 };
+getWalletTransactions.key = "getWalletTransactions";
+
 export const getAllBanks = async () => {
   const res = await appRequest.get<typeof GetAllBanks.Res>(GetAllBanks.Route);
   return res.data.data;
 };
+getAllBanks.key = "getAllBanks";
 
 export const getUserProfile = async () => {
   const res = await appRequest.get<typeof GetProfile.Res>(GetProfile.Route);
   return res.data.data;
 };
+getUserProfile.key = "getUserProfile";
 
 export const getLandlordsProfile = async () => {
   const res = await appRequest.get<typeof GetLandlordProfile.Res>(
@@ -52,6 +57,7 @@ export const getLandlordsProfile = async () => {
   );
   return res.data.data;
 };
+getLandlordsProfile.key = "getLandlordsProfile";
 
 export const getAllEmergency = async () => {
   const res = await appRequest.get<typeof GetAllEmergencies.Res>(
@@ -59,6 +65,7 @@ export const getAllEmergency = async () => {
   );
   return res.data.data;
 };
+getAllEmergency.key = "getAllEmergency";
 
 export const getOutstandingBalance = (id: number) => async () => {
   const res = await appRequest.get<typeof GetOutstandingBalance.Res>(
@@ -66,12 +73,15 @@ export const getOutstandingBalance = (id: number) => async () => {
   );
   return res.data.data;
 };
+getOutstandingBalance.key = "getOutstandingBalance";
+
 export const getAllEmergencyTypes = async () => {
   const res = await appRequest.get<typeof GetAllEmergenciesTypes.Res>(
     GetAllEmergenciesTypes.Route
   );
   return res.data.data;
 };
+getAllEmergencyTypes.key = "getAllEmergencyTypes";
 
 export const createEmergency = async (
   data: typeof PostCreateEmergency.Body

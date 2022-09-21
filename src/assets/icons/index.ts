@@ -10,3 +10,4 @@ export { ReactComponent as IconFlood } from "./flood.svg";
 export { ReactComponent as IconSpinner } from "./spinner.svg";
 export { ReactComponent as IconMasterCard } from "./master-card.svg";
 export { ReactComponent as IconCaretDownFilled } from "./carret-filled.svg";
+export { ReactComponent as IconGrayUser } from "./gray-user.svg";
