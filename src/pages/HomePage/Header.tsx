@@ -1,5 +1,12 @@
 import styled from "styled-components/macro";
-import { Card, NotificationDropdown, Typography } from "components";
+import {
+  Button,
+  Card,
+  Modal,
+  NotificationDropdown,
+  Typography,
+  UlStyle,
+} from "components";
 import { formatNameToDisplay, getInitials } from "utils/helpers";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import { MdLocationPin } from "react-icons/md";
@@ -10,12 +17,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
 import { IconSpinner } from "assets/icons";
+import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
+import { authActions } from "store/reducers/auth/authDocSlice";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { IconGrayUser } from "assets/icons/";
 import { AppIcon } from "utils/iconRender";
 import { RiLogoutCircleFill } from "react-icons/ri";
-import { authActions } from "store/reducers/auth/authDocSlice";
-import { useDispatch } from "react-redux";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -104,11 +112,21 @@ const AccountDrop = styled.button`
 const Drop = styled.div`
   position: absolute;
   top: 65px;
-  left: -106px;
+  left: -140px;
+  background-color: white;
+  overflow: hidden;
   z-index: 1;
-
-  > div {
+  border-radius: 16px;
+  box-shadow: 0 7px 62px -28px rgba(166, 166, 166, 0.35);
+  > ul {
     box-shadow: 2px 5px 10px 1px #00000026;
+  }
+  .dropDown-card {
+    width: 100%;
+    min-width: 181px;
+    padding: 24px 32px;
+    border-radius: 16px;
+    box-shadow: 0 7px 62px -28px rgba(166, 166, 166, 0.35) !important;
   }
 `;
 
@@ -152,9 +170,13 @@ const Search = React.memo(
 export const HomeHeader = () => {
   const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
   const { ref, visible, setVisible } = useOnClickOutside(false);
+
+  const [showLogout, setShowLogout] = useState(false);
+
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
+
   const [searching, setSearching] = useState(false);
   const makeSearch = useCallback(() => {
     setSearching(true);
@@ -162,82 +184,117 @@ export const HomeHeader = () => {
       setSearching(false);
     }, 3000);
   }, []);
+
+  const name = (data?.tenant_name || data?.landlord_name) as string;
+
   const logoutUser = () => {
     dispatch(authActions.logoutUser());
     queryClient.clear();
   };
-  const name = (data?.tenant_name || data?.landlord_name) as string;
 
   return (
-    <Card style={{ marginBottom: 16, position: "relative" }}>
-      <Loader absolute open={isLoading} />
-      <HeaderStyles>
-        <div style={{ gridArea: "text", maxWidth: 400 }}>
-          <Typography variant="heading4" className="text-truncate_2">
-            Welcome Back {name && `, ${formatNameToDisplay(name)}`}
-          </Typography>
-          <Typography variant="bodyBig">
-            Keep your environment clean, stay safe. 😷
-          </Typography>
-        </div>
-        <Search onSearch={makeSearch} loading={searching} />
-        <AccountDiv>
-          <NotificationDropdown />
-          <div style={{ position: "relative" }}>
-            <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
-              <AiOutlineCaretDown size={20} color="var(--gray)" />
-              {/* <img */}
-              {/*  className="initials" */}
-              {/*  src="https://picsum.photos/200/300" */}
-              {/*  alt={name} */}
-              {/* /> */}
-              <div className="initials" aria-label={`name initial for ${name}`}>
-                <Typography color="white" weight={600} size={18}>
-                  {getInitials(name)}
-                </Typography>
-              </div>
-              {visible && (
-                <Drop>
-                  <Card style={{ padding: "24px 32px", width: "180px" }}>
-                    <ul style={{ listStyle: "none" }}>
-                      <li>
-                        <Link
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                          to="/myAccount"
-                        >
-                          <IconGrayUser />
-                          <Typography textColor="gray">My Account</Typography>
-                        </Link>
-                      </li>
-                      <li>
-                        {" "}
-                        <button
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginTop: "40px",
-                          }}
-                          type="button"
-                          className="link"
-                          onClick={logoutUser}
-                        >
-                          <AppIcon size={23} render={RiLogoutCircleFill} />
-                          <Typography textColor="gray">Log Out</Typography>
-                        </button>
-                      </li>
-                    </ul>
-                  </Card>
-                </Drop>
-              )}
-            </AccountDrop>
+    <>
+      <Card style={{ marginBottom: 16, position: "relative" }}>
+        <Loader absolute open={isLoading} />
+        <HeaderStyles>
+          <div style={{ gridArea: "text", maxWidth: 400 }}>
+            <Typography variant="heading4" className="text-truncate_2">
+              Welcome Back {name && `, ${formatNameToDisplay(name)}`}
+            </Typography>
+            <Typography variant="bodyBig">
+              Keep your environment clean, stay safe. 😷
+            </Typography>
           </div>
-        </AccountDiv>
-      </HeaderStyles>
-    </Card>
+          <Search onSearch={makeSearch} loading={searching} />
+          <AccountDiv>
+            <NotificationDropdown />
+            <div style={{ position: "relative" }}>
+              <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
+                <AiOutlineCaretDown size={20} color="var(--gray)" />
+                {/* <img */}
+                {/*  className="initials" */}
+                {/*  src="https://picsum.photos/200/300" */}
+                {/*  alt={name} */}
+                {/* /> */}
+                <div
+                  className="initials"
+                  aria-label={`name initial for ${name}`}
+                >
+                  <Typography color="white" weight={600} size={18}>
+                    {getInitials(name)}
+                  </Typography>
+                </div>
+                {visible && (
+                  <Drop>
+                    <Card className="dropDown-card">
+                      <UlStyle>
+                        <li>
+                          <Link
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                            to="/myAccount"
+                          >
+                            <IconGrayUser />
+                            <Typography
+                              style={{ marginLeft: "16px" }}
+                              textColor="gray"
+                            >
+                              My Account
+                            </Typography>
+                          </Link>
+                        </li>
+                        <li>
+                          {" "}
+                          <button
+                            style={{
+                              whiteSpace: "nowrap",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              marginTop: "10px",
+                            }}
+                            type="button"
+                            className="link"
+                            onClick={logoutUser}
+                          >
+                            <AppIcon size={23} render={RiLogoutCircleFill} />
+                            <Typography
+                              style={{ marginLeft: "16px" }}
+                              textColor="gray"
+                            >
+                              Log Out
+                            </Typography>
+                          </button>
+                        </li>
+                      </UlStyle>
+                    </Card>
+                  </Drop>
+                )}
+              </AccountDrop>
+            </div>
+          </AccountDiv>
+        </HeaderStyles>
+      </Card>
+      <Modal visible={showLogout} maxWidth={620} showCloseBtn={false}>
+        <Card style={{ padding: "50px 70px" }}>
+          <Typography
+            variant="heading4"
+            content="Are you sure you want to log out?"
+            style={{ textAlign: "center" }}
+          />
+          <LogoutBtnActions>
+            <Button
+              secondary
+              text="Cancel"
+              onClick={() => setShowLogout(false)}
+            />
+            <Button text="Logout" onClick={logoutUser} />
+          </LogoutBtnActions>
+        </Card>
+      </Modal>
+    </>
   );
 };
