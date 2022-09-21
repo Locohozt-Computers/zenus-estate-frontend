@@ -71,9 +71,7 @@ export const NotificationDropdown = () => {
   };
 
   const toggleDrop = () => {
-    if (data?.length) {
-      setVisible(!visible);
-    }
+    setVisible(!visible);
   };
 
   return (
@@ -106,23 +104,35 @@ export const NotificationDropdown = () => {
                     </Typography>
                   </button>
                 </div>
-                <UlStyle onClick={onNotificationClick}>
-                  {data?.map((el, i) => (
-                    <Li
-                      key={el.id}
-                      id={el.id}
-                      style={{
-                        borderBottom:
-                          i !== data.length - 1
-                            ? "1px solid var(--gray)"
-                            : undefined,
-                      }}
-                      read={el.read_at}
-                    >
-                      {el?.message}
-                    </Li>
-                  ))}
-                </UlStyle>
+                <>
+                  {!data?.length ? (
+                    <div style={{ padding: 10 }}>
+                      <Typography
+                        textColor="blue"
+                        variant="helperText"
+                        content="No New Notifications"
+                      />
+                    </div>
+                  ) : (
+                    <UlStyle onClick={onNotificationClick}>
+                      {data?.map((el, i) => (
+                        <Li
+                          key={el.id}
+                          id={el.id}
+                          style={{
+                            borderBottom:
+                              i !== data.length - 1
+                                ? "1px solid var(--gray)"
+                                : undefined,
+                          }}
+                          read={el.read_at}
+                        >
+                          {el?.message}
+                        </Li>
+                      ))}
+                    </UlStyle>
+                  )}
+                </>
               </div>
             )}
           </Card>

@@ -156,8 +156,8 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
                 setPage(page + 1);
               });
           },
-          onError: async () => {
-            await refetchNotifications();
+          onError: () => {
+            refetchNotifications();
             setPage(page + 2);
           },
         }
