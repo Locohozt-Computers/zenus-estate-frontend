@@ -1,6 +1,3 @@
-import { InstanceOf } from "reselect/es/types";
-import { string } from "yup";
-
 export class PostUserLogin {
   static Route = "/login";
 
