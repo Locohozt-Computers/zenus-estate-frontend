@@ -12,6 +12,8 @@ export const getBankAccounts = async () => {
   );
   return res.data.data;
 };
+getBankAccounts.key = "getBankAccounts";
+
 export const walletTransferBank = async (
   data: typeof PostWalletTransferBank.Body
 ) => {

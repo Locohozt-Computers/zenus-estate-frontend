@@ -13,6 +13,7 @@ import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
 import { notification } from "services";
+import { getAllNotifications } from "components/organisms/NotificationDropdown/request";
 
 const StyledDiv = styled.div`
   position: relative;
@@ -66,21 +67,31 @@ const StyledDiv = styled.div`
 const truncate = (str: string) => `${str.slice(0, 2)}****${str.slice(6)}`;
 
 export const WithdrawView = ({ setPage }: PropsI) => {
-  const { isLoading: profileLoading, data: profileData } = useQuery(
-    ["getUserProfileWallet"],
-    getUserProfile,
-    { cacheTime: 0, refetchOnWindowFocus: "always" }
+  const {
+    isLoading: profileLoading,
+    data: profileData,
+    refetch,
+  } = useQuery([getUserProfile.key], getUserProfile, {
+    cacheTime: 0,
+  });
+
+  const { refetch: refetchNotification } = useQuery(
+    [getAllNotifications.key],
+    getAllNotifications
   );
 
   const { data: banks, isLoading: bankLoading } = useQuery(
-    ["getAllBank"],
+    [getAllBanks.key],
     getAllBanks
   );
 
   const { data: bankAccounts, isLoading } = useQuery(
-    ["getBankAccounts"],
+    [getBankAccounts.key],
     getBankAccounts
   );
+
+  const { mutate, isLoading: withdrawalLoading } =
+    useMutation(walletTransferBank);
 
   const bankDetails = useMemo(() => {
     if (bankAccounts) {
@@ -95,7 +106,6 @@ export const WithdrawView = ({ setPage }: PropsI) => {
     }
     return null;
   }, [bankAccounts, banks?.data]);
-  const { mutate } = useMutation(walletTransferBank);
 
   const formik = useFormik({
     initialValues: { amount: 0 },
@@ -111,13 +121,19 @@ export const WithdrawView = ({ setPage }: PropsI) => {
     onSubmit: (values, { resetForm }) => {
       mutate(values, {
         onSuccess: () => {
-          resetForm();
+          refetch();
+          refetchNotification();
           notification.success(
-            `You have successfully withdrawn ₦${values.amount}`
+            `You have successfully withdrawn ${currencyFormat(values.amount)}`,
+            { position: "top-center" }
           );
+          resetForm();
         },
         onError: () => {
-          notification.error(`Your ₦${values.amount} withdrawal Has Failed`);
+          refetchNotification();
+          notification.error(
+            `Your ${currencyFormat(values.amount)} withdrawal Has Failed`
+          );
         },
       });
     },
@@ -180,6 +196,7 @@ export const WithdrawView = ({ setPage }: PropsI) => {
               name="amount"
               placeholder="Amount"
               label="Amount to withdraw"
+              disabled={withdrawalLoading}
             />
             <Typography
               size={14}
@@ -197,6 +214,7 @@ export const WithdrawView = ({ setPage }: PropsI) => {
               <Button
                 type="submit"
                 className="withdraw-btn"
+                loading={withdrawalLoading}
                 disabled={!formik.isValid}
               >
                 <span>Withdraw</span>{" "}
