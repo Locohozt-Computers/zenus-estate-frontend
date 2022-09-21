@@ -1,7 +1,12 @@
 import { CSSProperties } from "react";
 
-export const formatNameToDisplay = (firstName?: string, lastName?: string) => {
-  return `${firstName || ""} ${lastName || ""}`.trim();
+export const formatNameToDisplay = (str?: string) => {
+  if (str) {
+    const [initial, firstName, lastName] = str.split(" ");
+    if (lastName) return `${initial} ${lastName}`;
+    return `${initial} ${lastName || firstName}`;
+  }
+  return str;
 };
 
 export const cssObjectToString = (obj: CSSProperties) => {
