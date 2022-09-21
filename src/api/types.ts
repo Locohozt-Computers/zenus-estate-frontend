@@ -1,3 +1,6 @@
+import { InstanceOf } from "reselect/es/types";
+import { string } from "yup";
+
 export class PostUserLogin {
   static Route = "/login";
 
@@ -185,6 +188,30 @@ export class PostBillPayment {
     status: number;
     message: string;
     data: PaymentSuccessResponse;
+  };
+}
+
+export class PostWalletTransferBank {
+  static Route = "/wallet-transfer-bank";
+
+  static Body: {
+    amount: number;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+    data: {
+      amount: number;
+      reference: string;
+      trans_id: string;
+      user_id: number;
+      description: string;
+      transaction_type_id: number;
+      transaction_id: number;
+      updated_at: string;
+      created_at: string;
+    };
   };
 }
 
