@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAllTransactions,
@@ -74,6 +74,13 @@ const TabStyling = styled.table`
     border: 1px solid var(--light-gray);
     padding: 8px;
   }
+
+  .button {
+    background-color: var(--blue);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
 `;
 
 const UlStyle = styled.ul`
@@ -92,6 +99,8 @@ const UlStyle = styled.ul`
 const ExpandedComponent = ({
   data,
 }: ExpanderComponentProps<PaymentHistoryI>) => {
+  const downloadRef = useRef<HTMLAnchorElement>(null);
+
   const expD = useMemo(
     () => [
       {
@@ -122,6 +131,12 @@ const ExpandedComponent = ({
     [data]
   );
 
+  const onPrint = () => {
+    if (downloadRef.current) {
+      downloadRef.current.click();
+    }
+  };
+
   return (
     <TabStyling>
       <tbody>
@@ -135,6 +150,24 @@ const ExpandedComponent = ({
             </td>
           </tr>
         ))}
+        <tr>
+          <td>
+            <Typography>Print Receipt</Typography>
+          </td>
+          <td>
+            <a
+              type="presentations"
+              ref={downloadRef}
+              href="https://picsum.photos/200/300"
+              style={{ display: "none" }}
+            >
+              receipt
+            </a>
+            <button className="button" type="button" onClick={onPrint}>
+              Print
+            </button>
+          </td>
+        </tr>
       </tbody>
     </TabStyling>
   );
@@ -200,7 +233,7 @@ const AccountStatementPage = () => {
       if (hasFilter) {
         if (pId) {
           queryClient.prefetchQuery(
-            ["getAllTransactionsByLevyType", p + 1],
+            [getAllTransactionsByLevyType.key, p + 1],
             () =>
               getAllTransactionsByLevyType({
                 page: p + 1,

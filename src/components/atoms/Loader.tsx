@@ -120,9 +120,11 @@ export const PageLoad = () => {
           style={{ width: 47, height: 47 }}
           alt="zenus estate"
         />
-        <Typography textColor="blue" size={42} weight={600}>
-          ZENUS FINANCIALS
-        </Typography>
+        <Typography
+          variant="heading2"
+          weight={600}
+          content="ZENUS FINANCIALS"
+        />
       </div>
       <LoaderIcon />
     </PageLoadStyle>

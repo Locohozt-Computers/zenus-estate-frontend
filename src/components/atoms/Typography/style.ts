@@ -46,6 +46,12 @@ const setVariant = (variant: TextVariant) => {
         fontSize: `clamp(${pxToEm(14)}, 4vw, ${pxToEm(16)})`,
         color: "var(--black)",
       });
+    case "heading2":
+      return cssObjectToString({
+        fontWeight: 500,
+        fontSize: `clamp(${pxToEm(28)}, 4vw, ${pxToEm(49)})`,
+        color: "var(--blue)",
+      });
     case "heading3":
       return cssObjectToString({
         fontWeight: 500,

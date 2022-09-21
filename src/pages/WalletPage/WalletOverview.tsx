@@ -68,7 +68,7 @@ const TransactionSnippetLoader = styled.div`
 `;
 
 const filterOptions = [
-  { label: "All", value: "null" },
+  { label: "All", value: "" },
   { label: "Credit", value: TransactionTypeEnum.Credit },
   { label: "Debit", value: TransactionTypeEnum.Debit },
 ];
@@ -80,7 +80,9 @@ export const WalletOverview = ({ setPage }: PropsI) => {
     "no-funds" | "no-account" | null
   >(null);
 
-  const [filterTransactions, setFilterTransaction] = useState("");
+  const [filterTransactions, setFilterTransaction] = useState<
+    TransactionTypeEnum | undefined
+  >(undefined);
 
   const [transPaginationInfo, setTransPaginationInfo] = useState({
     current: 1,
@@ -95,7 +97,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
     refetch: refetchTransaction,
     isFetching: isFetchingTransaction,
   } = useQuery(["getWalletTransactions", filterTransactions], () =>
-    getWalletTransactions()
+    getWalletTransactions({ trans_type: filterTransactions })
   );
 
   const transactionPagination = useCallback(() => {
@@ -103,7 +105,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
       (async () => {
         const res = await getWalletTransactions({
           page: transPaginationInfo.current + 1,
-          filter: filterTransactions,
+          trans_type: filterTransactions,
         });
         setTransactions(transactions.concat(res.data));
         setTransPaginationInfo({
@@ -131,11 +133,8 @@ export const WalletOverview = ({ setPage }: PropsI) => {
   );
 
   const onFilter = (event: React.MouseEvent<any>) => {
-    const id = (event.target as any)?.id;
-    if (id) {
-      // Todo: implement param filter
-      setFilterTransaction(id as string);
-    }
+    const transType = (event.target as any)?.id;
+    setFilterTransaction(transType as TransactionTypeEnum);
   };
 
   const handleAddFunds = () => {
@@ -227,7 +226,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
             renderSetVisible={({ setVisible }) => setVisible(false)}
           >
             <UlStyle onClick={onFilter}>
-              {filterOptions.map(({ label, value }) => (
+              {filterOptions?.map(({ label, value }) => (
                 <li id={value} key={value}>
                   {label}
                 </li>

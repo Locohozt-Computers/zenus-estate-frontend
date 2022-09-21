@@ -156,8 +156,8 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
                 setPage(page + 1);
               });
           },
-          onError: async () => {
-            await refetchNotifications();
+          onError: () => {
+            refetchNotifications();
             setPage(page + 2);
           },
         }
@@ -315,6 +315,16 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
       ) : (
         <CustomPayStackButton
           {...payStackBtn}
+          metadata={{
+            user_id: profile?.user_id,
+            custom_fields: [
+              {
+                display_name: "User",
+                variable_name: "user_id",
+                value: profile?.user_id,
+              },
+            ],
+          }}
           onSuccess={onPaySuccess}
           buttonProps={{
             disabled: !total,

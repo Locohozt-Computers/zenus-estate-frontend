@@ -1,12 +1,12 @@
 import { CSSProperties } from "react";
 
-export const formatNameToDisplay = (str?: string) => {
+export const formatNameToDisplay = (str?: string, nameOnly?: boolean) => {
   if (str) {
     const [initial, firstName, lastName] = str.split(" ");
-    if (lastName) return `${initial} ${lastName}`;
-    return `${initial} ${lastName || firstName}`;
+    if (lastName) return `${!nameOnly ? initial : firstName} ${lastName}`;
+    return `${!nameOnly ? initial : ""} ${lastName || firstName}`.trim();
   }
-  return str;
+  return str || "--";
 };
 
 export const cssObjectToString = (obj: CSSProperties) => {
@@ -137,5 +137,47 @@ export const getBalColor = (bal: number) => {
   return "var(--green)";
 };
 
-// @ts-ignore
-window.hexToHSL = hexToHSL;
+/**
+ * Omit list of keys from object if they exist
+ * @param obj
+ * @param remove
+ */
+export const omit = <T extends { [p in string]: any }>(
+  obj: T,
+  remove: string[]
+): T => {
+  const copyObj: any = { ...obj };
+  if (remove.length) {
+    remove.forEach((key) => delete copyObj[key]);
+    return { ...copyObj };
+  }
+  return copyObj;
+};
+
+/**
+ * Pick keys from object
+ * @param obj
+ * @param keep
+ */
+export const pick = <T extends { [p in string]: any }>(
+  obj: T,
+  keep: string[]
+): T => {
+  return keep.reduce((res: any, cur) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (obj.hasOwnProperty(cur)) {
+      res[cur] = obj[cur];
+    }
+    return res;
+  }, {});
+};
+
+export const excludeObjectEmptyValues = <T extends object>(obj: T) => {
+  return Object.entries(obj).reduce(
+    (res: Partial<Record<string, any>>, [key, value]) => {
+      if (value) res[key] = value;
+      return res;
+    },
+    {}
+  );
+};
