@@ -533,6 +533,10 @@ export class GetWalletTransactions {
   };
 }
 
+export class GetWalletTransactionsWithFilter {
+  static Route = "/wallet-transactions/filter/:transaction_type_id";
+}
+
 export class PostFundWallet {
   static Route = "/fund-wallet";
 
