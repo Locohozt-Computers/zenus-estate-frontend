@@ -44,7 +44,8 @@ const HeaderStyles = styled.div`
 
 const SearchStyle = styled.div<{ loading?: boolean }>`
   position: relative;
-  max-width: 535px;
+  max-width: 650px;
+  min-width: 200px;
 
   > svg {
     position: absolute;
@@ -113,9 +114,10 @@ const Drop = styled.div`
   position: absolute;
   top: 65px;
   left: -106px;
-  z-index: 1;
+  z-index: 2;
   background-color: white;
   overflow: hidden;
+  right: 0;
 
   > ul {
     box-shadow: 2px 5px 10px 1px #00000026;
@@ -189,7 +191,7 @@ export const HomeHeader = () => {
       <Card style={{ marginBottom: 16, position: "relative" }}>
         <Loader absolute open={isLoading} />
         <HeaderStyles>
-          <div style={{ gridArea: "text", maxWidth: 400 }}>
+          <div style={{ gridArea: "text" }}>
             <Typography variant="heading4" className="text-truncate_2">
               Welcome Back {name && `, ${formatNameToDisplay(name)}`}
             </Typography>
@@ -203,11 +205,6 @@ export const HomeHeader = () => {
             <div style={{ position: "relative" }}>
               <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
                 <AiOutlineCaretDown size={20} color="var(--gray)" />
-                {/* <img */}
-                {/*  className="initials" */}
-                {/*  src="https://picsum.photos/200/300" */}
-                {/*  alt={name} */}
-                {/* /> */}
                 <div
                   className="initials"
                   aria-label={`name initial for ${name}`}
@@ -233,7 +230,6 @@ export const HomeHeader = () => {
                         </Link>
                       </li>
                       <li>
-                        {" "}
                         <button
                           style={{
                             display: "flex",

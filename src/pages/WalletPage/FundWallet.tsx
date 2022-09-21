@@ -11,6 +11,7 @@ import * as yup from "yup";
 import { ValidationError } from "yup";
 import { PayStackResponseI } from "api";
 import { fundWallet } from "pages/WalletPage/request";
+import { getAllNotifications } from "components/organisms/NotificationDropdown/request";
 
 const validationSchema = {
   amount: VALIDATIONS.amount,
@@ -22,8 +23,13 @@ export const FundWallet = ({
   onSuccess?: (r?: PayStackResponseI) => void;
 }) => {
   const { data: profile, isLoading: profileLoading } = useQuery(
-    ["getUserProfile"],
+    [getUserProfile.key],
     getUserProfile
+  );
+
+  const { refetch: refetchNotification } = useQuery(
+    [getAllNotifications.key],
+    getAllNotifications
   );
 
   const { mutate, isLoading } = useMutation(fundWallet);
@@ -53,9 +59,13 @@ export const FundWallet = ({
           {
             onSuccess: () => {
               setIsSuccess("Complete");
+              refetchNotification();
               if (onSuccess) onSuccess(r);
             },
-            onError: () => setIsSuccess("Failed"),
+            onError: () => {
+              refetchNotification();
+              setIsSuccess("Failed");
+            },
           }
         );
       };
