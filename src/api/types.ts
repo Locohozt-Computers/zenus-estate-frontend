@@ -81,6 +81,18 @@ export class GetLandlordProfile {
   };
 }
 
+interface BankAccountResI {
+  id: number;
+  user_id: number;
+  bank_code: number;
+  account_number: string;
+  account_name?: string;
+  status: number;
+  branch_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export class GetProfile {
   static Route = "/profile";
 
@@ -107,6 +119,7 @@ export class GetProfile {
       created_at: string;
       updated_at: string;
       walletBalance: number;
+      bank?: BankAccountResI;
     };
   };
 }
@@ -520,16 +533,8 @@ export class GetWalletTransactions {
   };
 }
 
-interface BankAccountResI {
-  id: number;
-  user_id: number;
-  bank_code: number;
-  account_number: string;
-  account_name?: string;
-  status: number;
-  branch_id: number;
-  created_at: string;
-  updated_at: string;
+export class GetWalletTransactionsWithFilter {
+  static Route = "/wallet-transactions/filter/:trans_type_id";
 }
 
 export class PostFundWallet {
@@ -615,9 +620,9 @@ export class GetAllNotifications {
     status: string;
     message: string;
     data: Array<{
-      id: "5a425fe1-a1b5-48ab-bf7c-ff3a8fe0ae64";
-      message: "You  successfully funded your wallet with =N= 69000 ";
-      created_at: "2022-09-18T10:44:59.000000Z";
+      id: string;
+      message: string;
+      created_at: string;
       read_at: null;
     }>;
   };

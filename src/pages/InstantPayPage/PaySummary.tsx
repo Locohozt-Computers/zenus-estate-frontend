@@ -22,6 +22,7 @@ import { PaymentOptionNameEnum, PayStackResponseI } from "api";
 import { Loader } from "components/atoms/Loader";
 import { notification } from "services";
 import { CustomPayStackButton } from "pages/InstantPayPage/PayStackButton";
+import { getAllNotifications } from "components/organisms/NotificationDropdown/request";
 import { PageProps } from "./Props";
 
 const StyledDiv = styled.div`
@@ -99,6 +100,11 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
     getPaymentMethod
   );
 
+  const { refetch: refetchNotifications } = useQuery(
+    [getAllNotifications.key],
+    getAllNotifications
+  );
+
   const { mutate, isLoading } = useMutation(postBillPayment);
 
   const details = useSelector(paymentSelectors.state);
@@ -144,18 +150,30 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
                 "getDashboard",
                 "getAllTransactions",
               ])
-              .then(() => {
+              .then(async () => {
+                await refetchNotifications();
                 dispatch(setValues({ ...details, successResponse: res }));
                 setPage(page + 1);
               });
           },
           onError: () => {
+            refetchNotifications();
             setPage(page + 2);
           },
         }
       );
     },
-    [details, dispatch, mutate, page, queryClient, setPage, setValues, total]
+    [
+      details,
+      dispatch,
+      mutate,
+      page,
+      queryClient,
+      refetchNotifications,
+      setPage,
+      setValues,
+      total,
+    ]
   );
 
   const walletPayment = useCallback(() => {
@@ -169,6 +187,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
         {
           onSuccess: (res: Record<string, any>) => {
             dispatch(setValues({ ...details, successResponse: res }));
+
             setPage(page + 1);
           },
           onError: () => {

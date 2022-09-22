@@ -115,6 +115,7 @@ export const getPaymentType = async () => {
   );
   return res.data.data;
 };
+getPaymentType.key = "getPaymentType";
 
 export const getPaymentMethod = async () => {
   const res = await appRequest.get<typeof GetPaymentMethod.Res>(
@@ -122,6 +123,7 @@ export const getPaymentMethod = async () => {
   );
   return res.data.data;
 };
+getPaymentMethod.key = "getPaymentMethod";
 
 export const postBillPayment = async (data: typeof PostBillPayment.Body) => {
   const res = await appRequest.post<typeof PostBillPayment.Res>(
@@ -130,6 +132,7 @@ export const postBillPayment = async (data: typeof PostBillPayment.Body) => {
   );
   return res.data.data;
 };
+postBillPayment.key = "postBillPayment";
 
 export const postComplaint = async (data: typeof PostMakeComplaint.Body) => {
   const res = await appRequest.post<typeof PostMakeComplaint.Res>(
@@ -138,6 +141,7 @@ export const postComplaint = async (data: typeof PostMakeComplaint.Body) => {
   );
   return res.data;
 };
+postComplaint.key = "postComplaint";
 
 export const getComplaints = async () => {
   const res = await appRequest.get<typeof GetComplaintCategory.Res>(
@@ -145,6 +149,7 @@ export const getComplaints = async () => {
   );
   return res.data.data;
 };
+getComplaints.key = "getComplaints";
 
 export const getAllTransactions = async (page?: number) => {
   const res = await appRequest.get<typeof GetCustomerTransaction.Res>(
@@ -153,6 +158,7 @@ export const getAllTransactions = async (page?: number) => {
   );
   return res.data.data;
 };
+getAllTransactions.key = "getAllTransactions";
 
 export const getAllTransactionsByLevyType = async ({
   payment_type_id: id,
