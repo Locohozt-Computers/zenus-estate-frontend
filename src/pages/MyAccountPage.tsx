@@ -1,59 +1,26 @@
-import React, { InputHTMLAttributes, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
-import { FormikProvider, useFormik, useFormikContext } from "formik";
+import { FormikProvider, useFormik } from "formik";
 import styled from "styled-components/macro";
-import { Input, Card } from "components/atoms";
+import { Input, Card, Button } from "components/atoms";
 import { Typography } from "components";
 import { DashboardContent } from "layouts";
 import { GoBack } from "pages/ReportEmergencyPage/style";
 import { AppIcon } from "utils";
 import { IconArrowLeft } from "assets/icons";
+import { formatNameToDisplay, getInitials } from "utils/helpers";
 import house from "../assets/images/img.png";
-
-const InputStyling = styled.input<{ error?: boolean }>``;
-
-const EditableInput = ({
-  label,
-  name,
-  ...rest
-}: {
-  label: string;
-  name: string;
-} & InputHTMLAttributes<HTMLInputElement>) => {
-  const formik = useFormikContext();
-
-  const { value, touched, error } = formik.getFieldMeta(
-    name || label?.toLowerCase()
-  );
-
-  const hasError = error && touched && error;
-
-  return (
-    <div>
-      <div>
-        <InputStyling
-          error={!!hasError}
-          {...rest}
-          value={value as string}
-          type="text"
-        />
-        {hasError && <small>{hasError}</small>}
-      </div>
-      <button type="button">i</button>
-    </div>
-  );
-};
 
 const MyAccountStyle = styled.div`
   position: relative;
   .editableInput {
-    //background: red !important;
     border-radius: 0 !important;
     border-bottom: 1px solid #ededed !important;
     background: none !important;
     padding: 0.5rem 0 !important;
+    outline: none;
   }
   .input-container {
     margin-bottom: 35px;
@@ -64,11 +31,28 @@ const MyAccountStyle = styled.div`
   legend {
     margin-bottom: 37px;
   }
+  label {
+    > span {
+      color: var(--blue) !important;
+    }
+  }
   .my-account-card {
     width: 100%;
     max-width: 697px;
     margin: auto;
     padding: 59px 42px;
+  }
+  .initials {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2.3px solid white;
+    position: relative;
+    top: 132px;
   }
 `;
 
@@ -87,7 +71,7 @@ const MyAccountHeader = styled.div`
 
 const MyAccountPage = () => {
   const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
-
+  const name = (data?.tenant_name || data?.landlord_name) as string;
   const formik = useFormik({
     initialValues: {},
     onSubmit: () => {},
@@ -123,41 +107,24 @@ const MyAccountPage = () => {
             </Typography>
           </GoBack>
           <MyAccountHeader style={{ backgroundImage: `url(${house})` }}>
-            <Typography
-              style={{
-                width: "110px",
-                height: "110px",
-                borderRadius: "50%",
-                background: "var(--blue)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                border: "2.3px solid white",
-                position: "relative",
-                top: "132px",
-              }}
-              size={34}
-              textColor="white"
-            >
-              DM
+            <Typography className="initials" size={34} textColor="white">
+              {getInitials(name)}
             </Typography>
           </MyAccountHeader>
-          <FormikProvider value={formik}>
-            <div>
-              <Input
-                readOnly
-                label="Estate Owner"
-                name="amount"
-                className="editableInput"
-                placeholder="Daniel Mbazu"
-              />
-            </div>
+          <div>
+            <Input
+              readOnly
+              label="Name"
+              name="amount"
+              className="editableInput"
+              value={data?.tenant_name}
+            />
             <Input
               readOnly
               label="Address"
               name="address"
               className="editableInput"
-              placeholder="12 Okue Street, Okota, Mainland."
+              value={data?.address}
             />{" "}
             <Input
               readOnly
@@ -166,7 +133,10 @@ const MyAccountPage = () => {
               className="editableInput"
               placeholder="danielmbazu9@gmail.com"
               type="email"
+              value={data?.tenant_email}
             />{" "}
+          </div>
+          <FormikProvider value={formik}>
             <Input
               readOnly
               label="Account Details"
@@ -200,27 +170,26 @@ const MyAccountPage = () => {
                 name="name"
                 className="editableInput"
                 placeholder="Daniel Mbazu"
+                value={data?.landlord_name}
               />{" "}
               <Input
                 readOnly
                 label="Phone Number"
                 name="phoneNumber"
                 className="editableInput"
-                placeholder="Daniel Mbazu"
+                value={data?.landlord_phone}
               />{" "}
               <Input
                 readOnly
                 label="Email Adress"
                 name="phoneNumber"
                 className="editableInput"
-                placeholder="Daniel Mbazu"
+                value={data?.landlord_email}
               />{" "}
             </fieldset>
-            <EditableInput label="Estate Owner" name="estateOwner" />
-            <EditableInput label="Address" name="address" />
-            <EditableInput label="Account Number" name="accountNumber" />
-            <EditableInput label="Phone Number" name="phoneNumber" />
-            <EditableInput label="Email" name="email" />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button text="Save" />
+            </div>
           </FormikProvider>
         </Card>
       </MyAccountStyle>
