@@ -91,7 +91,10 @@ export const PayOption = ({ page, setPage }: PageProps) => {
 
   const { setValues } = paymentActions;
 
-  const { data, isLoading } = useQuery(["getPaymentMethod"], getPaymentMethod);
+  const { data, isLoading } = useQuery(
+    [getPaymentMethod.key],
+    getPaymentMethod
+  );
 
   const formik = useFormik({
     initialValues: { payment_method_id: null },

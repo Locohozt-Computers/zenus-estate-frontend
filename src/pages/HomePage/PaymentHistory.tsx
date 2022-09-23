@@ -10,9 +10,9 @@ import { DATE_FORMAT } from "app-constants";
 
 const columns: TableColumn<PaymentHistoryI>[] = [
   {
-    name: "Payment Type",
+    name: "Levy Type",
     selector: (row) => row.payment_type.name,
-    format: (v) => <Typography content={v.payment_type.name} />,
+    format: (v) => <Typography content={v.levy.special_name} />,
     style: {
       paddingLeft: 40,
     },

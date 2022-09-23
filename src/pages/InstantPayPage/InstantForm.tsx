@@ -106,7 +106,7 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
           name="payment_type_id"
           options={paymentTypesOptions}
           value={formik.values.payment_type_id}
-          placeholder="Service Charge Fee"
+          placeholder="Select Service Fee"
           label="Payment type"
           loading={paymentTypesLoading}
           onChange={handlePaymentType}
