@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Button, Typography } from "components/atoms";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getAllTransactions,
+  getDashboard,
   getPaymentMethod,
   getPaymentType,
   getUserProfile,
@@ -87,17 +89,16 @@ const StyledDiv = styled.div`
 export const PaySummary = ({ page, setPage }: PageProps) => {
   const queryClient = useQueryClient();
 
-  const { data: profile, isLoading: profileLoading } = useQuery(
-    ["getUserProfile"],
-    getUserProfile
-  );
-  const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
-    ["getPaymentType"],
-    getPaymentType
-  );
+  const details = useSelector(paymentSelectors.state);
+
   const { data: payMethods, isLoading: payMethodsLoading } = useQuery(
-    ["getPaymentMethod"],
+    [getPaymentMethod.key],
     getPaymentMethod
+  );
+
+  const { data: paymentTypes, isLoading: paymentTypesLoading } = useQuery(
+    [getPaymentType.key],
+    getPaymentType
   );
 
   const { refetch: refetchNotifications } = useQuery(
@@ -106,8 +107,6 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
   );
 
   const { mutate, isLoading } = useMutation(postBillPayment);
-
-  const details = useSelector(paymentSelectors.state);
 
   const dispatch = useDispatch();
 
@@ -128,6 +127,14 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
     [details.payment_method_id, payMethods]
   );
 
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    refetch: refetchProfile,
+  } = useQuery([getUserProfile.key], getUserProfile, {
+    enabled: selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet,
+  });
+
   const total = details.final_amount;
 
   const onPaySuccess = useCallback(
@@ -146,9 +153,9 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
           onSuccess: (res: Record<string, any>) => {
             queryClient
               .invalidateQueries([
-                "paymentType",
-                "getDashboard",
-                "getAllTransactions",
+                getPaymentType.key,
+                getDashboard.key,
+                getAllTransactions.key,
               ])
               .then(async () => {
                 await refetchNotifications();
@@ -187,7 +194,6 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
         {
           onSuccess: (res: Record<string, any>) => {
             dispatch(setValues({ ...details, successResponse: res }));
-
             setPage(page + 1);
           },
           onError: () => {
@@ -222,6 +228,12 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
     profile?.landlord_email,
     total,
   ]);
+
+  useEffect(() => {
+    return () => {
+      refetchProfile();
+    };
+  }, [refetchProfile]);
 
   return (
     <StyledDiv>
@@ -265,19 +277,16 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
             content={truncateLongName(profile?.address || "")}
           />
         </div>
-        <div className="summary-field">
-          <span>
-            {selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet
-              ? "Wallet"
-              : "Pay stack"}{" "}
-            fees
-          </span>
-          <Typography
-            variant="subtitle"
-            textColor="blue"
-            content={currencyFormat(details.fees)}
-          />
-        </div>
+        {selectedPaymentMethod?.name === PaymentOptionNameEnum.Card && (
+          <div className="summary-field">
+            <span>Pay stack fees</span>
+            <Typography
+              variant="subtitle"
+              textColor="blue"
+              content={currencyFormat(details.fees)}
+            />
+          </div>
+        )}
         <div className="summary-field">
           <span>Type</span>
           <Typography
@@ -302,13 +311,17 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
             textColor="blue"
             size={23}
             weight={500}
-            content={`${currencyFormat(total)}`}
+            content={
+              selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet
+                ? `${currencyFormat(total - details.fees)}`
+                : `${currencyFormat(total)}`
+            }
           />
         </div>
       </div>
       {selectedPaymentMethod?.name === PaymentOptionNameEnum.Wallet ? (
         <Button
-          text={`Pay ${currencyFormat(total)}`}
+          text={`Pay ${currencyFormat(total - details.fees)}`}
           onClick={walletPayment}
           disabled={!total}
         />

@@ -78,9 +78,9 @@ const getLabel = (name: PaymentOptionNameEnum) => {
 
 export const PayOption = ({ page, setPage }: PageProps) => {
   const { isLoading: profileLoading, data: profileData } = useQuery(
-    ["getUserProfileWallet"],
+    [getUserProfile.key],
     getUserProfile,
-    { cacheTime: 0, refetchOnWindowFocus: "always" }
+    { cacheTime: 0 }
   );
 
   const [payOption, setPayOption] = useState("");
