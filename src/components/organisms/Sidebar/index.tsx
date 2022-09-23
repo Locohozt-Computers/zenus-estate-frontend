@@ -15,7 +15,7 @@ import {
   IconUserQuestion,
   IconWallet,
 } from "assets/icons";
-import { AiFillPrinter, AiFillQuestionCircle } from "react-icons/ai";
+import { AiFillQuestionCircle } from "react-icons/ai";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Container,
@@ -73,11 +73,11 @@ const navSection2: NavType = [
     icon: IconUserQuestion,
     route: ROUTES.estateBanks.fullPath,
   },
-  {
-    label: "Print Receipts",
-    icon: AiFillPrinter,
-    route: ROUTES.printReceipt.fullPath,
-  },
+  // {
+  //   label: "Print Receipts",
+  //   icon: AiFillPrinter,
+  //   route: ROUTES.printReceipt.fullPath,
+  // },
 ];
 
 if (process.env.NODE_ENV === "development") {

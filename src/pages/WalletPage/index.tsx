@@ -20,7 +20,10 @@ const StyledDiv = styled(Card)`
 `;
 
 const WalletPage = () => {
-  const { data: bankAccounts } = useQuery(["getBankAccounts"], getBankAccounts);
+  const { data: bankAccounts } = useQuery(
+    [getBankAccounts.key],
+    getBankAccounts
+  );
 
   const [page, setPage] = useState(1);
 
