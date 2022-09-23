@@ -78,9 +78,9 @@ const getLabel = (name: PaymentOptionNameEnum) => {
 
 export const PayOption = ({ page, setPage }: PageProps) => {
   const { isLoading: profileLoading, data: profileData } = useQuery(
-    ["getUserProfileWallet"],
+    [getUserProfile.key],
     getUserProfile,
-    { cacheTime: 0, refetchOnWindowFocus: "always" }
+    { cacheTime: 0 }
   );
 
   const [payOption, setPayOption] = useState("");
@@ -91,7 +91,10 @@ export const PayOption = ({ page, setPage }: PageProps) => {
 
   const { setValues } = paymentActions;
 
-  const { data, isLoading } = useQuery(["getPaymentMethod"], getPaymentMethod);
+  const { data, isLoading } = useQuery(
+    [getPaymentMethod.key],
+    getPaymentMethod
+  );
 
   const formik = useFormik({
     initialValues: { payment_method_id: null },

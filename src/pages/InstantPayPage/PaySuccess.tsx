@@ -24,7 +24,7 @@ export const PaySuccess = () => {
       />
       <Typography
         variant="subtitle"
-        content="Your Payment has been successfully registered in Zenux database."
+        content="Your Payment has been successfully."
         textColor="blue"
       />
     </StyledDiv>

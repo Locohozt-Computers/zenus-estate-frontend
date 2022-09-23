@@ -10,9 +10,11 @@ import { DATE_FORMAT } from "app-constants";
 
 const columns: TableColumn<PaymentHistoryI>[] = [
   {
-    name: "Payment Type",
+    name: "Levy Type",
     selector: (row) => row.payment_type.name,
-    format: (v) => <Typography content={v.payment_type.name} />,
+    format: (v) => (
+      <Typography title={v.levy.special_name} content={v.levy.special_name} />
+    ),
     style: {
       paddingLeft: 40,
     },
@@ -21,9 +23,13 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     name: "Date",
     selector: (row) => row.created_at,
     format: (v) => (
-      <Typography content={format(new Date(v.created_at), DATE_FORMAT.main)} />
+      <Typography
+        title={format(new Date(v.created_at), DATE_FORMAT.shorterDate)}
+        content={format(new Date(v.created_at), DATE_FORMAT.shorterDate)}
+      />
     ),
     center: true,
+    width: "230px",
   },
   {
     name: "Amount",
