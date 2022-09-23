@@ -10,7 +10,7 @@ import {
   UlStyle,
   WalletCard,
 } from "components";
-import { pxToEm } from "utils";
+import { AppIcon, pxToEm } from "utils";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile, getWalletTransactions } from "pages/request";
 import { currencyFormat } from "utils/helpers";
@@ -21,6 +21,7 @@ import { getBankAccounts } from "pages/WalletPage/request";
 import { FundWallet } from "pages/WalletPage/FundWallet";
 import { notification } from "services";
 import { useScrollWithin } from "hooks";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const StyledDiv = styled.div`
   position: relative;
@@ -74,6 +75,8 @@ const filterOptions = [
 ];
 
 export const WalletOverview = ({ setPage }: PropsI) => {
+  const [showBalance, setShowBalance] = useState(true);
+
   const [transactions, setTransactions] = useState<Array<TransactionI>>([]);
 
   const [withdrawState, setWithdrawState] = useState<
@@ -200,7 +203,31 @@ export const WalletOverview = ({ setPage }: PropsI) => {
         </Card>
       </Modal>
 
-      <CustomCard className="center-contents text-center direction-column">
+      <CustomCard
+        className="center-contents text-center direction-column"
+        style={{ position: "relative" }}
+      >
+        <div
+          className="center-contents justify-flex-end"
+          style={{
+            width: "100%",
+            position: "absolute",
+            top: 0,
+          }}
+        >
+          <button
+            style={{
+              margin: 20,
+            }}
+            type="button"
+            onClick={() => setShowBalance(!showBalance)}
+          >
+            <AppIcon
+              textColor="blue"
+              render={!showBalance ? AiFillEye : AiFillEyeInvisible}
+            />
+          </button>
+        </div>
         <Typography
           variant="subtitle"
           textColor="med-gray"
@@ -210,7 +237,11 @@ export const WalletOverview = ({ setPage }: PropsI) => {
           size={39}
           weight={500}
           textColor="blue"
-          content={currencyFormat(profile?.walletBalance || 0)}
+          content={
+            showBalance
+              ? currencyFormat(profile?.walletBalance || 0)
+              : "************"
+          }
         />
       </CustomCard>
       <div className="center-contents space-between btn-section">

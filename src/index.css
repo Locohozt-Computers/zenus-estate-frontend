@@ -54,6 +54,10 @@ input {
   justify-content: flex-start;
 }
 
+.justify-flex-end {
+  justify-content: flex-end;
+}
+
 button {
   cursor: pointer;
   background: none;
