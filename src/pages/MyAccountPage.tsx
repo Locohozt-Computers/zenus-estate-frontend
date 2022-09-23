@@ -8,8 +8,6 @@ import { Input, Card, Button } from "components/atoms";
 import { Typography } from "components";
 import { DashboardContent } from "layouts";
 import { GoBack } from "pages/ReportEmergencyPage/style";
-import { AppIcon } from "utils";
-import { IconArrowLeft } from "assets/icons";
 import { formatNameToDisplay, getInitials } from "utils/helpers";
 import house from "../assets/images/img.png";
 
@@ -97,7 +95,6 @@ const MyAccountPage = () => {
         <Loader open={isLoading} absolute />
         <Card className="my-account-card">
           <GoBack aria-label="go back to start">
-            <AppIcon size={40} render={IconArrowLeft} />
             <Typography
               variant="bodyBig"
               textColor="gray"
@@ -129,7 +126,7 @@ const MyAccountPage = () => {
             <Input
               readOnly
               label="Email"
-              name="amount"
+              name="email"
               className="editableInput"
               placeholder="danielmbazu9@gmail.com"
               type="email"
@@ -154,7 +151,7 @@ const MyAccountPage = () => {
             <Input
               readOnly
               label="Password"
-              name="amount"
+              name="password"
               className="editableInput"
               type="password"
             />
@@ -181,8 +178,8 @@ const MyAccountPage = () => {
               />{" "}
               <Input
                 readOnly
-                label="Email Adress"
-                name="phoneNumber"
+                label="Email Address"
+                name="email address"
                 className="editableInput"
                 value={data?.landlord_email}
               />{" "}

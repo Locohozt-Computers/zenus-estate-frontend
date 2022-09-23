@@ -17,7 +17,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
 import { Loader } from "components/atoms/Loader";
 import { IconSpinner } from "assets/icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconGrayUser } from "assets/icons/";
 import { AppIcon } from "utils/iconRender";
 import { RiLogoutCircleFill } from "react-icons/ri";
@@ -25,10 +25,12 @@ import { authActions } from "store/reducers/auth/authDocSlice";
 import { useDispatch } from "react-redux";
 import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
 import { searchTenantsEmail } from "pages/HomePage/requests";
+import { FiPhoneCall } from "react-icons/fi";
+import { HiOutlineMail } from "react-icons/hi";
+import { ROUTES } from "app-constants";
 
 const HeaderStyles = styled.div`
   display: grid;
-  //grid-template-columns: 1fr;
   grid-template-areas: "text text account" "search search search";
   grid-gap: 40px;
   justify-content: space-between;
@@ -134,10 +136,6 @@ const Drop = styled.div`
     align-items: center;
     gap: 10px;
     color: var(--gray);
-
-    &:hover {
-      color: white;
-    }
   }
 `;
 
@@ -178,7 +176,30 @@ const Search = React.memo(
   }
 );
 
+const TenantResults = styled.div`
+  display: flex;
+  align-items: center;
+  overflow: auto;
+  gap: 20px;
+
+  .result-card {
+    padding: clamp(10px, 10%, 30px);
+    border-radius: 8px;
+    background: url(${""});
+    background-color: #f5f8ff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .center-contents {
+      gap: 10px;
+    }
+  }
+`;
+
 export const HomeHeader = () => {
+  const navigate = useNavigate();
+
   const { isLoading, data } = useQuery([getUserProfile.key], getUserProfile);
 
   const { ref, visible, setVisible } = useOnClickOutside(false);
@@ -210,6 +231,12 @@ export const HomeHeader = () => {
     queryClient.clear();
   };
 
+  const handleAccountActions = (e: React.MouseEvent<any>) => {
+    const id = (e.target as Record<string, any>)?.id;
+    if (id === "account") navigate(ROUTES.myAccount.fullPath);
+    if (id === "log-out") setShowLogout(true);
+  };
+
   return (
     <>
       <Modal
@@ -218,20 +245,36 @@ export const HomeHeader = () => {
         maxWidth={608}
         closeModal={() => setSearching(false)}
       >
-        <Card style={{ padding: 25 }}>
-          <Typography.Heading
-            variant="heading3"
-            content={`${searchResponse?.total} Estate member found!`}
-          />
-          <div>
-            {searchResponse?.data?.map((el) => (
-              <Card>
-                <Typography>{el.tenant_name}</Typography>
-                <Typography>{el.signup_email}</Typography>
-                <Typography>{el.tenant_phone}</Typography>
+        <Card style={{ padding: 25, display: "grid", gap: 20 }}>
+          <div className="center-contents">
+            <Typography.Heading
+              variant="heading3"
+              content={`${searchResponse?.total} Estate member found!`}
+            />
+          </div>
+          <TenantResults>
+            {searchResponse?.data?.map((el, i) => (
+              <Card className="result-card" key={`${el.id}-${i.toString()}`}>
+                <Typography
+                  variant="bodyBig"
+                  textColor="blue"
+                  content={el.tenant_name}
+                />
+                <div className="center-contents justify-flex-start">
+                  <AppIcon textColor="blue" render={HiOutlineMail} size={20} />
+                  <Typography size={14}>
+                    <a href={`mailto:${el.signup_email}`}>{el.signup_email}</a>
+                  </Typography>
+                </div>
+                <div className="center-contents justify-flex-start">
+                  <AppIcon textColor="blue" render={FiPhoneCall} size={20} />
+                  <Typography size={14}>
+                    <a href={`tel:${el.tenant_phone}`}>{el.tenant_phone}</a>
+                  </Typography>
+                </div>
               </Card>
             ))}
-          </div>
+          </TenantResults>
           <div className="center-contents">
             <Button text="back" onClick={() => setSearching(false)} />
           </div>
@@ -253,8 +296,13 @@ export const HomeHeader = () => {
           </div>
           <AccountDiv>
             <NotificationDropdown />
-            <div style={{ position: "relative" }}>
-              <AccountDrop ref={ref} onClick={() => setVisible(!visible)}>
+            <div
+              role="presentation"
+              style={{ position: "relative" }}
+              ref={ref}
+              onClick={() => setVisible(!visible)}
+            >
+              <AccountDrop>
                 <AppIcon
                   render={AiOutlineCaretDown}
                   size={20}
@@ -268,39 +316,31 @@ export const HomeHeader = () => {
                     {getInitials(name)}
                   </Typography>
                 </div>
-                {visible && (
-                  <Drop>
-                    <Card className="dropDown-card">
-                      <UlStyle>
-                        <li>
-                          <Link to="/myAccount" className="link">
-                            <AppIcon
-                              render={IconGrayUser}
-                              color="inherit"
-                              size={20}
-                            />
-                            <Typography>My Account</Typography>
-                          </Link>
-                        </li>
-                        <li>
-                          <button
-                            type="button"
-                            className="link"
-                            onClick={logoutUser}
-                          >
-                            <AppIcon
-                              color="inherit"
-                              size={20}
-                              render={RiLogoutCircleFill}
-                            />
-                            <Typography>Log Out</Typography>
-                          </button>
-                        </li>
-                      </UlStyle>
-                    </Card>
-                  </Drop>
-                )}
               </AccountDrop>
+              {visible && (
+                <Drop>
+                  <UlStyle onClick={handleAccountActions}>
+                    <li className="link" id="account">
+                      <AppIcon
+                        id="account"
+                        render={IconGrayUser}
+                        color="inherit"
+                        size={20}
+                      />
+                      <Typography id="account">My Account</Typography>
+                    </li>
+                    <li className="link" id="log-out">
+                      <AppIcon
+                        id="log-out"
+                        color="inherit"
+                        size={20}
+                        render={RiLogoutCircleFill}
+                      />
+                      <Typography id="log-out">Log Out</Typography>
+                    </li>
+                  </UlStyle>
+                </Drop>
+              )}
             </div>
           </AccountDiv>
         </HeaderStyles>
