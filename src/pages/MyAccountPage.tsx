@@ -108,7 +108,7 @@ const MyAccountPage = () => {
           </GoBack>
           <MyAccountHeader style={{ backgroundImage: `url(${house})` }}>
             <Typography className="initials" size={34} textColor="white">
-              {getInitials(name)}
+              {getInitials(formatNameToDisplay(name))}
             </Typography>
           </MyAccountHeader>
           <div>
