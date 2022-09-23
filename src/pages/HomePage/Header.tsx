@@ -258,6 +258,7 @@ export const HomeHeader = () => {
                 <Typography
                   variant="bodyBig"
                   textColor="blue"
+                  style={{ whiteSpace: "nowrap" }}
                   content={el.tenant_name}
                 />
                 <div className="center-contents justify-flex-start">
