@@ -50,6 +50,10 @@ input {
   justify-content: space-between;
 }
 
+.justify-flex-start {
+  justify-content: flex-start;
+}
+
 button {
   cursor: pointer;
   background: none;

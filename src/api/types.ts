@@ -538,7 +538,6 @@ export class GetWalletTransactions {
   };
 }
 
-
 export class PostFundWallet {
   static Route = "/fund-wallet";
 
