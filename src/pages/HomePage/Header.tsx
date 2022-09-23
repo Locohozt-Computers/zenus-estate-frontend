@@ -24,6 +24,7 @@ import { RiLogoutCircleFill } from "react-icons/ri";
 import { authActions } from "store/reducers/auth/authDocSlice";
 import { useDispatch } from "react-redux";
 import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
+import { searchTenantsEmail } from "pages/HomePage/requests";
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -162,7 +163,8 @@ const Search = React.memo(
 );
 
 export const HomeHeader = () => {
-  const { isLoading, data } = useQuery(["getUserProfile"], getUserProfile);
+  const { isLoading, data } = useQuery([getUserProfile.key], getUserProfile);
+
   const { ref, visible, setVisible } = useOnClickOutside(false);
 
   const [showLogout, setShowLogout] = useState(false);
@@ -171,12 +173,18 @@ export const HomeHeader = () => {
 
   const dispatch = useDispatch();
 
-  const [searching, setSearching] = useState(false);
-  const makeSearch = useCallback(() => {
-    setSearching(true);
-    setTimeout(() => {
-      setSearching(false);
-    }, 3000);
+  const [searching, setSearching] = useState<string | boolean>(false);
+
+  const { isFetching: isSearching, data: searchResponse } = useQuery(
+    [searchTenantsEmail.key, searching],
+    () => searchTenantsEmail({ search_block_name: searching as string }),
+    {
+      enabled: !!searching,
+    }
+  );
+
+  const makeSearch = useCallback((value: string) => {
+    setSearching(value);
   }, []);
 
   const name = (data?.tenant_name || data?.landlord_name) as string;
@@ -188,6 +196,31 @@ export const HomeHeader = () => {
 
   return (
     <>
+      <Modal
+        visible={!!searchResponse?.data?.length}
+        showCloseBtn={false}
+        maxWidth={608}
+        closeModal={() => setSearching(false)}
+      >
+        <Card style={{ padding: 25 }}>
+          <Typography.Heading
+            variant="heading3"
+            content={`${searchResponse?.total} Estate member found!`}
+          />
+          <div>
+            {searchResponse?.data?.map((el) => (
+              <Card>
+                <Typography>{el.tenant_name}</Typography>
+                <Typography>{el.signup_email}</Typography>
+                <Typography>{el.tenant_phone}</Typography>
+              </Card>
+            ))}
+          </div>
+          <div className="center-contents">
+            <Button text="back" onClick={() => setSearching(false)} />
+          </div>
+        </Card>
+      </Modal>
       <Card style={{ marginBottom: 16, position: "relative" }}>
         <Loader absolute open={isLoading} />
         <HeaderStyles>
@@ -199,7 +232,9 @@ export const HomeHeader = () => {
               Keep your environment clean, stay safe. 😷
             </Typography>
           </div>
-          <Search onSearch={makeSearch} loading={searching} />
+          <div style={{ position: "relative" }}>
+            <Search onSearch={makeSearch} loading={isSearching} />
+          </div>
           <AccountDiv>
             <NotificationDropdown />
             <div style={{ position: "relative" }}>

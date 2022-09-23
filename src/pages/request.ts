@@ -20,6 +20,7 @@ import appRequest, {
   PostResetPassword,
   PutUpdateEmergency,
 } from "api";
+import { excludeObjectEmptyValues } from "utils/helpers";
 
 export const getDashboard = async () => {
   const res = await appRequest.get<typeof GetDashboard.Res>(GetDashboard.Route);
@@ -27,13 +28,12 @@ export const getDashboard = async () => {
 };
 getDashboard.key = "getDashboard";
 
-export const getWalletTransactions = async (params?: {
-  page?: number;
-  filter?: string;
-}) => {
+export const getWalletTransactions = async (
+  params?: typeof GetWalletTransactions.Params
+) => {
   const res = await appRequest.get<typeof GetWalletTransactions.Res>(
     GetWalletTransactions.Route,
-    { params }
+    { params: excludeObjectEmptyValues(params || {}) }
   );
   return res.data.data;
 };
@@ -175,6 +175,7 @@ export const getAllTransactionsByLevyType = async ({
   );
   return res.data.data;
 };
+getAllTransactionsByLevyType.key = "getAllTransactionsByLevyType";
 
 export const forgetPassword = async (data: typeof PostForgotPassword.Body) => {
   const res = await appRequest.post<typeof PostForgotPassword.Res>(

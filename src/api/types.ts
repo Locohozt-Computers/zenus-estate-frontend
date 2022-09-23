@@ -526,6 +526,11 @@ export interface TransactionI {
 export class GetWalletTransactions {
   static Route = "/wallet-transactions";
 
+  static Params: {
+    trans_type?: TransactionTypeEnum;
+    page?: number;
+  };
+
   static Res: {
     data: {
       data: Array<TransactionI>;
@@ -533,9 +538,6 @@ export class GetWalletTransactions {
   };
 }
 
-export class GetWalletTransactionsWithFilter {
-  static Route = "/wallet-transactions/filter/:trans_type_id";
-}
 
 export class PostFundWallet {
   static Route = "/fund-wallet";
@@ -642,6 +644,10 @@ export class PostReadNotification extends GetAllNotifications {
 
 export class GetSearchBlockOrName {
   static Route = "/search/:search_block_name";
+
+  static Params: {
+    search_block_name?: string;
+  };
 
   static Res: {
     data: PaginationI & {

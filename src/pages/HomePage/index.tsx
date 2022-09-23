@@ -32,7 +32,7 @@ const AccountList = styled.div`
 `;
 
 const HomePage = () => {
-  const { isLoading, data } = useQuery(["getDashboard"], getDashboard);
+  const { isLoading, data } = useQuery([getDashboard.key], getDashboard);
 
   return (
     <>
