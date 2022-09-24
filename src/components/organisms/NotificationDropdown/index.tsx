@@ -29,16 +29,25 @@ const Drop = styled.div`
   z-index: 2;
   position: absolute;
   top: 65px;
-  right: 0;
+  left: 0;
   min-width: 200px;
 
   > div {
     box-shadow: 2px 5px 10px 1px #00000026;
   }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    right: 0;
+    left: unset;
+  }
 `;
 
 const Li = styled.li<{ read?: null | string }>`
   background-color: ${({ read }) => !read && hexToHSL("#3a86ff", 20)};
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    min-width: 400px;
+  }
 `;
 
 export const NotificationDropdown = () => {

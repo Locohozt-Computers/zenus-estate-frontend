@@ -1,8 +1,8 @@
 import styled from "styled-components";
+import { pxToEm } from "utils";
 
 export const UlStyle = styled.ul`
   list-style: none;
-  white-space: nowrap;
 
   > li {
     padding: 10px 15px;
@@ -12,5 +12,9 @@ export const UlStyle = styled.ul`
       cursor: pointer;
       background-color: var(--blue);
     }
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    white-space: nowrap;
   }
 `;

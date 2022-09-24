@@ -23,7 +23,7 @@ const StyledDiv = styled.div`
   position: relative;
 
   .saved-account {
-    padding: ${pxToEm(35)};
+    padding: ${pxToEm(16)};
     height: ${pxToEm(185)};
     background: #fdfafd;
     border-radius: 10px;
@@ -47,10 +47,19 @@ const StyledDiv = styled.div`
     height: 85px;
     object-fit: cover;
 
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     background-color: var(--gray);
+  }
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    .saved-account {
+      padding: ${pxToEm(35)};
+    }
+
+    .initials {
+      display: flex;
+    }
   }
 
   .withdraw-btn {

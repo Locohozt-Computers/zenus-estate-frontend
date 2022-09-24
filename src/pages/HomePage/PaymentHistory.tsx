@@ -13,7 +13,12 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     name: "Levy Type",
     selector: (row) => row.payment_type.name,
     format: (v) => (
-      <Typography title={v.levy.special_name} content={v.levy.special_name} />
+      <Typography
+        variant="bodyBig"
+        textColor="med-gray"
+        title={v.levy.special_name}
+        content={v.levy.special_name}
+      />
     ),
     style: {
       paddingLeft: 40,
@@ -24,6 +29,8 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     selector: (row) => row.created_at,
     format: (v) => (
       <Typography
+        variant="bodyBig"
+        textColor="med-gray"
         title={format(new Date(v.created_at), DATE_FORMAT.shorterDate)}
         content={format(new Date(v.created_at), DATE_FORMAT.shorterDate)}
       />
@@ -36,6 +43,7 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     selector: (row) => row.amount,
     format: (v) => (
       <Typography
+        variant="bodyBig"
         style={{
           color: v.amount < 0 ? "var(--pink)" : "var(--green)",
         }}

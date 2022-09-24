@@ -146,6 +146,7 @@ const Drop = styled.div`
     align-items: center;
     gap: 10px;
     color: var(--gray);
+    white-space: nowrap;
   }
 `;
 

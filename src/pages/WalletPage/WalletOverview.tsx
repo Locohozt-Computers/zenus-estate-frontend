@@ -34,7 +34,7 @@ const StyledDiv = styled.div`
     flex-direction: column;
 
     > button {
-      max-width: 70%;
+      max-width: 380px;
     }
 
     @media screen and (min-width: ${pxToEm(900, false)}) {
