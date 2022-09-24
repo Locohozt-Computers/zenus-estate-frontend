@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import { Input, Typography } from "components";
 import { CustomPayStackButton } from "pages/InstantPayPage/PayStackButton";
-import { currencyFormat } from "utils/helpers";
+import { currencyFormat, strToNumOnly } from "utils/helpers";
 import { VALIDATIONS } from "app-constants";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "pages/request";
@@ -34,14 +34,13 @@ export const FundWallet = ({
 
   const { mutate, isLoading } = useMutation(fundWallet);
 
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("0");
   const [isSuccess, setIsSuccess] = useState("");
   const [err, setErr] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (err) setErr("");
-    const v = e.target.value.replace(/\D/g, "");
-    setAmount(+v);
+    setAmount(strToNumOnly(e.target.value));
   };
 
   const validatePayment = async (
@@ -111,10 +110,10 @@ export const FundWallet = ({
                 ],
               }}
               email={profile?.landlord_email}
-              amount={amount * 100} // convert to kobo
+              amount={+amount * 100} // convert to kobo
               buttonProps={{
                 disabled: +amount <= 0,
-                text: `Pay ${currencyFormat(amount)}`,
+                text: `Pay ${currencyFormat(+amount)}`,
               }}
               onClick={(r) => {
                 validatePayment(r);

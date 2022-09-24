@@ -54,7 +54,7 @@ export const ButtonStyle = styled.button<{ active?: boolean }>`
 `;
 
 export const DivContent = styled(Card)`
-  padding: 56px 96px;
+  padding: 16px;
   max-width: 804px;
   max-height: 757px;
   width: 100%;
@@ -63,7 +63,7 @@ export const DivContent = styled(Card)`
   display: grid;
   grid-template-rows: auto auto 1fr auto;
 
-  @media screen and (min-width: ${pxToEm(900)}) {
+  @media screen and (min-width: ${pxToEm(900, false)}) {
     padding: 56px 96px;
   }
 `;

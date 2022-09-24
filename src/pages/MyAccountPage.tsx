@@ -9,10 +9,12 @@ import { Typography } from "components";
 import { DashboardContent } from "layouts";
 import { GoBack } from "pages/ReportEmergencyPage/style";
 import { formatNameToDisplay, getInitials } from "utils/helpers";
+import { pxToEm } from "utils";
 import house from "../assets/images/img.png";
 
 const MyAccountStyle = styled.div`
   position: relative;
+
   .editableInput {
     border-radius: 0 !important;
     border-bottom: 1px solid #ededed !important;
@@ -20,6 +22,7 @@ const MyAccountStyle = styled.div`
     padding: 0.5rem 0 !important;
     outline: none;
   }
+
   .input-container {
     margin-bottom: 35px;
   }
@@ -38,7 +41,11 @@ const MyAccountStyle = styled.div`
     width: 100%;
     max-width: 697px;
     margin: auto;
-    padding: 59px 42px;
+    padding: 16px;
+
+    @media screen and (min-width: ${pxToEm(900, false)}) {
+      padding: 59px 42px;
+    }
   }
   .initials {
     width: 110px;

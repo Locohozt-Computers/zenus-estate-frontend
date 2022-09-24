@@ -31,12 +31,18 @@ import { ROUTES } from "app-constants";
 
 const HeaderStyles = styled.div`
   display: grid;
-  grid-template-areas: "text text account" "search search search";
+  grid-template-areas: "account account account" "text text text" "search search search";
   grid-gap: 40px;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   padding: 10px 8px;
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "text text account" "search search search";
+    padding: 20px 40px;
+  }
 
   @media screen and (min-width: ${pxToEm(1200, false)}) {
     grid-template-columns: auto 1fr auto;
@@ -89,12 +95,16 @@ const AccountDiv = styled.div`
   grid-auto-flow: column;
   gap: 30px;
   align-items: center;
+
+  .account-container {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 const AccountDrop = styled.button`
   position: relative;
-  all: unset;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -162,7 +172,7 @@ const Search = React.memo(
         <input
           onChange={handleChange}
           type="search"
-          placeholder="Search Location..."
+          placeholder="Search Email, Name, Block..."
         />
         {loading && (
           <IconSpinner
@@ -292,14 +302,12 @@ export const HomeHeader = () => {
               Keep your environment clean, stay safe. 😷
             </Typography>
           </div>
-          <div style={{ position: "relative" }}>
-            <Search onSearch={makeSearch} loading={isSearching} />
-          </div>
+          <Search onSearch={makeSearch} loading={isSearching} />
           <AccountDiv>
             <NotificationDropdown />
             <div
               role="presentation"
-              style={{ position: "relative" }}
+              className="account-container"
               ref={ref}
               onClick={() => setVisible(!visible)}
             >

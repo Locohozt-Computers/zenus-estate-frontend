@@ -29,6 +29,20 @@ const StyledDiv = styled.div`
   .btn-section {
     margin-bottom: ${pxToEm(40)};
     gap: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    > button {
+      max-width: 70%;
+    }
+
+    @media screen and (min-width: ${pxToEm(900, false)}) {
+      flex-direction: row;
+      > button {
+        max-width: 100%;
+      }
+    }
   }
 `;
 

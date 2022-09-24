@@ -10,6 +10,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getPaymentMethod, getPaymentType } from "pages/request";
 import { NavigationController } from "components";
+import { pxToEm } from "utils";
 import { InstantForm } from "./InstantForm";
 import { PayOption } from "./PayOption";
 import { PaySummary } from "./PaySummary";
@@ -20,10 +21,14 @@ const StyledCard = styled(Card)`
   max-width: 804px;
   max-height: 757px;
   width: 100%;
-  padding: 60px;
+  padding: 16px;
 
   .nav {
     margin-bottom: 30px;
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    padding: 60px;
   }
 `;
 
@@ -44,7 +49,13 @@ const StyledDiv = styled.div`
   .paymentDetails {
     align-self: center;
     height: 100%;
-    padding: 0 40px;
+    padding: 0;
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    .paymentDetails {
+      padding: 0 40px;
+    }
   }
 `;
 

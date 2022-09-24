@@ -53,6 +53,7 @@ export const currencyFormat = (
   symbol: "$" | "₦" | string = "₦"
 ) => {
   return `${symbol?.trim() ?? ""} ${num
+    .toFixed(2)
     .toString()
     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}`.trim();
 };
@@ -180,4 +181,11 @@ export const excludeObjectEmptyValues = <T extends object>(obj: T) => {
     },
     {}
   );
+};
+
+export const strToNumOnly = (str: string) => {
+  if (str.match(/^([0-9]{1,})?(\.)?([0-9]{1,})?$/)) {
+    return str;
+  }
+  return "";
 };

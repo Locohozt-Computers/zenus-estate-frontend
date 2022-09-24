@@ -11,7 +11,7 @@ import { IoMdClose } from "react-icons/io";
 const DashboardStyling = styled.div<{ sidebar?: boolean }>`
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr;
   height: 100vh;
 
   .dashboard-container {
@@ -20,8 +20,8 @@ const DashboardStyling = styled.div<{ sidebar?: boolean }>`
     max-width: 1120px;
   }
 
-  @media screen and (min-width: 900px) {
-    grid-template-columns: minmax(auto, 282px) 1fr;
+  @media screen and (min-width: 1300px) {
+    grid-template-columns: auto 1fr;
   }
 `;
 
@@ -36,10 +36,21 @@ const ContentStyling = styled.main`
 const SideBarStyling = styled.div<{ sidebar: boolean }>`
   transition: 0.5s all;
   background-color: white;
-  width: ${({ sidebar }) => (sidebar ? "282px" : "72px")};
 
-  @media screen and (min-width: 900px) {
-    width: 282px;
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  max-width: 282px;
+  z-index: 1;
+
+  transform: translateX(${({ sidebar }) => (sidebar ? "-282px" : "0")});
+
+  box-shadow: 3px -1px 19px 2px #0000003d;
+
+  @media screen and (min-width: 1300px) {
+    position: relative;
+    transform: translateX(0px);
+    box-shadow: none;
   }
 `;
 
@@ -53,8 +64,9 @@ const FloatingToggle = styled.button`
   height: 45px;
   border-radius: 22.5px;
   cursor: pointer;
+  box-shadow: 0 0 6px 4px #0000002b;
 
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 1300px) {
     display: none;
   }
 `;
@@ -75,14 +87,14 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
     <DashboardStyling sidebar={sidebarCollapse}>
       <SideBarStyling sidebar={sidebarCollapse}>
-        <Sidebar open={sidebarCollapse} />
+        <Sidebar open />
       </SideBarStyling>
       <ContentStyling>
         <Loader open={loading} />
         {loading ? null : children}
       </ContentStyling>
       <FloatingToggle onClick={() => setSidebarCollapse(!sidebarCollapse)}>
-        {!sidebarCollapse ? (
+        {sidebarCollapse ? (
           <GiHamburgerMenu color="white" size={20} />
         ) : (
           <IoMdClose color="white" size={20} />

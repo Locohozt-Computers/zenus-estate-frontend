@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useMemo } from "react";
-import { AppIcon } from "utils";
+import { AppIcon, pxToEm } from "utils";
 import { IconArrowLeft } from "assets/icons";
 
 interface NavI {
@@ -25,6 +25,7 @@ const NavStyle = styled.div`
     display: flex;
     align-items: center;
     gap: 1px;
+    font-size: clamp(${pxToEm(12)}, 4vw, ${pxToEm(16)});
   }
 `;
 

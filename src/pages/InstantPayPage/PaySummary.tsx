@@ -25,6 +25,7 @@ import { Loader } from "components/atoms/Loader";
 import { notification } from "services";
 import { CustomPayStackButton } from "pages/InstantPayPage/PayStackButton";
 import { getAllNotifications } from "components/organisms/NotificationDropdown/request";
+import { pxToEm } from "utils";
 import { PageProps } from "./Props";
 
 const StyledDiv = styled.div`
@@ -61,7 +62,7 @@ const StyledDiv = styled.div`
   .summary-field,
   .summary-title {
     border-bottom: 1px solid var(--gray-2);
-    padding: 0 50px;
+    padding: 10px;
     width: 100%;
     height: 60px;
     display: flex;
@@ -83,6 +84,12 @@ const StyledDiv = styled.div`
     width: 100%;
 
     justify-content: center;
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    .summary-field {
+      padding: 0 50px;
+    }
   }
 `;
 

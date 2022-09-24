@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import clsx from "clsx";
 import * as yup from "yup";
 import { PaymentOptionNameEnum } from "api";
-import { AppIcon } from "utils";
+import { AppIcon, pxToEm } from "utils";
 import { VALIDATIONS } from "app-constants";
 import { currencyFormat } from "utils/helpers";
 import { notification } from "services";
@@ -31,7 +31,7 @@ const StyledDiv = styled.div`
     background: var(--light-gray);
     border-radius: 7px;
     font-size: 17px;
-    padding-left: 33px;
+    padding: 16px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -56,6 +56,12 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: space-between;
     color: var(--blue);
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    .paymentMethod {
+      padding: 0 30px;
+    }
   }
 `;
 
@@ -167,7 +173,11 @@ export const PayOption = ({ page, setPage }: PageProps) => {
                   style={{ marginRight: 12 }}
                 />
               )}
-              <Typography size={17} content={getLabel(el.name).label} />
+              <Typography
+                variant="subtitle"
+                textColor="gray"
+                content={getLabel(el.name).label}
+              />
             </>
           </button>
         ))}

@@ -4,18 +4,24 @@ import { DashboardContent } from "layouts";
 import { Card, NavigationController } from "components";
 import { useQuery } from "@tanstack/react-query";
 import { getBankAccounts } from "pages/WalletPage/request";
+import { pxToEm } from "utils";
 import { WalletOverview } from "./WalletOverview";
 import { AddAccount } from "./AddAccount";
 import { WithdrawView } from "./WithdrawView";
 import { WithdrawSuccess } from "./WithdrawSuccess";
 
 const StyledDiv = styled(Card)`
-  padding: 50px 100px;
   max-width: 824px;
   margin: 0 auto;
 
   .nav {
     margin-bottom: 30px;
+  }
+
+  padding: 16px;
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    padding: 59px 80px;
   }
 `;
 

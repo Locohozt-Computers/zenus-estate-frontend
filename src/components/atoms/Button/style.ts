@@ -14,7 +14,7 @@ export const ButtonWrapper = styled.button<{
   padding: ${pxToEm(14)} ${pxToEm(82)};
   text-transform: capitalize;
   text-align: center;
-  font-size: ${pxToEm(20)};
+  font-size: clamp(${pxToEm(15)}, 4vw, ${pxToEm(20)});
   font-weight: 500;
   background-color: var(--blue);
   border-radius: 29px;
