@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Card, Select, TextArea, Typography } from "components";
 import { Link } from "react-router-dom";
 import { ROUTES } from "app-constants";
-import { Loader } from "components/atoms/Loader";
+import WalletPage from "pages/WalletPage";
 
 const PlayPage = () => {
   return (
@@ -49,16 +49,7 @@ const PlayPage = () => {
       <Button secondary text="Next" />
       <Button secondary text="Other Page" />
       <Link to={ROUTES.other.fullPath}>Link to Other Page</Link>
-      <div
-        style={{
-          position: "relative",
-          width: 500,
-          height: 600,
-        }}
-      >
-        {/* Notice that this is wrapped within a relative element and the loader set as absolute */}
-        <Loader open absolute />
-      </div>
+      <WalletPage />
     </div>
   );
 };

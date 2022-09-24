@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFormikContext } from "formik";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { AppIcon } from "utils";
+import { strToNumOnly } from "utils/helpers";
 import { InputWrapper } from "./style";
 import { InputProps } from "./types";
 
@@ -76,9 +77,7 @@ export const FormikInput = ({
 
   const hasError = error && touched && error;
 
-  const v = numbersOnly
-    ? (value as string).replaceAll(/\D/g, "").trim()
-    : (value as string);
+  const v = numbersOnly ? strToNumOnly(value as string) : (value as string);
 
   return (
     <Input

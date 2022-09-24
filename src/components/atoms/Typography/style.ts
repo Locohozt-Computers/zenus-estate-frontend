@@ -76,6 +76,12 @@ const setVariant = (variant: TextVariant) => {
         fontSize: `clamp(${pxToEm(15)}, 4vw, ${pxToEm(17)})`,
         color: "var(--black)",
       });
+    case "bodySmall":
+      return cssObjectToString({
+        fontWeight: 400,
+        fontSize: `clamp(${pxToEm(12)}, 4vw, ${pxToEm(14)})`,
+        color: "var(--med-gray)",
+      });
     case "helperText":
       return cssObjectToString({
         fontWeight: 400,

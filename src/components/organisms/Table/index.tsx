@@ -45,8 +45,8 @@ const customStyles: TableStyles = {
 export const THeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  flex-direction: column;
+  //align-items: flex-end;
+  //flex-direction: column;
   gap: 20px;
   height: 78px;
 

@@ -19,7 +19,7 @@ type Props = {
 
 const StyledDiv = styled.div`
   width: 100%;
-  height: ${pxToEm(98)};
+  //height: ${pxToEm(98)};
   padding: ${pxToEm(14)};
   display: flex;
   align-items: center;
@@ -31,8 +31,23 @@ const StyledDiv = styled.div`
     flex: 1;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     height: 100%;
+    flex-direction: column;
+    gap: 10px;
+
+    > div:last-child {
+      width: 100%;
+    }
+
+    @media screen and (min-width: ${pxToEm(900, false)}) {
+      align-items: center;
+      flex-direction: row;
+
+      > div:last-child {
+        width: fit-content;
+      }
+    }
 
     &-section,
     &-section-right {
