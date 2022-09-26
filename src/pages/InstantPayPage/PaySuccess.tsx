@@ -4,8 +4,7 @@ import { Typography } from "components/atoms";
 import pay from "assets/images/paysuccess.png";
 
 const StyledDiv = styled.div`
-  width: 480px;
-  height: 100%;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
   align-items: center;

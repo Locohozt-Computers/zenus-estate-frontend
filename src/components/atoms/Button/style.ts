@@ -38,7 +38,11 @@ export const ButtonWrapper = styled.button<{
     css`
       pointer-events: none;
       opacity: 0.5;
-    `}
+    `};
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    padding: ${pxToEm(14)} ${pxToEm(30)};
+  }
 `;
 
 export const ButtonLoader = styled.div`

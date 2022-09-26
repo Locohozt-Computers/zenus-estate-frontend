@@ -122,7 +122,7 @@ const ReportEmergencyPage = () => {
               </GoBack>
               <div className="center-contents flex-column text-center">
                 <img
-                  style={{ maxWidth: 440, maxHeight: 332 }}
+                  style={{ maxWidth: 440, maxHeight: 332, width: "100%" }}
                   src={successImg}
                   alt=""
                 />
