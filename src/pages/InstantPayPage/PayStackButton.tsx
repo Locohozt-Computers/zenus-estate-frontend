@@ -32,7 +32,7 @@ export const CustomPayStackButton = ({
   };
   return (
     <Button
-      className={clsx("paystack-button", buttonProps?.className as string)}
+      className={clsx(buttonProps?.className as string)}
       text={buttonProps?.text}
       {...buttonProps}
       onClick={handleClick}

@@ -37,22 +37,6 @@ const StyledDiv = styled.div`
   justify-content: space-between;
   margin-top: 1.5rem;
 
-  .paystack-button {
-    padding: 14px 82px;
-    text-transform: capitalize;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 500;
-    background-color: var(--blue);
-    border-radius: 29px;
-    font-family: "Montserrat", sans-serif;
-    color: white;
-
-    &:active {
-      transform: scale(0.98);
-    }
-  }
-
   .summary {
     background: #fdfafd;
     border-radius: 10px;
@@ -339,6 +323,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
           {...payStackBtn}
           metadata={{
             user_id: profile?.user_id,
+            type: details.payment_type_id,
             custom_fields: [
               {
                 display_name: "User",
