@@ -58,12 +58,10 @@ const WalletPage = () => {
     const query = new URLSearchParams(location.search);
     const queryPage = query.get("page");
     if (queryPage) {
-      const idx = pages
-        .filter(Boolean)
-        .findIndex((el) => el?.toLowerCase() === queryPage);
-      if (idx > -1) handleSetPage(idx);
+      const idx = pages.filter(Boolean).findIndex((el) => el === queryPage);
+      if (idx > -1) setPage(idx + 1);
     }
-  }, [handleSetPage, location.search, pages]);
+  }, [location.search, pages]);
 
   return (
     <DashboardContent>

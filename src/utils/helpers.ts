@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { ChangeEvent, CSSProperties } from "react";
 import { BankAccountResI, BankRes } from "api";
 
 export const formatNameToDisplay = (str?: string, nameOnly?: boolean) => {
@@ -206,4 +206,27 @@ export const getBankDetails = (
     };
   }
   return null;
+};
+
+export const formatPhoneNumber = (event: ChangeEvent<HTMLInputElement>) => {
+  const cleaned = `${event.target.value}`.replace(/\D/g, "");
+  let match = cleaned.match(/^(234|)+?(\d{3})(\d{3})(\d{4})$/);
+  if (cleaned.length === 11) {
+    match = cleaned.match(/^(234|)+?(\d{4})(\d{3})(\d{4})$/);
+  }
+  if (match) {
+    const intlCode = match[1] ? "+234 " : "";
+    event.target.value = [
+      intlCode,
+      "(",
+      match[2],
+      ") ",
+      match[3],
+      " - ",
+      match[4],
+    ].join("");
+    return event;
+  }
+  event.target.value = cleaned;
+  return event;
 };

@@ -8,6 +8,7 @@ import { DashboardContent } from "layouts";
 import { GoBack } from "pages/ReportEmergencyPage/style";
 import {
   formatNameToDisplay,
+  formatPhoneNumber,
   getBankDetails,
   getInitials,
 } from "utils/helpers";
@@ -74,6 +75,7 @@ const DataField = ({
 const validationSchema = yup.object({
   old_password: VALIDATIONS.passwordNotRequired,
   new_password: VALIDATIONS.passwordNotRequired,
+  phone_number: VALIDATIONS.phoneNumber,
 });
 
 const MyAccountPage = () => {
@@ -122,7 +124,7 @@ const MyAccountPage = () => {
       }
       if (values.phone_number) {
         mutatePhone(
-          { phone_no: values.phone_number },
+          { phone_no: values.phone_number.replace(/\D/gi, "") },
           {
             onSuccess: (e) => {
               refetchProfile();
@@ -187,7 +189,7 @@ const MyAccountPage = () => {
                 onEditClick={() =>
                   navigate({
                     pathname: ROUTES.myWallet.fullPath,
-                    search: "page=add new account",
+                    search: "page=Add New Account",
                   })
                 }
               />
@@ -196,13 +198,17 @@ const MyAccountPage = () => {
                 label="Phone Number"
                 value={
                   changePhone ? (
-                    <AccountInnerInputStyling
-                      style={{ width: "85%" }}
-                      type="text"
-                      name="phone_number"
-                      value={formik.values.phone_number}
-                      onChange={formik.handleChange}
-                    />
+                    <>
+                      <AccountInnerInputStyling
+                        style={{ width: "85%" }}
+                        type="text"
+                        name="phone_number"
+                        value={formik.values.phone_number}
+                        onChange={(e) =>
+                          formik.handleChange(formatPhoneNumber(e))
+                        }
+                      />
+                    </>
                   ) : (
                     data?.tenant_phone
                   )
