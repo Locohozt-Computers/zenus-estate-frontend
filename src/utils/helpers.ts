@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { BankAccountResI, BankRes } from "api";
 
 export const formatNameToDisplay = (str?: string, nameOnly?: boolean) => {
   if (str) {
@@ -188,4 +189,21 @@ export const strToNumOnly = (str: string) => {
     return str;
   }
   return "";
+};
+
+export const getBankDetails = (
+  banks?: BankRes[],
+  bankAccounts?: BankAccountResI[]
+) => {
+  if (bankAccounts && banks) {
+    const res = banks?.find(
+      (el) => el.code.toString() === bankAccounts[0].bank_code.toString()
+    );
+    return {
+      bank: res?.name,
+      account: bankAccounts[0].account_name,
+      acc_number: bankAccounts[0].account_number,
+    };
+  }
+  return null;
 };

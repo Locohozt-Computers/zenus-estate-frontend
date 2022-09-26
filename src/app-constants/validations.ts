@@ -4,6 +4,9 @@ import { currencyFormat } from "utils/helpers";
 export const VALIDATIONS = {
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
+  passwordNotRequired: yup.string(),
+  confirmPassword: (ref = "password") =>
+    yup.string().oneOf([yup.ref(ref), null], "Passwords must match"),
   description: yup.string(),
   address: yup.string().required("Address is required"),
   accountNumber: yup.number().required("Account Number is required"),

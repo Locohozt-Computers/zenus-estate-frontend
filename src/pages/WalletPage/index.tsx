@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { DashboardContent } from "layouts";
 import { Card, NavigationController } from "components";
 import { useQuery } from "@tanstack/react-query";
 import { getBankAccounts } from "pages/WalletPage/request";
 import { pxToEm } from "utils";
+import { useLocation } from "react-router-dom";
 import { WalletOverview } from "./WalletOverview";
 import { AddAccount } from "./AddAccount";
 import { WithdrawView } from "./WithdrawView";
@@ -26,29 +27,50 @@ const StyledDiv = styled(Card)`
 `;
 
 const WalletPage = () => {
+  const location = useLocation();
+
   const { data: bankAccounts } = useQuery(
     [getBankAccounts.key],
     getBankAccounts
   );
 
+  const pages = useMemo(
+    () => [
+      "My Wallet",
+      bankAccounts?.length ? "Withdraw" : undefined,
+      "Add New Account",
+    ],
+    [bankAccounts?.length]
+  );
+
   const [page, setPage] = useState(1);
 
-  const handleSetPage = (p: number) => {
-    if (page > 2) {
-      setPage(1);
-    } else setPage(p);
-  };
+  const handleSetPage = useCallback(
+    (p: number) => {
+      if (page > 2) {
+        setPage(1);
+      } else setPage(p);
+    },
+    [page]
+  );
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const queryPage = query.get("page");
+    if (queryPage) {
+      const idx = pages
+        .filter(Boolean)
+        .findIndex((el) => el?.toLowerCase() === queryPage);
+      if (idx > -1) handleSetPage(idx);
+    }
+  }, [handleSetPage, location.search, pages]);
 
   return (
     <DashboardContent>
       <StyledDiv>
         <div className="nav">
           <NavigationController
-            pages={[
-              "My Wallet",
-              bankAccounts?.length ? "Withdraw" : undefined,
-              "Add New Account",
-            ]}
+            pages={pages}
             active={page}
             onPageChange={handleSetPage}
           />
