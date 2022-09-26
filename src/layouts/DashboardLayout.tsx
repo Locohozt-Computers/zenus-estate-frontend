@@ -44,7 +44,7 @@ const SideBarStyling = styled.div<{ sidebar: boolean }>`
   max-width: 282px;
   z-index: 1;
 
-  transform: translateX(${({ sidebar }) => (sidebar ? "-282px" : "0")});
+  transform: translateX(${({ sidebar }) => (sidebar ? "-306px" : "0")});
 
   box-shadow: 3px -1px 19px 2px #0000003d;
 
