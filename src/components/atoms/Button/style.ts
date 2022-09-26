@@ -11,7 +11,7 @@ export const ButtonWrapper = styled.button<{
   cursor: pointer;
   position: relative;
   pointer-events: ${({ btnDisable }) => (btnDisable ? "none" : "auto")};
-  padding: ${pxToEm(14)} ${pxToEm(82)};
+  padding: ${pxToEm(14)} ${pxToEm(30)};
   text-transform: capitalize;
   text-align: center;
   font-size: clamp(${pxToEm(15)}, 4vw, ${pxToEm(20)});
@@ -41,7 +41,7 @@ export const ButtonWrapper = styled.button<{
     `};
 
   @media screen and (min-width: ${pxToEm(900, false)}) {
-    padding: ${pxToEm(14)} ${pxToEm(30)};
+    padding: ${pxToEm(14)} ${pxToEm(82)};
   }
 `;
 
