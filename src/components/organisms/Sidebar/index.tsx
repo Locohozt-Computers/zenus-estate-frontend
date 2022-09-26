@@ -12,7 +12,6 @@ import {
   IconCarEmergency,
   IconCaretDown,
   IconUser,
-  IconUserQuestion,
   IconWallet,
 } from "assets/icons";
 import { AiFillQuestionCircle } from "react-icons/ai";
@@ -68,11 +67,11 @@ const navSection2: NavType = [
     icon: AiFillQuestionCircle,
     route: ROUTES.contactAdmin.fullPath,
   },
-  {
-    label: "Estate Banks",
-    icon: IconUserQuestion,
-    route: ROUTES.estateBanks.fullPath,
-  },
+  // {
+  //   label: "Estate Banks",
+  //   icon: IconUserQuestion,
+  //   route: ROUTES.estateBanks.fullPath,
+  // },
   // {
   //   label: "Print Receipts",
   //   icon: AiFillPrinter,

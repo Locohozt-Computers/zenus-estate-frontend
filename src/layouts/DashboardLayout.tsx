@@ -7,6 +7,7 @@ import { setAuthorizationHeader } from "api";
 import { Loader } from "components/atoms/Loader";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
+import { useLocation } from "react-router-dom";
 
 const DashboardStyling = styled.div<{ sidebar?: boolean }>`
   position: relative;
@@ -55,9 +56,9 @@ const SideBarStyling = styled.div<{ sidebar: boolean }>`
 `;
 
 const FloatingToggle = styled.button`
-  position: absolute;
-  bottom: 20px;
-  right: 30px;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
   border: none;
   background-color: var(--blue);
   width: 45px;
@@ -72,9 +73,12 @@ const FloatingToggle = styled.button`
 `;
 
 export const DashboardLayout = ({ children }: PropsWithChildren) => {
+  const apiToken = useSelector(authSelectors.token);
+  const location = useLocation();
+
   const [sidebarCollapse, setSidebarCollapse] = useState(false);
   const [loading, setLoading] = useState(true);
-  const apiToken = useSelector(authSelectors.token);
+  const [, setLastLoc] = useState("");
 
   useEffect(() => {
     // persist token in app
@@ -83,6 +87,17 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
       setLoading(false);
     }
   }, [apiToken]);
+
+  useEffect(() => {
+    // handles auto close sidebar after click
+    setLastLoc((prev) => {
+      if (prev !== location.pathname) {
+        if (prev) setSidebarCollapse(true);
+        return location.pathname;
+      }
+      return prev;
+    });
+  }, [location]);
 
   return (
     <DashboardStyling sidebar={sidebarCollapse}>

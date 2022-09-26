@@ -19,6 +19,18 @@ const Button = styled.button`
   background-color: var(--gray-2);
   border-radius: 16px;
   padding: ${pxToEm(15)};
+  position: relative;
+
+  .red-dot {
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: var(--pink);
+    top: 7px;
+    right: 7px;
+  }
 
   :active {
     transform: scale(0.98);
@@ -91,6 +103,7 @@ export const NotificationDropdown = () => {
           size={20}
           color="var(--blue)"
         />
+        {!!data?.length && <span className="red-dot" />}
       </Button>
       {visible && (
         <Drop>
