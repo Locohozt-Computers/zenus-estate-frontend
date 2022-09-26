@@ -38,6 +38,20 @@ export class PostResetPassword {
   };
 }
 
+export class PutChangePassword {
+  static Route = "/change-password";
+
+  static Body: {
+    old_password: string;
+    new_password: string;
+  };
+
+  static Res: {
+    status: string;
+    message: string;
+  };
+}
+
 export class PostForgotPassword {
   static Route = "/password/email";
 
@@ -52,36 +66,38 @@ export class PostForgotPassword {
   };
 }
 
+interface ProfileData {
+  id: number;
+  user_id: number;
+  signup_email: string;
+  house_no: string;
+  landlord_name: string;
+  tenant_name: string;
+  address: string;
+  occupation: string;
+  office_address: string;
+  landlord_phone: string;
+  tenant_phone: string;
+  landlord_email: string;
+  tenant_email: string;
+  house_status_id: number;
+  tenancy_type_id: number;
+  charge_svc: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export class GetLandlordProfile {
   static Route = "/landlord";
 
   static Res: {
     status: number;
     message: string;
-    data: {
-      id: number;
-      user_id: number;
-      signup_email: string;
-      house_no: string;
-      landlord_name: string;
-      tenant_name: string;
-      address: string;
-      occupation: string;
-      office_address: string;
-      landlord_phone: string;
-      tenant_phone: string;
-      landlord_email: string;
-      tenant_email: string;
-      house_status_id: number;
-      tenancy_type_id: number;
-      charge_svc: boolean;
-      created_at: string;
-      updated_at: string;
-    };
+    data: ProfileData;
   };
 }
 
-interface BankAccountResI {
+export interface BankAccountResI {
   id: number;
   user_id: number;
   bank_code: number;
@@ -99,28 +115,24 @@ export class GetProfile {
   static Res: {
     status: number;
     message: string;
-    data: {
-      id: number;
-      user_id: number;
-      signup_email: string;
-      house_no: string;
-      landlord_name: string;
-      tenant_name: string;
-      address: string;
-      occupation: string;
-      office_address: string;
-      landlord_phone: string;
-      tenant_phone: string;
-      landlord_email: string;
-      tenant_email: string;
-      house_status_id: number;
-      tenancy_type_id: number;
-      charge_svc: boolean;
-      created_at: string;
-      updated_at: string;
+    data: ProfileData & {
       walletBalance: number;
       bank?: BankAccountResI;
     };
+  };
+}
+
+export class PutUpdateUserPhoneNumber {
+  static Route = "/profile/update-mobile-number";
+
+  static Body: {
+    phone_no: string;
+  };
+
+  static Res: {
+    status: number;
+    message: string;
+    data: ProfileData;
   };
 }
 
@@ -425,6 +437,15 @@ export class GetDashboard {
   };
 }
 
+export interface BankRes {
+  id: number;
+  code: string;
+  name: string;
+  pay_with_bank: boolean;
+  active: boolean;
+  currency: string;
+}
+
 export class GetAllBanks {
   static Route = "/all-banks";
 
@@ -432,14 +453,7 @@ export class GetAllBanks {
     status: string;
     message: string;
     data: {
-      data: Array<{
-        id: number;
-        code: string;
-        name: string;
-        pay_with_bank: boolean;
-        active: boolean;
-        currency: string;
-      }>;
+      data: Array<BankRes>;
     };
   };
 }
