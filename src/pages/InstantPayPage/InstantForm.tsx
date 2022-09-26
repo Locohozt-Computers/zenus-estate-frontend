@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FormikProvider, useFormik } from "formik";
 import { VALIDATIONS } from "app-constants";
 import * as yup from "yup";
-import { getPaymentType } from "pages/request";
+import { getPaymentType, getUserProfile } from "pages/request";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -32,6 +32,10 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
     ["paymentType"],
     getPaymentType
   );
+  const { refetch: refetchProfile, isFetching } = useQuery(
+    [getUserProfile.key],
+    getUserProfile
+  );
 
   const details = useSelector(paymentSelectors.state);
 
@@ -58,7 +62,7 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
       final_amount: details.final_amount,
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const oustd = +currencyFormat.removeFormat(values.outstandingBalance);
       const amt = +currencyFormat.removeFormat(values.amount);
       dispatch(
@@ -70,6 +74,7 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
           outstandingBalance: oustd,
         })
       );
+      await refetchProfile();
       setPage(page + 1);
     },
   });
@@ -134,7 +139,12 @@ export const InstantForm = ({ page, setPage }: PageProps) => {
             pointerEvents: "none",
           }}
         />
-        <Button text="Next" type="submit" disabled={paymentTypesLoading} />
+        <Button
+          text="Next"
+          type="submit"
+          loading={isFetching}
+          disabled={paymentTypesLoading}
+        />
       </StyledForm>
     </FormikProvider>
   );

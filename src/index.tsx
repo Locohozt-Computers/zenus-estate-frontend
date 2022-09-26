@@ -33,7 +33,7 @@ root.render(
           <QueryClientProvider client={queryClient}>
             <App />
             <Toaster position="top-right" reverseOrder={false} />
-            <ReactQueryDevtools />
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
           </QueryClientProvider>
         </BrowserRouter>
       </PersistGate>

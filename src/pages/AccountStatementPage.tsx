@@ -20,9 +20,6 @@ const columns: TableColumn<PaymentHistoryI>[] = [
     name: "Levy Type",
     selector: (row) => row.levy.special_name,
     format: (v) => <Typography content={v.levy.special_name} />,
-    style: {
-      paddingLeft: 40,
-    },
   },
   {
     name: "Date",
@@ -55,9 +52,6 @@ const columns: TableColumn<PaymentHistoryI>[] = [
       />
     ),
     right: true,
-    style: {
-      paddingRight: 40,
-    },
   },
 ];
 

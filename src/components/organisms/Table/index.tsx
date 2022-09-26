@@ -13,8 +13,7 @@ import imgData from "./img.png";
 const customStyles: TableStyles = {
   header: {
     style: {
-      paddingLeft: 40, // override the cell padding for head cells
-      paddingRight: 40,
+      padding: "0px 40px",
       minHeight: 40,
       fontSize: 17,
       borderBottom: "1px solid #0000001f",
@@ -24,20 +23,24 @@ const customStyles: TableStyles = {
   headCells: {
     style: {
       fontSize: 17,
-      paddingLeft: 40, // override the cell padding for head cells
-      paddingRight: 40,
+      padding: "0px 40px",
     },
   },
   head: {
     style: {
-      height: 62,
+      minHeight: 62,
       color: "var(--med-gray)",
     },
   },
   rows: {
     style: {
-      padding: "14px 0px",
+      padding: "10px 30px",
       color: "var(--med-gray)",
+    },
+  },
+  cells: {
+    style: {
+      padding: "0px 10px",
     },
   },
 };
@@ -45,7 +48,7 @@ const customStyles: TableStyles = {
 export const THeader = styled.div`
   display: flex;
   justify-content: space-between;
-  //align-items: flex-end;
+  align-items: center;
   //flex-direction: column;
   gap: 20px;
   height: 78px;
@@ -119,6 +122,18 @@ const DTStyling = styled.div`
   .rdt_TableHeader {
     > div:last-child {
       display: none;
+    }
+  }
+
+  .rdt_TableRow,
+  .rdt_TableHeader {
+    padding: 10px;
+  }
+
+  @media screen and (min-width: ${pxToEm(900, false)}) {
+    .rdt_TableRow,
+    .rdt_TableHeader {
+      padding: 10px 20px;
     }
   }
 `;
