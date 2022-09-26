@@ -83,11 +83,11 @@ const getLabel = (name: PaymentOptionNameEnum) => {
 };
 
 export const PayOption = ({ page, setPage }: PageProps) => {
-  const { isLoading: profileLoading, data: profileData } = useQuery(
-    [getUserProfile.key],
-    getUserProfile,
-    { cacheTime: 0 }
-  );
+  const {
+    isLoading: profileLoading,
+    data: profileData,
+    isFetching,
+  } = useQuery([getUserProfile.key], getUserProfile, { refetchOnMount: true });
 
   const [payOption, setPayOption] = useState("");
 
@@ -188,7 +188,7 @@ export const PayOption = ({ page, setPage }: PageProps) => {
           Wallet Balance
         </span>
         <span>
-          {profileLoading ? (
+          {profileLoading || isFetching ? (
             <Typography size={14} content="Getting Balance..." />
           ) : (
             currencyFormat(profileData?.walletBalance || 0)

@@ -20,9 +20,7 @@ const columns: TableColumn<PaymentHistoryI>[] = [
         content={v.levy.special_name}
       />
     ),
-    style: {
-      paddingLeft: 40,
-    },
+    minWidth: "270px",
   },
   {
     name: "Date",
@@ -62,9 +60,6 @@ const columns: TableColumn<PaymentHistoryI>[] = [
       />
     ),
     right: true,
-    style: {
-      paddingRight: 40,
-    },
   },
 ];
 

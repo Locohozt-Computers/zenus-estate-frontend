@@ -200,6 +200,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
         },
         {
           onSuccess: (res: Record<string, any>) => {
+            refetchProfile();
             dispatch(setValues({ ...details, successResponse: res }));
             setPage(page + 1);
           },
@@ -219,6 +220,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
     mutate,
     page,
     profile?.walletBalance,
+    refetchProfile,
     setPage,
     setValues,
     total,
