@@ -99,6 +99,12 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
     });
   }, [location]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setSidebarCollapse(true);
+    }, 1000);
+  }, []);
+
   return (
     <DashboardStyling sidebar={sidebarCollapse}>
       <SideBarStyling sidebar={sidebarCollapse}>
