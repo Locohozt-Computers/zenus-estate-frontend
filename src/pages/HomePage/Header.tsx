@@ -188,8 +188,9 @@ const Search = React.memo(
 );
 
 const TenantResults = styled.div`
-  display: flex;
-  align-items: center;
+  max-height: 70vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   overflow: auto;
   gap: 20px;
 
@@ -253,7 +254,7 @@ export const HomeHeader = () => {
       <Modal
         visible={!!searchResponse?.data?.length}
         showCloseBtn={false}
-        maxWidth={608}
+        maxWidth={1024}
         closeModal={() => setSearching(false)}
       >
         <Card style={{ padding: 25, display: "grid", gap: 20 }}>
@@ -272,7 +273,10 @@ export const HomeHeader = () => {
                   style={{ whiteSpace: "nowrap" }}
                   content={el.tenant_name}
                 />
-                <div className="center-contents justify-flex-start">
+                <div
+                  className="center-contents justify-flex-start"
+                  style={{ wordBreak: "break-all" }}
+                >
                   <AppIcon textColor="blue" render={HiOutlineMail} size={20} />
                   <Typography size={14}>
                     <a href={`mailto:${el.signup_email}`}>{el.signup_email}</a>
