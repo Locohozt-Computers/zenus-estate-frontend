@@ -16,6 +16,7 @@ export const AppIcon = ({
     <Component
       style={{
         fontSize: size || 20,
+        minWidth: size || 20,
         color: textColor ? `var(--${textColor})` : color ?? "var(--med-gray)",
       }}
       {...rest}
