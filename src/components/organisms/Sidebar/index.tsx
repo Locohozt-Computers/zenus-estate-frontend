@@ -2,9 +2,20 @@ import React, { FC, SVGProps, useState } from "react";
 import { Button, Card, Modal, Typography } from "components/atoms";
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "app-constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "store/reducers/auth/authDocSlice";
-import { RiDashboardFill, RiLogoutCircleFill } from "react-icons/ri";
+import {
+  clientActions,
+  clientSelectors,
+} from "store/reducers/client/clientSlice";
+import { PropertySwitcher } from "components/organisms/PropertySwitcher";
+import {
+  RiBarChartBoxFill,
+  RiDashboardFill,
+  RiLogoutCircleFill,
+} from "react-icons/ri";
+import { MdHowToVote, MdPeopleAlt, MdReportProblem } from "react-icons/md";
+import { HiSwitchHorizontal } from "react-icons/hi";
 import { AppIcon } from "utils";
 import { IconType } from "react-icons";
 import { FaCoins } from "react-icons/fa";
@@ -38,7 +49,17 @@ type NavType = Array<{
 const navSection1: NavType = [
   { label: "Home", icon: RiDashboardFill, route: ROUTES.home.fullPath },
   {
-    label: "Report Emergency",
+    label: "Dashboard",
+    icon: RiBarChartBoxFill,
+    route: ROUTES.dashboard.fullPath,
+  },
+  {
+    label: "Visitors",
+    icon: MdPeopleAlt,
+    route: ROUTES.visitors.fullPath,
+  },
+  {
+    label: "Emergency",
     icon: IconCarEmergency,
     route: ROUTES.reportEmergency.fullPath,
   },
@@ -66,6 +87,16 @@ const navSection2: NavType = [
     label: "Contact Admin",
     icon: AiFillQuestionCircle,
     route: ROUTES.contactAdmin.fullPath,
+  },
+  {
+    label: "Report Issue",
+    icon: MdReportProblem,
+    route: ROUTES.reportIssue.fullPath,
+  },
+  {
+    label: "Polls",
+    icon: MdHowToVote,
+    route: ROUTES.polls.fullPath,
   },
   // {
   //   label: "Estate Banks",
@@ -159,12 +190,17 @@ const NavBtn = ({
 export const Sidebar = ({ open }: { open: boolean }) => {
   const [visible, setVisible] = useState(false);
   const queryClient = useQueryClient();
-
   const dispatch = useDispatch();
+  const selectedEstate = useSelector(clientSelectors.selectedEstate);
 
   const logoutUser = () => {
     dispatch(authActions.logoutUser());
+    dispatch(clientActions.clearClient());
     queryClient.clear();
+  };
+
+  const switchEstate = () => {
+    dispatch(clientActions.openEstatePicker());
   };
 
   return (
@@ -179,6 +215,47 @@ export const Sidebar = ({ open }: { open: boolean }) => {
           ZENUS
         </Typography>
       </Logo>
+      {selectedEstate && (
+        <div style={{ padding: "12px 12px 4px" }}>
+          <PropertySwitcher />
+          <button
+            type="button"
+            onClick={switchEstate}
+            style={{
+              all: "unset",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 14px",
+              width: "100%",
+              boxSizing: "border-box",
+              borderRadius: 10,
+              marginTop: 4,
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "#f0f4ff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "transparent";
+            }}
+          >
+            <AppIcon
+              render={HiSwitchHorizontal}
+              size={16}
+              color="var(--med-gray)"
+            />
+            <Typography
+              size={12}
+              style={{ color: "var(--med-gray)", whiteSpace: "nowrap" }}
+            >
+              Switch Community
+            </Typography>
+          </button>
+        </div>
+      )}
       <Nav>
         <ul>
           {navSection1.map((values) => (

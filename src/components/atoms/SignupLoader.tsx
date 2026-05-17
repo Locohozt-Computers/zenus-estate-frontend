@@ -1,12 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-/*
- *  we have 3 clicks,
- * for every click being made, loader loads.
- * hence we track the loader based on the number of clicks.
- * */
-
 const Loader = styled.div`
   background: #ebf2ff;
   height: 19px;
@@ -17,28 +11,28 @@ const Loader = styled.div`
 
   .loader {
     background: #003085;
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
-    border-top-left-radius: 50px;
-    border-bottom-left-radius: 50px;
+    border-radius: 50px;
+    transition: width 0.3s ease;
   }
 `;
+
+const progressWidths: Record<number, string> = {
+  1: "33%",
+  2: "66%",
+};
+
 const SignupLoader: React.FC<{
-  slide?: string | number | undefined;
+  slide?: number;
   check?: boolean;
-}> = ({ slide, check }) => {
+}> = ({ slide = 0, check }) => {
+  if (slide === 0) return null;
+
+  const width = check ? "100%" : progressWidths[slide] ?? "33%";
+
   return (
-    <>
-      <div style={{ display: slide === 0 ? "none" : "block" }}>
-        <Loader>
-          <div
-            className="loader"
-            style={{ width: check === true && slide === 1 ? "100%" : "370px" }}
-          />
-        </Loader>
-      </div>
-    </>
-    // <Loader className="">{Array(3).fill(<div className="steps" />)}</Loader>
+    <Loader>
+      <div className="loader" style={{ width }} />
+    </Loader>
   );
 };
 

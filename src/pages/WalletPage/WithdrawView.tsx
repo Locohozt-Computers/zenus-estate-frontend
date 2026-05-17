@@ -130,9 +130,9 @@ export const WithdrawView = ({ setPage }: PropsI) => {
     validateOnMount: true,
     validationSchema: yup.object({
       amount: VALIDATIONS.amount.max(
-        profileData?.walletBalance as number,
+        parseFloat(profileData?.walletBalance ?? "0"),
         `Your account balance is ${currencyFormat(
-          profileData?.walletBalance || 0
+          parseFloat(profileData?.walletBalance ?? "0")
         )}`
       ),
     }),
@@ -231,7 +231,7 @@ export const WithdrawView = ({ setPage }: PropsI) => {
                 profileLoading
                   ? "Getting Balance..."
                   : `Wallet balance ${currencyFormat(
-                      profileData?.walletBalance || 0
+                      parseFloat(profileData?.walletBalance ?? "0")
                     )}`
               }
             />

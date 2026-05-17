@@ -2,12 +2,11 @@ import React from "react";
 import { Typography } from "components/atoms";
 import styled from "styled-components";
 import { pxToEm } from "utils";
-import withdraw from "assets/images/withdrawcash.png";
-import add from "assets/images/addcash.png";
 import { currencyFormat, getBalColor } from "utils/helpers";
 import { format } from "date-fns";
 import { DATE_FORMAT } from "app-constants";
 import { TransactionTypeEnum } from "api";
+import { HiArrowDown, HiArrowUp } from "react-icons/hi";
 
 type Props = {
   action: TransactionTypeEnum;
@@ -73,13 +72,40 @@ const StyledDiv = styled.div`
   }
 `;
 
+const InflowIconWrapper = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e6f4ea, #c8e6c9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
+const OutflowIconWrapper = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fdecea, #f8c8c4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
 export const WalletCard = ({ action, name, id, amount, date }: Props) => {
   return (
     <StyledDiv>
-      <img
-        src={action === TransactionTypeEnum.Credit ? add : withdraw}
-        alt={action}
-      />
+      {action === TransactionTypeEnum.Credit ? (
+        <InflowIconWrapper>
+          <HiArrowDown size={20} color="#2e7d32" />
+        </InflowIconWrapper>
+      ) : (
+        <OutflowIconWrapper>
+          <HiArrowUp size={20} color="#c62828" />
+        </OutflowIconWrapper>
+      )}
       <div className="text-div">
         <div className="text-div-section space-out">
           <Typography content={name} variant="bodyBig" />

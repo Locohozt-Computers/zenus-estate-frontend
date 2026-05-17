@@ -22,6 +22,7 @@ import { IconGrayUser } from "assets/icons/";
 import { AppIcon } from "utils/iconRender";
 import { RiLogoutCircleFill } from "react-icons/ri";
 import { authActions } from "store/reducers/auth/authDocSlice";
+import { clientActions } from "store/reducers/client/clientSlice";
 import { useDispatch } from "react-redux";
 import { LogoutBtnActions } from "components/organisms/Sidebar/styles";
 import { searchTenantsEmail } from "pages/HomePage/requests";
@@ -51,7 +52,7 @@ const HeaderStyles = styled.div`
   } ;
 `;
 
-const SearchStyle = styled.div<{ loading?: boolean }>`
+const SearchStyle = styled.div<{ $loading?: boolean }>`
   position: relative;
   max-width: 650px;
   min-width: 200px;
@@ -77,7 +78,7 @@ const SearchStyle = styled.div<{ loading?: boolean }>`
     font-size: 16px;
     width: 100%;
     outline: none;
-    padding-right: ${({ loading }) => loading && "47px"};
+    padding-right: ${({ $loading }) => $loading && "47px"};
 
     &:hover {
       border: 1px solid var(--light-blue);
@@ -168,7 +169,7 @@ const Search = React.memo(
     };
 
     return (
-      <SearchStyle loading={loading} style={{ gridArea: "search" }}>
+      <SearchStyle $loading={loading} style={{ gridArea: "search" }}>
         <MdLocationPin size={20} color="var(--blue)" />
         <input
           onChange={handleChange}
@@ -188,8 +189,9 @@ const Search = React.memo(
 );
 
 const TenantResults = styled.div`
-  display: flex;
-  align-items: center;
+  max-height: 70vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   overflow: auto;
   gap: 20px;
 
@@ -235,10 +237,13 @@ export const HomeHeader = () => {
     setSearching(value);
   }, []);
 
-  const name = (data?.tenant_name || data?.landlord_name) as string;
+  const name = data
+    ? `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim()
+    : "";
 
   const logoutUser = () => {
     dispatch(authActions.logoutUser());
+    dispatch(clientActions.clearClient());
     queryClient.clear();
   };
 
@@ -253,7 +258,7 @@ export const HomeHeader = () => {
       <Modal
         visible={!!searchResponse?.data?.length}
         showCloseBtn={false}
-        maxWidth={608}
+        maxWidth={1024}
         closeModal={() => setSearching(false)}
       >
         <Card style={{ padding: 25, display: "grid", gap: 20 }}>
@@ -272,7 +277,10 @@ export const HomeHeader = () => {
                   style={{ whiteSpace: "nowrap" }}
                   content={el.tenant_name}
                 />
-                <div className="center-contents justify-flex-start">
+                <div
+                  className="center-contents justify-flex-start"
+                  style={{ wordBreak: "break-all" }}
+                >
                   <AppIcon textColor="blue" render={HiOutlineMail} size={20} />
                   <Typography size={14}>
                     <a href={`mailto:${el.signup_email}`}>{el.signup_email}</a>
