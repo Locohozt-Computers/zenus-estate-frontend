@@ -1,13 +1,17 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import { Sidebar } from "components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authSelectors } from "store/reducers/auth/authDocSlice";
+import { clientSelectors } from "store/reducers/client/clientSlice";
+import { fetchSettings } from "store/reducers/settings/settingsSlice";
 import { setAuthorizationHeader } from "api";
+import { EstatePicker } from "components/organisms/EstatePicker";
 import { Loader } from "components/atoms/Loader";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
 import { useLocation } from "react-router-dom";
+import { SetPinModal } from "pages/MyAccountPage/SetPinModal";
 
 const DashboardStyling = styled.div<{ sidebar?: boolean }>`
   position: relative;
@@ -73,7 +77,10 @@ const FloatingToggle = styled.button`
 `;
 
 export const DashboardLayout = ({ children }: PropsWithChildren) => {
+  const dispatch = useDispatch();
   const apiToken = useSelector(authSelectors.token);
+  const pinIsSet = useSelector(authSelectors.pinIsSet);
+  const selectedEstate = useSelector(clientSelectors.selectedEstate);
   const location = useLocation();
 
   const [sidebarCollapse, setSidebarCollapse] = useState(false);
@@ -81,7 +88,6 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
   const [, setLastLoc] = useState("");
 
   useEffect(() => {
-    // persist token in app
     if (apiToken) {
       setAuthorizationHeader(apiToken);
       setLoading(false);
@@ -89,7 +95,12 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
   }, [apiToken]);
 
   useEffect(() => {
-    // handles auto close sidebar after click
+    if (selectedEstate) {
+      dispatch(fetchSettings() as any);
+    }
+  }, [selectedEstate, dispatch]);
+
+  useEffect(() => {
     setLastLoc((prev) => {
       if (prev !== location.pathname) {
         if (prev) setSidebarCollapse(true);
@@ -107,12 +118,14 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <DashboardStyling sidebar={sidebarCollapse}>
+      <SetPinModal visible={!pinIsSet} />
+      <EstatePicker />
       <SideBarStyling sidebar={sidebarCollapse}>
         <Sidebar open />
       </SideBarStyling>
       <ContentStyling>
         <Loader open={loading} />
-        {loading ? null : children}
+        {loading || !selectedEstate ? null : children}
       </ContentStyling>
       <FloatingToggle onClick={() => setSidebarCollapse(!sidebarCollapse)}>
         {sidebarCollapse ? (

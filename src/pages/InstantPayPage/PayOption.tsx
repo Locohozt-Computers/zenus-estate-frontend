@@ -114,7 +114,7 @@ export const PayOption = ({ page, setPage }: PageProps) => {
   const handleSelect = (name: string, id: number) => () => {
     if (
       name === PaymentOptionNameEnum.Wallet &&
-      (profileData?.walletBalance || 0) <= 0
+      parseFloat(profileData?.walletBalance ?? "0") <= 0
     ) {
       notification.info(
         profileLoading
@@ -191,7 +191,7 @@ export const PayOption = ({ page, setPage }: PageProps) => {
           {profileLoading || isFetching ? (
             <Typography size={14} content="Getting Balance..." />
           ) : (
-            currencyFormat(profileData?.walletBalance || 0)
+            currencyFormat(parseFloat(profileData?.walletBalance ?? "0"))
           )}
         </span>
       </div>

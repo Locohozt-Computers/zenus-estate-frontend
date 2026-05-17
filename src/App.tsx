@@ -10,6 +10,7 @@ import NotFoundPage from "pages/NotFoundPage";
 import ContactAdminPage from "pages/ContactAdminPage";
 
 const LazyHomePage = React.lazy(() => import("pages/HomePage"));
+const LazyDashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const LazyReportEmergencyPage = React.lazy(
   () => import("pages/ReportEmergencyPage")
 );
@@ -25,6 +26,35 @@ const LazyAccountStatementPage = React.lazy(
 );
 const LazyForgetPassword = React.lazy(() => import("pages/ForgetPasswordPage"));
 const LazyResetPassword = React.lazy(() => import("pages/ResetPasswordPage"));
+const LazyPaymentSuccessPage = React.lazy(
+  () => import("pages/PaymentSuccessPage")
+);
+const LazyDemandNoticePaymentSuccessPage = React.lazy(
+  () => import("pages/DemandNoticePaymentSuccessPage")
+);
+const LazyElectricityPaymentSuccessPage = React.lazy(
+  () => import("pages/ElectricityPaymentSuccessPage")
+);
+const LazyVisitorsPage = React.lazy(() => import("pages/VisitorsPage"));
+const LazyMyBillsHubPage = React.lazy(() => import("pages/MyBillsHubPage"));
+const LazyCommunityDuesPage = React.lazy(
+  () => import("pages/CommunityDuesPage")
+);
+const LazyUtilitiesPage = React.lazy(() => import("pages/UtilitiesPage"));
+const LazyPowerTokenQuotaPage = React.lazy(
+  () => import("pages/PowerTokenQuotaPage")
+);
+const LazyPowerTokenBuyPage = React.lazy(
+  () => import("pages/PowerTokenBuyPage")
+);
+const LazyReportIssuePage = React.lazy(() => import("pages/ReportIssuePage"));
+const LazyTicketDetailPage = React.lazy(
+  () => import("pages/ReportIssuePage/TicketDetailPage")
+);
+const LazyPollsPage = React.lazy(() => import("pages/PollsPage"));
+const LazyPollDetailPage = React.lazy(
+  () => import("pages/PollsPage/PollDetailPage")
+);
 
 const PrivateRoute = () => {
   const isAuth = useSelector(authSelectors.isAuth);
@@ -77,6 +107,7 @@ function App() {
             <Route path={ROUTES.playground.path} element={<LazyPlayPage />} />
           )}
           <Route path={ROUTES.home.path} element={<LazyHomePage />} />
+          <Route path={ROUTES.dashboard.path} element={<LazyDashboardPage />} />
           <Route
             path="/"
             element={<Navigate replace to={ROUTES.home.path} />}
@@ -86,11 +117,8 @@ function App() {
             element={<LazyReportEmergencyPage />}
           />
           <Route path={ROUTES.myWallet.path} element={<LazyWalletPage />} />
-          <Route
-            path={ROUTES.myBills.path}
-            element={<Navigate replace to={ROUTES.instantPay.path} />}
-          />
           <Route path={ROUTES.myBills.path} element={<Outlet />}>
+            <Route index element={<LazyMyBillsHubPage />} />
             <Route
               path={ROUTES.accountStatements.path}
               element={<LazyAccountStatementPage />}
@@ -98,6 +126,37 @@ function App() {
             <Route
               path={ROUTES.instantPay.path}
               element={<LazyInstantPayPage />}
+            />
+            <Route
+              path={ROUTES.communityDues.path}
+              element={<LazyCommunityDuesPage />}
+            />
+            <Route
+              path={ROUTES.utilities.path}
+              element={<LazyUtilitiesPage />}
+            />
+            <Route
+              path={ROUTES.powerTokenQuota.path}
+              element={<LazyPowerTokenQuotaPage />}
+            />
+            <Route
+              path={ROUTES.powerTokenBuy.path}
+              element={<LazyPowerTokenBuyPage />}
+            />
+          </Route>
+          <Route path={ROUTES.visitors.path} element={<LazyVisitorsPage />} />
+          <Route path={ROUTES.reportIssue.path} element={<Outlet />}>
+            <Route index element={<LazyReportIssuePage />} />
+            <Route
+              path={ROUTES.reportIssueDetail.path}
+              element={<LazyTicketDetailPage />}
+            />
+          </Route>
+          <Route path={ROUTES.polls.path} element={<Outlet />}>
+            <Route index element={<LazyPollsPage />} />
+            <Route
+              path={ROUTES.pollDetail.path}
+              element={<LazyPollDetailPage />}
             />
           </Route>
           <Route path={ROUTES.myAccount.path} element={<LazyMyAccountPage />} />
@@ -112,6 +171,18 @@ function App() {
           <Route
             path={ROUTES.contactAdmin.path}
             element={<ContactAdminPage />}
+          />
+          <Route
+            path={ROUTES.paymentSuccess.path}
+            element={<LazyPaymentSuccessPage />}
+          />
+          <Route
+            path={ROUTES.demandNoticePaymentSuccess.path}
+            element={<LazyDemandNoticePaymentSuccessPage />}
+          />
+          <Route
+            path={ROUTES.electricityPaymentSuccess.path}
+            element={<LazyElectricityPaymentSuccessPage />}
           />
         </Route>
         <Route path="*" element={<NotFoundPage />} />

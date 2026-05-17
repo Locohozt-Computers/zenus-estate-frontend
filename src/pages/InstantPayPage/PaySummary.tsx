@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Button, Typography } from "components/atoms";
 import { useDispatch, useSelector } from "react-redux";
+import { authSelectors } from "store/reducers/auth/authDocSlice";
 import {
   getAllTransactions,
   getDashboard,
@@ -81,6 +82,10 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
   const queryClient = useQueryClient();
 
   const details = useSelector(paymentSelectors.state);
+  const authEmail = useSelector(authSelectors.email);
+  const authFirstName = useSelector(authSelectors.firstName);
+  const authLastName = useSelector(authSelectors.lastName);
+  const authFullName = `${authFirstName} ${authLastName}`.trim();
 
   const { data: payMethods, isLoading: payMethodsLoading } = useQuery(
     [getPaymentMethod.key],
@@ -175,7 +180,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
   );
 
   const walletPayment = useCallback(() => {
-    if ((profile?.walletBalance || 0) > total) {
+    if (parseFloat(profile?.walletBalance ?? "0") > total) {
       mutate(
         {
           amount: details?.amountToCharge || 0,
@@ -203,7 +208,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
     dispatch,
     mutate,
     page,
-    profile?.walletBalance,
+    profile?.walletBalance, // eslint-disable-line react-hooks/exhaustive-deps
     refetchProfile,
     setPage,
     setValues,
@@ -212,15 +217,10 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
 
   useEffect(() => {
     setPayStackBtn({
-      email: `${profile?.landlord_email}`,
+      email: authEmail,
       amount: total * 100, // convert to kobo
     });
-  }, [
-    details.amount,
-    details.outstandingBalance,
-    profile?.landlord_email,
-    total,
-  ]);
+  }, [details.amount, details.outstandingBalance, authEmail, total]);
 
   useEffect(() => {
     return () => {
@@ -258,7 +258,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
           <Typography
             variant="subtitle"
             textColor="blue"
-            content={formatNameToDisplay(profile?.tenant_name)}
+            content={formatNameToDisplay(authFullName)}
           />
         </div>
         <div className="summary-field">
@@ -266,7 +266,7 @@ export const PaySummary = ({ page, setPage }: PageProps) => {
           <Typography
             variant="subtitle"
             textColor="blue"
-            title={profile?.address}
+            title={profile?.address ?? undefined}
             content={truncateLongName(profile?.address || "")}
           />
         </div>

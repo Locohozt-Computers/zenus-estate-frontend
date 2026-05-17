@@ -5,6 +5,7 @@ import { FormikProvider, useFormik } from "formik";
 import * as yup from "yup";
 import { ROUTES, VALIDATIONS } from "app-constants";
 import { authActions } from "store/reducers/auth/authDocSlice";
+import { clientActions } from "store/reducers/client/clientSlice";
 import { useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { pxToEm } from "utils";
@@ -35,6 +36,7 @@ export const LoginForm = () => {
   const { isLoading, mutate } = useMutation(loginUser);
 
   const { authUser } = authActions;
+  const { setEstates } = clientActions;
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -43,6 +45,10 @@ export const LoginForm = () => {
       mutate(values, {
         onSuccess: (response) => {
           dispatch(authUser(response));
+          dispatch(setEstates(response.estates ?? []));
+          dispatch(
+            clientActions.setVirtualAccounts(response.virtual_accounts ?? [])
+          );
         },
       });
     },
