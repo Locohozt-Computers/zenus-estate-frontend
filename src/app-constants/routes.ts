@@ -23,6 +23,10 @@ export const ROUTES = {
     path: "home",
     fullPath: "/home",
   },
+  dashboard: {
+    path: "dashboard",
+    fullPath: "/dashboard",
+  },
   reportEmergency: {
     path: "reportEmergency",
     fullPath: "/reportEmergency",
@@ -38,6 +42,22 @@ export const ROUTES = {
   accountStatements: {
     path: "accountStatements",
     fullPath: "/myBills/accountStatements",
+  },
+  communityDues: {
+    path: "communityDues",
+    fullPath: "/myBills/communityDues",
+  },
+  utilities: {
+    path: "utilities",
+    fullPath: "/myBills/utilities",
+  },
+  powerTokenQuota: {
+    path: "powerToken/quota",
+    fullPath: "/myBills/powerToken/quota",
+  },
+  powerTokenBuy: {
+    path: "powerToken/buy",
+    fullPath: "/myBills/powerToken/buy",
   },
   myWallet: {
     path: "myWallet",
@@ -58,6 +78,38 @@ export const ROUTES = {
   printReceipt: {
     path: "printReceipt",
     fullPath: "/printReceipt",
+  },
+  paymentSuccess: {
+    path: "payment/success",
+    fullPath: "/payment/success",
+  },
+  demandNoticePaymentSuccess: {
+    path: "demand-notice/payment/success",
+    fullPath: "/demand-notice/payment/success",
+  },
+  electricityPaymentSuccess: {
+    path: "electricity/payment/success",
+    fullPath: "/electricity/payment/success",
+  },
+  visitors: {
+    path: "visitors",
+    fullPath: "/visitors",
+  },
+  reportIssue: {
+    path: "reportIssue",
+    fullPath: "/reportIssue",
+  },
+  reportIssueDetail: {
+    path: ":id",
+    fullPath: "/reportIssue/:id",
+  },
+  polls: {
+    path: "polls",
+    fullPath: "/polls",
+  },
+  pollDetail: {
+    path: ":id",
+    fullPath: "/polls/:id",
   },
   playground: {
     path: "play",

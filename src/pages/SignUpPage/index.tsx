@@ -1,32 +1,35 @@
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import CreateAccount from "pages/SignUpPage/SignUpForm/createAccount";
 import CompleteAccount from "pages/SignUpPage/SignUpForm/completeAccount";
+import RegisterAccount from "pages/SignUpPage/SignUpForm/registerAccount";
 import SignupLoader from "components/atoms/SignupLoader";
-
-export interface CreateAccountT {
-  setSlide?: (index: number) => void;
-  slide?: string | number | undefined;
-  onUpdate?: (pos: number) => void;
-  skip?: string;
-  status?: (verify: boolean) => void;
-  check?: boolean;
-}
-const form = [CreateAccount, CompleteAccount];
 
 const SignUp = () => {
   const [slide, setSlide] = useState(0);
-  const [check, unCheck] = useState(false);
-  const Components: FC<any> = form[slide];
-  const handleClick = (pos: number) => {
-    setSlide(slide + pos);
-  };
-  const handleModal = () => {
-    unCheck(true);
-  };
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => setSlide((s) => s + 1);
+
   return (
     <div>
-      <SignupLoader check={check} slide={slide} />
-      <Components status={handleModal} onUpdate={handleClick} />
+      <SignupLoader check={complete} slide={slide} />
+      {slide === 0 && (
+        <CreateAccount onUpdate={handleNext} onPhoneVerified={setPhoneNumber} />
+      )}
+      {slide === 1 && (
+        <CompleteAccount
+          onUpdate={handleNext}
+          onBack={() => setSlide(0)}
+          phoneNumber={phoneNumber}
+        />
+      )}
+      {slide === 2 && (
+        <RegisterAccount
+          phoneNumber={phoneNumber}
+          status={() => setComplete(true)}
+        />
+      )}
     </div>
   );
 };

@@ -1,17 +1,15 @@
 import React from "react";
 import { Table, Tag, THeader, Typography } from "components";
 import { format } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
-import { getDashboard } from "pages/request";
 import { TableColumn } from "react-data-table-component";
-import { PaymentHistoryI } from "api";
+import { DashboardLevyI, DashboardTransactionI } from "api/types";
 import { currencyFormat, getStatusColor } from "utils/helpers";
 import { DATE_FORMAT } from "app-constants";
 
-const columns: TableColumn<PaymentHistoryI>[] = [
+const columns: TableColumn<DashboardTransactionI>[] = [
   {
     name: "Levy Type",
-    selector: (row) => row.payment_type.name,
+    selector: (row) => row.levy.special_name,
     format: (v) => (
       <Typography
         variant="bodyBig"
@@ -45,7 +43,7 @@ const columns: TableColumn<PaymentHistoryI>[] = [
         style={{
           color: v.amount < 0 ? "var(--pink)" : "var(--green)",
         }}
-        content={currencyFormat(v.amount)}
+        content={currencyFormat(Math.abs(v.amount))}
       />
     ),
     center: true,
@@ -63,8 +61,10 @@ const columns: TableColumn<PaymentHistoryI>[] = [
   },
 ];
 
-export const PaymentHistory = () => {
-  const { isLoading, data } = useQuery(["getDashboard"], getDashboard);
+export const PaymentHistory = ({ levies }: { levies: DashboardLevyI[] }) => {
+  const transactions: DashboardTransactionI[] = levies.flatMap(
+    (levy) => levy.recent_transactions
+  );
 
   return (
     <div>
@@ -75,8 +75,8 @@ export const PaymentHistory = () => {
           </THeader>
         }
         columns={columns}
-        data={data?.payment_history || []}
-        progressPending={isLoading}
+        data={transactions}
+        progressPending={false}
       />
     </div>
   );

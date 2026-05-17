@@ -25,6 +25,12 @@ const createClient = () => {
   };
 
   const onRequestOut = (config: AxiosRequestConfig) => {
+    const estate = store.getState().client.selectedEstate;
+    if (estate) {
+      config.headers = config.headers ?? {};
+      config.headers["X-Tenant-ID"] = estate.id;
+      config.headers["X-Tenant-Domain"] = estate.domain;
+    }
     return config;
   };
   const onRequestRejected = (error: AxiosError) => {

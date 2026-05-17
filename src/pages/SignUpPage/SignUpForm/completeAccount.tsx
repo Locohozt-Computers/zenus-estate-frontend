@@ -1,99 +1,101 @@
-import React, { ChangeEvent, useState } from "react";
-import {
-  Button,
-  Card,
-  Input,
-  Modal,
-  Select,
-  Typography,
-} from "components/atoms";
+import React from "react";
+import { Button, FormikInput, Typography } from "components";
+import { useMutation } from "@tanstack/react-query";
+import { FormikProvider, useFormik } from "formik";
+import * as yup from "yup";
 import { Form } from "pages/SignUpPage/SignUpForm/createAccount";
-import styled from "styled-components/macro";
+import { verifyOtp, verifyPhone } from "pages/SignUpPage/request";
+
+const validationSchema = yup.object({
+  otp: yup
+    .string()
+    .length(4, "OTP must be exactly 4 digits")
+    .required("OTP is required"),
+});
 
 type CompleteAccountT = {
   onUpdate?: (pos: number) => void;
-  status?: (verify: boolean) => void;
+  onBack?: () => void;
+  phoneNumber?: string;
 };
 
-const CompleteAccountStyle = styled.div`
-  width: 100%;
-  max-width: 678px;
-  .completed-card {
-    width: 100%;
-    padding: 100px;
-    //max-width: 480px;
-  }
-`;
+const CompleteAccount: React.FC<CompleteAccountT> = ({
+  onUpdate,
+  onBack,
+  phoneNumber,
+}) => {
+  const { isLoading, mutate } = useMutation(verifyOtp);
+  const { isLoading: isResending, mutate: resend } = useMutation(verifyPhone);
 
-const CompleteAccount: React.FC<CompleteAccountT> = ({ onUpdate, status }) => {
-  const [visible, setVisible] = useState(false);
+  const formik = useFormik({
+    initialValues: { otp: "" },
+    validationSchema,
+    onSubmit: (values) => {
+      mutate(
+        { phone_number: phoneNumber || "", otp: values.otp },
+        {
+          onSuccess: () => {
+            if (onUpdate) onUpdate(1);
+          },
+        }
+      );
+    },
+  });
 
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (onUpdate && status) {
-      onUpdate(0);
-      status(true);
-    }
-  };
-  const handleClick = () => {
-    setVisible(!visible);
+  const handleResend = () => {
+    resend({ phone_number: phoneNumber || "" });
   };
 
   return (
-    <CompleteAccountStyle>
-      <Typography.Heading size={39} variant="heading3">
-        Complete your account setup
-      </Typography.Heading>
-      <Form style={{ width: "100%" }} onSubmit={handleSubmit}>
-        <Input
-          name="email"
-          label="Enter your full name *"
-          placeholder="ZENUX ABUBAKAR"
-        />
-        <Select
-          options={[]}
-          name="email"
-          label="Select your apartment number *"
-          placeholder="ZENUX ABUBAKAR"
-        />
-        <Input name="upload" type="file" label="Upload your picture" />
-        <div className="center-contents">
-          <Button type="submit" text="Complete Setup" onClick={handleClick} />
-        </div>
-      </Form>
-      <Modal maxWidth={620} visible={visible}>
-        <Card
-          style={{
-            padding: "50px 70px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Typography.Heading
-            size={28}
-            style={{ marginBottom: 18 }}
-            variant="heading3"
-          >
-            Completed!
-          </Typography.Heading>
-          <Typography style={{ marginBottom: 18, textAlign: "center" }}>
-            Your details has been recorded, it will appear on your dashboard
-            after admin’s approval.
-          </Typography>
-          <div>
-            <Button
-              type="submit"
-              text="Okay"
-              onClick={() => setVisible(false)}
-              className="modal-btn"
-              style={{ marginTop: 70 }}
-            />
+    <FormikProvider value={formik}>
+      <div style={{ width: "100%", maxWidth: 572 }}>
+        <Typography.Heading variant="heading3">
+          Verify your phone number
+        </Typography.Heading>
+        <Typography.Heading variant="bodyBig">
+          Enter the 4-digit OTP sent to {phoneNumber}
+        </Typography.Heading>
+        <Form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
+          <FormikInput
+            name="otp"
+            label="Enter OTP"
+            placeholder="0000"
+            maxLength={4}
+          />
+          <div className="center-contents">
+            <Button type="submit" text="Verify OTP" loading={isLoading} />
           </div>
-        </Card>
-      </Modal>
-    </CompleteAccountStyle>
+        </Form>
+        <div style={{ marginTop: 16, display: "flex", gap: 24 }}>
+          <Typography>
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={handleResend}
+              onKeyDown={(e) => e.key === "Enter" && handleResend()}
+              style={{
+                color: "var(--blue)",
+                cursor: isResending ? "not-allowed" : "pointer",
+                opacity: isResending ? 0.6 : 1,
+              }}
+            >
+              {isResending ? "Resending..." : "Resend OTP"}
+            </span>
+          </Typography>
+          <Typography>
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={onBack}
+              onKeyDown={(e) => e.key === "Enter" && onBack?.()}
+              style={{ color: "var(--blue)", cursor: "pointer" }}
+            >
+              Change phone number
+            </span>
+          </Typography>
+        </div>
+      </div>
+    </FormikProvider>
   );
 };
 

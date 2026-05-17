@@ -138,7 +138,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
   const { ref: transactionRef } = useScrollWithin(transactionPagination, []);
 
   const {
-    data: profile,
+    data: profileData,
     isLoading: profileLoading,
     refetch: refetchProfile,
     isFetching: isFetchingProfile,
@@ -158,18 +158,7 @@ export const WalletOverview = ({ setPage }: PropsI) => {
     setWithdrawState("no-funds");
   };
 
-  const handleWithdraw = () => {
-    // check if user has added bank details
-    if (!bankAccounts?.length) {
-      setWithdrawState("no-account");
-    } else if (!profile?.walletBalance || profile?.walletBalance <= 0) {
-      // check if wallet has funds
-      handleAddFunds();
-    } else setPage(2);
-  };
-
   const handleUpdateFunds = () => {
-    // update wallet with new amount
     Promise.all([refetchProfile(), refetchTransaction()]).then(() => {
       notification.info("Data Updated!");
     });
@@ -253,13 +242,12 @@ export const WalletOverview = ({ setPage }: PropsI) => {
           textColor="blue"
           content={
             showBalance
-              ? currencyFormat(profile?.walletBalance || 0)
+              ? currencyFormat(parseFloat(profileData?.walletBalance ?? "0"))
               : "************"
           }
         />
       </CustomCard>
       <div className="center-contents space-between btn-section">
-        <CustomButton text="Withdraw" secondary onClick={handleWithdraw} />
         <CustomButton onClick={handleAddFunds} text="Fund Wallet" />
       </div>
       <PaymentHistory>
